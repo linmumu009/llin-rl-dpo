@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.11`：新增固定 prompts 的 base/adapter 对照评测脚本；实测 base `4.5922 tokens/s`、adapter `3.0373 tokens/s`，两边输出方向基本一致，2 step 合成 DPO adapter 暂无可解释效果差异。
 - `v0.1.10`：新增 adapter 非交互推理 smoke test，确认 `FULL_STATE_DICT + save_only_model` 导出的 LoRA adapter 可被 ms-swift 重新加载并生成；16 token smoke 输出被截断，只证明加载/推理链路，不代表效果。
 - `v0.1.9`：新增可选 `SwiftModel.load_state_dict(assign=...)` runtime patch，确认 resume 第一阶段错误可绕过；进一步定位到 FSDP2 sharded checkpoint 缺完整视觉塔权重。同时新增 `FULL_STATE_DICT + save_only_model` 配置，成功导出普通 LoRA adapter。
 - `v0.1.8`：训练脚本支持 checkpoint/resume 参数；20 step 保存测试成功生成 `checkpoint-10` 和 `checkpoint-20`，但从 FSDP2 checkpoint 恢复失败，当前恢复链路未通过。
@@ -162,13 +163,24 @@ qwen3.6-27B 的本地配置是：
 - 指标：`37` prompt tokens，`16` generated tokens，runtime `49.2921s`，tokens/s `0.3246`。
 - 注意：`MAX_NEW_TOKENS=16` 的 smoke 输出被截断，只说明 adapter 加载和推理链路可用，不代表效果。
 
+已完成固定 prompts 的 base/adapter 对照：
+
+- 新增脚本：`scripts/run_ms_swift_fixed_prompt_eval.sh` 和 `scripts/run_ms_swift_base_adapter_compare.sh`。
+- 新增数据：`datasets/fixed_eval_prompts.jsonl`。
+- base 结果：`/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/base-20260703.jsonl`。
+- adapter 结果：`/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/adapter-20260703.jsonl`。
+- base：`128` generated tokens，runtime `27.8733s`，tokens/s `4.5922`。
+- adapter：`128` generated tokens，runtime `42.1431s`，tokens/s `3.0373`。
+- 判断：2 step 合成 DPO adapter 与 base 输出方向基本一致，暂不能说明效果变化；adapter 推理有可观开销。
+
 仍需继续评估：
 
 - tiny 数据只能说明训练链路跑通，不能代表最终效果。
 - 合成 256 条数据只能说明短程稳定性和可优化性，不能代表真实 DPO 效果。
 - 当前 FSDP2 sharded checkpoint 可以保存，但恢复链路未通过；正式训练可以先采用 `FULL_STATE_DICT + save_only_model` 的 adapter 导出路线作为最低限度产物保障，该 adapter 导出路线已完成重新加载推理 smoke test。
 - 当前 `learning_rate=0.0` 是 1 step + 默认调度下的 smoke 现象，正式训练需要设置 warmup/scheduler。
-- 推理日志出现 `chunk_gated_delta_rule` tensor shape warning，命令仍成功；后续长训或正式评测前需要确认该 warning 是否影响正确性/效率。
+- 推理日志出现 `chunk_gated_delta_rule` tensor shape warning，base 和 adapter 都会出现；后续长训或正式评测前需要确认该 warning 是否影响正确性/效率。
+- 固定 prompts 的 64 token 输出仍有截断，正式评测需要禁用 thinking 或提高 `MAX_NEW_TOKENS`。
 - 官方 NPU 文档里 DPO 已验证组合偏 `deepspeed`；本次我们实际跑通的是 FSDP2，需要继续做更长步数和真实数据评估。
 - `decord` 未安装，对纯文本 DPO 不是阻塞；若后续做多模态/视频数据会成为依赖项。
 

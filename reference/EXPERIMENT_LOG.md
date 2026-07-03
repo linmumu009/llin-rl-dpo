@@ -1217,3 +1217,81 @@ tokens/s=0.3245956921103007
 1. 做真实 DPO 样例集或小规模业务数据集的 100-500 step 试跑。
 2. 增加固定 prompts 的 before/after adapter 对照推理，评估输出方向而不是只看 loss。
 3. 继续对照 deepspeed zero2/zero3 保存、resume 和 adapter 导出行为。
+
+## 2026-07-03 固定 prompts 的 base/adapter 对照推理
+
+目的：
+
+- 使用同一组固定 prompts 对比 base 模型和上一轮 2 step 合成 DPO LoRA adapter 的输出与推理速度。
+- 这不是正式效果评测，只是确认 adapter 重新加载后的输出方向和开销。
+
+新增文件：
+
+```text
+datasets/fixed_eval_prompts.jsonl
+scripts/run_ms_swift_fixed_prompt_eval.sh
+scripts/run_ms_swift_base_adapter_compare.sh
+```
+
+固定 prompts：
+
+```text
+1. List two checks we should run before starting a long DPO training job.
+2. In one paragraph, explain why saving only an adapter may be safer than relying on an untested sharded checkpoint.
+```
+
+实测命令等价于：
+
+```bash
+MAX_NEW_TOKENS=64 \
+RESULT_PATH=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/base-20260703.jsonl \
+scripts/run_ms_swift_fixed_prompt_eval.sh
+
+ADAPTER_PATH=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step/v0-20260703-130918/checkpoint-2 \
+MAX_NEW_TOKENS=64 \
+RESULT_PATH=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/adapter-20260703.jsonl \
+scripts/run_ms_swift_fixed_prompt_eval.sh
+```
+
+base 结果：
+
+```text
+result_path=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/base-20260703.jsonl
+num_prompt_tokens=85
+num_generated_tokens=128
+num_samples=2
+runtime=27.873314147931524
+samples/s=0.07175321848652216
+tokens/s=4.5922059831374185
+chunk_gated_delta_rule_warning_count=2
+```
+
+adapter 结果：
+
+```text
+result_path=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/adapter-20260703.jsonl
+num_prompt_tokens=85
+num_generated_tokens=128
+num_samples=2
+runtime=42.14306939195376
+samples/s=0.047457388103341464
+tokens/s=3.0372728386138537
+chunk_gated_delta_rule_warning_count=2
+```
+
+观察：
+
+- base 和 adapter 输出方向基本一致。
+- adapter 第一条输出中 `reward(chosen)` 被写成 `r(chosen)`，并继续生成第二点，但 64 token 上限导致末尾截断。
+- 第二条输出两边几乎一致，也在末尾截断。
+- adapter 推理速度低于 base：本次小样本观测为 `3.0373` vs `4.5922 tokens/s`。
+- `chunk_gated_delta_rule` tensor shape warning 在 base 和 adapter 都出现各 2 次，因此不是 adapter 独有现象。
+
+结论：
+
+- 2 step 合成 DPO adapter 太小，不能期待明显效果变化。
+- 这次对照说明 adapter 可复现加载并产生合理方向输出，但还不能证明真实 DPO 效果。
+- 正式效果评测需要：
+  - 更长 token 上限或禁用 thinking，避免输出截断。
+  - 固定真实验证集。
+  - base vs adapter 自动打分或人工 win-rate。

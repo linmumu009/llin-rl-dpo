@@ -1,0 +1,2 @@
+{"messages":[{"role":"system","content":"You are concise and practical."},{"role":"user","content":"List two checks we should run before starting a long DPO training job."}]}
+{"messages":[{"role":"system","content":"You are a careful ML engineer."},{"role":"user","content":"In one paragraph, explain why saving only an adapter may be safer than relying on an untested sharded checkpoint."}]}

@@ -1,5 +1,39 @@
 # 更新说明
 
+## v0.1.11 - 2026-07-03
+
+新增：
+
+- 新增 `datasets/fixed_eval_prompts.jsonl`，包含 2 条固定 prompts，用于 base/adapter 对照。
+- 新增 `scripts/run_ms_swift_fixed_prompt_eval.sh`：
+  - `ADAPTER_PATH` 为空时跑 base。
+  - `ADAPTER_PATH` 非空时加载 LoRA adapter。
+  - 支持 `RESULT_PATH` 指定输出文件。
+- 新增 `scripts/run_ms_swift_base_adapter_compare.sh`，封装固定 prompts 的 base/adapter 顺序对照，分别保存日志、退出码和结果文件。
+
+固定 prompts 对照实测：
+
+- base 结果：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/base-20260703.jsonl`
+- adapter 结果：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/adapter-20260703.jsonl`
+- 两边均完成 2 条 prompts、各生成 `128` tokens。
+- base：
+  - runtime `27.8733s`
+  - tokens/s `4.5922`
+  - samples/s `0.0718`
+- adapter：
+  - runtime `42.1431s`
+  - tokens/s `3.0373`
+  - samples/s `0.0475`
+
+当前判断：
+
+- base 和 adapter 固定 prompts 输出方向基本一致；2 step 合成 DPO adapter 太小，不能期待明显效果差异。
+- adapter 推理比 base 慢，当前小样本观测约为 `3.04` vs `4.59` tokens/s。
+- 两边各出现 2 次 `chunk_gated_delta_rule` tensor shape warning，说明该 warning 不是 adapter 独有。
+- 64 tokens 仍会截断部分输出；正式评测需要禁用 thinking 或提高 `MAX_NEW_TOKENS`。
+
 ## v0.1.10 - 2026-07-03
 
 新增：
