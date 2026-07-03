@@ -288,3 +288,150 @@ NPU 容器底座已经可用，当前是单 NPU smoke test 通过。
 2. qwen3.6-27B 的 `qwen3_5` 架构是否被 MindSpeed-LLM/MindSpeed-RL 支持。
 3. HF safetensors 到训练框架所需权重格式的转换方案。
 4. DPO 数据格式与预处理配置。
+
+## 2026-07-03 8 NPU smoke test
+
+### 设备选择
+
+现有容器占用情况：
+
+- `llin-autoresearch-msllm` 绑定 `/dev/davinci0`
+- `llin-autoresearch` 绑定 `/dev/davinci0`
+- `ASCEND_VISIBLE_DEVICES=0` 会触发 Ascend Runtime hook，但容器内 `npu-smi` 报 `device is used`
+
+为避免影响已有容器，`llin-rl-dpo` 改用：
+
+- `ASCEND_VISIBLE_DEVICES=8,9,10,11,12,13,14,15`
+- `ASCEND_RT_VISIBLE_DEVICES=0,1,2,3,4,5,6,7`
+
+当前容器：
+
+- 名称：`llin-rl-dpo`
+- 镜像：`swr.cn-south-1.myhuaweicloud.com/ascendhub/mindspeed-llm:26.0.0-a3-openeuler24.03-py3.11-aarch64`
+- 工作区：`/workspace/llin-rl-dpo`
+- 模型只读挂载：`/models/Qwen3.6-27B`
+
+### 单进程多卡可见性
+
+结果：
+
+- torch：`2.7.1+cpu`
+- torch_npu：`2.7.1.post4`
+- device_count：`8`
+
+### 逐卡 tensor smoke test
+
+脚本：
+
+- `scripts/npu_multicard_smoke.py`
+
+结果：
+
+```text
+device_count=8
+device=0 sum=4.0
+device=1 sum=4.0
+device=2 sum=4.0
+device=3 sum=4.0
+device=4 sum=4.0
+device=5 sum=4.0
+device=6 sum=4.0
+device=7 sum=4.0
+```
+
+### HCCL all-reduce smoke test
+
+脚本：
+
+- `scripts/hccl_smoke.py`
+
+命令：
+
+```bash
+torchrun --nproc_per_node 8 --master_port 29591 scripts/hccl_smoke.py
+```
+
+结果：
+
+```text
+world_size=8 all_reduce_sum=36.0 expected=36.0
+```
+
+结论：
+
+- 8 逻辑 NPU 可见。
+- 每张逻辑 NPU 可执行 tensor 计算。
+- 8 进程 HCCL all-reduce 通信正常。
+
+## 2026-07-03 qwen3.6-27B 训练前置检查
+
+### Transformers
+
+容器内版本：
+
+- Transformers：`4.57.1`
+
+检查命令：
+
+```bash
+TRANSFORMERS_OFFLINE=1 python -c "from transformers import AutoConfig; AutoConfig.from_pretrained('/models/Qwen3.6-27B', trust_remote_code=True)"
+```
+
+结果：
+
+- 失败。
+- 报错：`model type qwen3_5` 不被 Transformers 识别。
+
+### 本地模型元数据
+
+`/data/models/Qwen3.6-27B/config.json`：
+
+- `architectures`: `Qwen3_5ForConditionalGeneration`
+- `model_type`: `qwen3_5`
+- `language_model_only`: `false`
+- 包含 `text_config` 和 `vision_config`
+
+`/data/models/Qwen3.6-27B/configuration.json`：
+
+```json
+{"framework":"Pytorch","task":"image-text-to-text"}
+```
+
+### MindSpeed-LLM
+
+FSDP2 入口：
+
+- `train_fsdp2.py` 支持 `--stage dpo`
+- `--model-type-hf` 可选项包含 `qwen3`、`qwen3-moe`、`qwen3-next`
+- 当前没有直接的 `qwen3_5` 选项
+
+关键观察：
+
+- FSDP2 help 中有 `full_attention_interval`、`linear_key_head_dim`、`partial_rotary_factor` 等与 qwen3.6 text_config 接近的参数。
+- MindSpeed-LLM 内部有 `qwen3-next` FSDP2 模型实现，但 qwen3.6 的 config 是 `qwen3_5`，且是 image-text-to-text conditional generation。
+
+### vLLM Ascend 参考
+
+服务器已有：
+
+- `/data/models/qwen3.6_27b_docker_compose`
+- 镜像：`qwen3.6-27b:vllm-ascend-v0.18.0-a3`
+
+compose 文件引用的官方文档：
+
+- `https://docs.vllm.ai/projects/ascend/en/v0.18.0/tutorials/models/Qwen3.5-27B-Qwen3.6-27B.html`
+
+官方文档信息：
+
+- Qwen3.6-27B 是 dense model，使用 hybrid attention design，包含 GDN + full attention。
+- Qwen3.6-27B 在 vLLM Ascend 中 first supported in `v0.18.0rc1`。
+- BF16 版本要求 1 Atlas 800 A3 `(64G x 16)` 或 1 Atlas 800 A2 `(64G x 8)` 节点。
+
+结论：
+
+- 推理路径已有可用参考。
+- 训练路径不能直接复用 vLLM。
+- 下一步需要：
+  1. 找到或移植 qwen3_5 的 Transformers/MindSpeed 训练模型类。
+  2. 或把 qwen3.6 text_config 安全映射到 MindSpeed `qwen3-next` 路线做 dry-run。
+  3. 或先用 MindSpeed 已支持的 Qwen3/Qwen3-Next 模型做框架效率基准，再回到 qwen3.6 适配。

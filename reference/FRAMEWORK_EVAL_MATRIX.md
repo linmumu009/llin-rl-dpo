@@ -5,7 +5,8 @@
 | 框架 | 当前适配判断 | 能否跑通 | 效率评估 | 效果评估 | 当前风险 |
 |---|---|---:|---|---|---|
 | MindSpeed-RL DPO | 服务器已有官方 RL 镜像；官方支持 DPO，但样例是 Qwen3-30B-A3B | smoke test 未通过 | 暂不可测 | 暂不可测 | torch_npu 可 import，但 NPU device_count 为 0；目标 qwen3.6-27B 是 `qwen3_5` conditional/multimodal 配置 |
-| MindSpeed-LLM posttrain/DPO | 服务器已有 MindSpeed-LLM 镜像；当前 `llin-rl-dpo` 使用该镜像作为安全底座 | 单 NPU smoke test 通过 | 待测，多 NPU 前需确认可用设备集合 | 待测 | 还需确认是否支持 qwen3_5 权重转换和 DPO 入口 |
+| MindSpeed-LLM FSDP2/DPO | 服务器已有 MindSpeed-LLM 镜像；当前 `llin-rl-dpo` 使用该镜像作为 8 NPU 安全底座 | 8 NPU + HCCL smoke test 通过；qwen3.6 模型加载未通过 | 待测 | 待测 | FSDP2 支持 DPO，但 Transformers/MindSpeed 当前不直接识别 `qwen3_5` |
+| vLLM Ascend | 服务器已有 qwen3.6-27B 推理镜像和 compose；官方支持 Qwen3.6-27B 推理 | 推理路径已有参考，训练不适用 | 可作为推理效率/效果评估 | 可做训练前后评测服务 | vLLM 是推理框架，不能直接做 DPO 训练 |
 | verl NPU / FSDP | MindSpeed-RL 仓库包含 `verl_npu` 适配和 FSDP 测试脚本 | 未测试 | 待测 FSDP2/FSDP 吞吐、显存占用 | 待测 | 对 qwen3_5 / vision conditional generation 的支持未知 |
 | torch_npu FSDP 原生路线 | 最通用，但需要自己搭 DPO 训练循环或接 TRL/verl | 未测试 | 待测 | 待测 | 工程量更大；Transformers qwen3_5 支持版本要求高 |
 

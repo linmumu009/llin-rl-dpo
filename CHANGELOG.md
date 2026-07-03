@@ -1,5 +1,40 @@
 # 更新说明
 
+## v0.1.3 - 2026-07-03
+
+新增：
+
+- 新增 `scripts/npu_multicard_smoke.py`：逐卡 NPU tensor smoke test。
+- 新增 `scripts/hccl_smoke.py`：多进程 HCCL all-reduce smoke test。
+
+容器更新：
+
+- 将 `llin-rl-dpo` 从单逻辑 NPU 改为 8 逻辑 NPU：
+  - `ASCEND_VISIBLE_DEVICES=8,9,10,11,12,13,14,15`
+  - `ASCEND_RT_VISIBLE_DEVICES=0,1,2,3,4,5,6,7`
+- 容器内 `torch_npu.npu.device_count()` 返回 `8`。
+- `npu-smi info` 只显示物理设备 8-15 对应的 NPU 4-7。
+
+验证结果：
+
+- 逐卡 tensor 计算通过：device 0-7 均返回 `4.0`。
+- HCCL all-reduce 通过：
+  - `torchrun --nproc_per_node 8 --master_port 29591 scripts/hccl_smoke.py`
+  - 输出：`world_size=8 all_reduce_sum=36.0 expected=36.0`
+
+训练前置检查：
+
+- Transformers 版本：`4.57.1`
+- `AutoConfig.from_pretrained("/models/Qwen3.6-27B", trust_remote_code=True)` 失败。
+- 失败原因：Transformers 当前不识别 `model_type=qwen3_5`。
+- MindSpeed-LLM FSDP2 支持 DPO 阶段，并支持 `qwen3` / `qwen3-moe` / `qwen3-next`，但当前没有直接支持 `qwen3_5`。
+- 服务器已有 qwen3.6-27B vLLM Ascend 推理配方；该配方证明推理可行，但不能直接作为 DPO 训练路径。
+
+结论：
+
+- 多 NPU 训练底座已可用。
+- qwen3.6-27B DPO 还不能直接启动，下一步要先解决 `qwen3_5` 模型类支持或选择一个已支持模型做框架基准。
+
 ## v0.1.2 - 2026-07-03
 
 修复：
