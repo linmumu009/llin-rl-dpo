@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.9`：新增可选 `SwiftModel.load_state_dict(assign=...)` runtime patch，确认 resume 第一阶段错误可绕过；进一步定位到 FSDP2 sharded checkpoint 缺完整视觉塔权重。同时新增 `FULL_STATE_DICT + save_only_model` 配置，成功导出普通 LoRA adapter。
 - `v0.1.8`：训练脚本支持 checkpoint/resume 参数；20 step 保存测试成功生成 `checkpoint-10` 和 `checkpoint-20`，但从 FSDP2 checkpoint 恢复失败，当前恢复链路未通过。
 - `v0.1.7`：新增合成 DPO 数据生成脚本，完成 256 条合成数据上的 20 step 稳定性测试；运行成功，平均约 `5.92s/step`，显存记录约 `51.93 GiB`。
 - `v0.1.6`：`ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2` 在 8 NPU 上完成 1 个 optimizer step；记录 tiny DPO 数据、可复用启动脚本、环境版本和初步效率指标。
@@ -141,11 +142,20 @@ qwen3.6-27B 的本地配置是：
 - 恢复测试：从 `checkpoint-10` 恢复到 `max_steps=12` 失败。
 - 失败点：`SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'`。
 
+已完成 resume/导出进一步排查：
+
+- 新增 `patches/sitecustomize.py`，通过 `LLIN_SWIFTMODEL_ASSIGN_PATCH=1` 可选启用 `SwiftModel.load_state_dict(assign=...)` 兼容补丁。
+- 启用补丁后，resume 不再卡在 `assign`，但继续失败于 `Missing key in checkpoint state_dict: model.model.visual.patch_embed.proj.weight`。
+- 判断：默认 FSDP2 sharded checkpoint 保存的是 adapter/trainable 状态，恢复时 loader 按完整模型状态查找，二者不匹配。
+- 新增 `configs/fsdp2_full_state.json`，使用 `FULL_STATE_DICT`。
+- 使用 `FULL_STATE_DICT + SAVE_ONLY_MODEL=true` 跑 2 step，成功导出普通 LoRA adapter。
+- adapter 产物：`adapter_model.safetensors` 约 `223M`，`adapter_config.json` 指向 `/models/Qwen3.6-27B`，safetensors 可读取，包含 `992` 个 tensor。
+
 仍需继续评估：
 
 - tiny 数据只能说明训练链路跑通，不能代表最终效果。
 - 合成 256 条数据只能说明短程稳定性和可优化性，不能代表真实 DPO 效果。
-- 当前 FSDP2 checkpoint 可以保存，但恢复链路未通过；正式训练前必须解决 resume 或改用其他保存/导出方案。
+- 当前 FSDP2 sharded checkpoint 可以保存，但恢复链路未通过；正式训练可以先采用 `FULL_STATE_DICT + save_only_model` 的 adapter 导出路线作为最低限度产物保障。
 - 当前 `learning_rate=0.0` 是 1 step + 默认调度下的 smoke 现象，正式训练需要设置 warmup/scheduler。
 - 官方 NPU 文档里 DPO 已验证组合偏 `deepspeed`；本次我们实际跑通的是 FSDP2，需要继续做更长步数和真实数据评估。
 - `decord` 未安装，对纯文本 DPO 不是阻塞；若后续做多模态/视频数据会成为依赖项。

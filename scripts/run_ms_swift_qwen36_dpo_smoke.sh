@@ -13,6 +13,9 @@ SAVE_STEPS="${SAVE_STEPS:-500}"
 SAVE_TOTAL_LIMIT="${SAVE_TOTAL_LIMIT:-}"
 EVAL_STRATEGY="${EVAL_STRATEGY:-no}"
 RESUME_FROM_CHECKPOINT="${RESUME_FROM_CHECKPOINT:-}"
+LLIN_SWIFTMODEL_ASSIGN_PATCH="${LLIN_SWIFTMODEL_ASSIGN_PATCH:-0}"
+FSDP_CONFIG="${FSDP_CONFIG:-fsdp2}"
+SAVE_ONLY_MODEL="${SAVE_ONLY_MODEL:-}"
 
 export TORCH_DEVICE_BACKEND_AUTOLOAD="${TORCH_DEVICE_BACKEND_AUTOLOAD:-0}"
 export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
@@ -20,6 +23,11 @@ export MODELSCOPE_OFFLINE="${MODELSCOPE_OFFLINE:-1}"
 export PYTORCH_NPU_ALLOC_CONF="${PYTORCH_NPU_ALLOC_CONF:-expandable_segments:True}"
 export NPROC_PER_NODE
 export MASTER_PORT
+export LLIN_SWIFTMODEL_ASSIGN_PATCH
+
+if [[ "${LLIN_SWIFTMODEL_ASSIGN_PATCH}" == "1" ]]; then
+  export PYTHONPATH="/workspace/llin-rl-dpo/patches:${PYTHONPATH:-}"
+fi
 
 args=(
   rlhf
@@ -48,7 +56,7 @@ args=(
   --eval_strategy "${EVAL_STRATEGY}"
   --output_dir "${OUTPUT_DIR}"
   --check_model false
-  --fsdp fsdp2
+  --fsdp "${FSDP_CONFIG}"
 )
 
 if [[ -n "${SAVE_TOTAL_LIMIT}" ]]; then
@@ -57,6 +65,10 @@ fi
 
 if [[ -n "${RESUME_FROM_CHECKPOINT}" ]]; then
   args+=(--resume_from_checkpoint "${RESUME_FROM_CHECKPOINT}")
+fi
+
+if [[ -n "${SAVE_ONLY_MODEL}" ]]; then
+  args+=(--save_only_model "${SAVE_ONLY_MODEL}")
 fi
 
 swift "${args[@]}"

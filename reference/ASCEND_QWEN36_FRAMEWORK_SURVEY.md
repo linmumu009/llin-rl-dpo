@@ -74,10 +74,17 @@
 - `memory(GiB)=51.93`
 - `train_loss=0.0722111`
 
+保存/产物状态：
+
+- 默认 FSDP2 sharded checkpoint 可以保存，但 resume 仍失败。
+- 启用本仓库可选 `assign` patch 后，resume 会继续失败于缺视觉塔完整权重，说明默认 sharded checkpoint 与完整模型 resume 预期不匹配。
+- `FULL_STATE_DICT + save_only_model=true` 已成功导出普通 LoRA adapter：`adapter_model.safetensors` 约 `223M`，可读取，包含 `992` 个 tensor。
+
 当前判断：
 
 - `ms-swift` 已经从“最强候选”变成当前第一条可执行训练路线，并且通过了 20 step 短程稳定性测试。
 - 但当前 20 step 用的是合成数据；效率和效果需要真实数据、更多 step、固定验证集继续评估。
+- 在长训前仍需要解决 sharded resume，或将 `FULL_STATE_DICT + save_only_model` 的 adapter 导出作为阶段性产物保障。
 - 后续仍应与 LLaMA-Factory NPU、MindSpeed-RL/LLM 原生路线做同样口径对比。
 
 ### LLaMA-Factory NPU

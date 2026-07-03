@@ -987,3 +987,154 @@ model.load_state_dict(sharded_sd, assign=True)
 2. 测试是否能导出或保存 LoRA adapter 为普通 `adapter_model.safetensors`，作为最低限度可用产物。
 3. 对比 `--fsdp fsdp2` 与其他后端，例如 deepspeed zero2/zero3 或 FSDP1，检查保存/恢复行为。
 4. 在 checkpoint 恢复解决前，不建议直接启动长时间正式训练。
+
+## 2026-07-03 resume 继续排查与 adapter 导出路线
+
+### `assign` 兼容 patch
+
+新增文件：
+
+- `patches/sitecustomize.py`
+
+启用方式：
+
+```bash
+LLIN_SWIFTMODEL_ASSIGN_PATCH=1
+```
+
+脚本行为：
+
+- `scripts/run_ms_swift_qwen36_dpo_smoke.sh` 在该变量为 `1` 时，将 `/workspace/llin-rl-dpo/patches` 加入 `PYTHONPATH`。
+- Python 启动时自动加载 `sitecustomize.py`。
+- patch 让 `SwiftModel.load_state_dict` 接受 `assign=` 参数。
+
+### resume patch 测试
+
+启动参数：
+
+```bash
+LLIN_SWIFTMODEL_ASSIGN_PATCH=1 \
+DATASET_PATH=/workspace/llin-rl-dpo/datasets/synthetic_dpo_256.jsonl \
+OUTPUT_DIR=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-resume-patch-10-to-12 \
+MAX_STEPS=12 \
+SAVE_STRATEGY=no \
+RESUME_FROM_CHECKPOINT=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-checkpoint-20step/v0-20260703-124743/checkpoint-10 \
+MASTER_PORT=29625 \
+scripts/run_ms_swift_qwen36_dpo_smoke.sh
+```
+
+结果：
+
+```text
+exit_code=1
+```
+
+进展：
+
+- 不再报 `SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'`。
+
+新的失败点：
+
+```text
+RuntimeError: Missing key in checkpoint state_dict: model.model.visual.patch_embed.proj.weight.
+```
+
+判断：
+
+- 默认 FSDP2 sharded checkpoint 中没有完整视觉塔底座权重。
+- FSDP2 resume loader 期待完整模型 sharded state。
+- `assign` patch 只解决了第一层签名问题，不能让默认 sharded checkpoint 直接恢复。
+
+### FULL_STATE_DICT + save_only_model 导出测试
+
+新增配置：
+
+- `configs/fsdp2_full_state.json`
+
+关键内容：
+
+```json
+{
+  "fsdp": "full_shard auto_wrap",
+  "fsdp_config": {
+    "fsdp_version": 2,
+    "reshard_after_forward": true,
+    "auto_wrap_policy": "TRANSFORMER_BASED_WRAP",
+    "cpu_ram_efficient_loading": true,
+    "state_dict_type": "FULL_STATE_DICT",
+    "activation_checkpointing": true
+  }
+}
+```
+
+启动参数：
+
+```bash
+DATASET_PATH=/workspace/llin-rl-dpo/datasets/synthetic_dpo_256.jsonl \
+OUTPUT_DIR=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step \
+MAX_STEPS=2 \
+SAVE_STRATEGY=steps \
+SAVE_STEPS=1 \
+SAVE_TOTAL_LIMIT=1 \
+SAVE_ONLY_MODEL=true \
+FSDP_CONFIG=/workspace/llin-rl-dpo/configs/fsdp2_full_state.json \
+MASTER_PORT=29627 \
+scripts/run_ms_swift_qwen36_dpo_smoke.sh
+```
+
+结果：
+
+```text
+exit_code=0
+global_step/max_steps=2/2
+train_runtime=29.94
+train_samples_per_second=0.534
+train_steps_per_second=0.067
+train_loss=0.5927
+memory(GiB)=51.19
+```
+
+输出目录：
+
+```text
+/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step/v0-20260703-130918/checkpoint-2
+```
+
+产物：
+
+```text
+adapter_config.json
+adapter_model.safetensors
+additional_config.json
+args.json
+trainer_state.json
+training_args.bin
+```
+
+大小：
+
+```text
+checkpoint-2: 223M
+```
+
+adapter 检查：
+
+```text
+adapter_type=LORA
+base_model=/models/Qwen3.6-27B
+num_tensors=992
+first_key=base_model.model.model.language_model.layers.0.linear_attn.in_proj_a.lora_A.weight
+last_key=base_model.model.model.language_model.layers.9.mlp.up_proj.lora_B.weight
+```
+
+结论：
+
+- 当前 sharded checkpoint resume 仍未通过。
+- 但 `FULL_STATE_DICT + save_only_model=true` 可以导出普通 LoRA adapter。
+- 这是当前最实用的产物保障路线：长训前仍需解决 resume，但短程/阶段性训练至少可以保存 adapter 产物。
+
+下一步：
+
+1. 测试该 LoRA adapter 是否能重新加载做最小推理。
+2. 继续调查 FSDP2 sharded checkpoint resume 的根修复：是需要完整 state_dict、忽略冻结视觉塔缺失 key，还是 ms-swift/Accelerate 版本差异。
+3. 与 deepspeed zero2/zero3 保存/恢复对照。

@@ -1,5 +1,63 @@
 # 更新说明
 
+## v0.1.9 - 2026-07-03
+
+新增：
+
+- 新增 `patches/sitecustomize.py`，提供可选 runtime patch：
+  - `LLIN_SWIFTMODEL_ASSIGN_PATCH=1`
+  - 让 `SwiftModel.load_state_dict` 接受 `assign=` 参数，并在普通加载时传给底层 `base_model.load_state_dict`。
+- 新增 `configs/fsdp2_full_state.json`，用于 FSDP2 `FULL_STATE_DICT` 保存对照测试。
+- 新增 `scripts/inspect_adapter.py`，用于读取并检查 LoRA adapter 配置和 safetensors 权重。
+- `scripts/run_ms_swift_qwen36_dpo_smoke.sh` 增加：
+  - `FSDP_CONFIG`
+  - `SAVE_ONLY_MODEL`
+  - `LLIN_SWIFTMODEL_ASSIGN_PATCH`
+
+resume 排查：
+
+- 启用 `LLIN_SWIFTMODEL_ASSIGN_PATCH=1` 后，从 `checkpoint-10` resume 不再卡在：
+  - `SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'`
+- 但继续失败于：
+  - `Missing key in checkpoint state_dict: model.model.visual.patch_embed.proj.weight`
+
+判断：
+
+- 默认 FSDP2 sharded checkpoint 保存的是 adapter/trainable 状态，不包含完整视觉塔等冻结底座权重。
+- FSDP2 resume loader 期望完整模型 sharded state，因此仍无法恢复。
+- 这说明 `assign` patch 只能解决签名兼容第一层问题，不足以让默认 FSDP2 sharded checkpoint 可恢复。
+
+adapter 导出测试：
+
+- 使用 `configs/fsdp2_full_state.json`。
+- 参数：
+  - `MAX_STEPS=2`
+  - `SAVE_STRATEGY=steps`
+  - `SAVE_STEPS=1`
+  - `SAVE_TOTAL_LIMIT=1`
+  - `SAVE_ONLY_MODEL=true`
+  - `FSDP_CONFIG=/workspace/llin-rl-dpo/configs/fsdp2_full_state.json`
+- 输出目录：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step/v0-20260703-130918/checkpoint-2`
+
+adapter 导出结果：
+
+- 训练 exit code 为 `0`。
+- 生成普通 LoRA adapter 文件：
+  - `adapter_config.json`
+  - `adapter_model.safetensors`
+- `adapter_model.safetensors` 约 `223M`。
+- `scripts/inspect_adapter.py` 检查通过：
+  - `adapter_type=LORA`
+  - `base_model=/models/Qwen3.6-27B`
+  - `num_tensors=992`
+
+当前判断：
+
+- 默认 FSDP2 sharded checkpoint resume 仍未通过。
+- `FULL_STATE_DICT + save_only_model=true` 可以作为当前最低限度可用产物保存路线，能导出普通 LoRA adapter。
+- 下一步应测试该 adapter 是否能重新加载做推理/评测，并继续调查 sharded checkpoint resume 的根修复。
+
 ## v0.1.8 - 2026-07-03
 
 新增：
