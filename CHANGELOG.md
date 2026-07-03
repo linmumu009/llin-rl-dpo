@@ -1,5 +1,68 @@
 # 更新说明
 
+## v0.1.13 - 2026-07-03
+
+新增：
+
+- 新增 `scripts/make_ops_dpo.py`，生成面向训练运维/框架评估主题的半真实 DPO 数据。
+- 新增 `datasets/ops_dpo_512.jsonl`，共 `512` 条 DPO pairs。
+- 新增 `scripts/run_ms_swift_ops_dpo_100step.sh`，封装 `ops_dpo_512` 的 100 step DPO 试跑。
+- `.gitignore` 新增 `__pycache__/`。
+
+100 step 半真实 DPO 试跑：
+
+- 数据：`/workspace/llin-rl-dpo/datasets/ops_dpo_512.jsonl`
+- 输出目录：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-ops-100step/ops-100step-20260703/v0-20260703-141605`
+- 参数：
+  - `MAX_STEPS=100`
+  - `NUM_TRAIN_EPOCHS=3`
+  - `SAVE_ONLY_MODEL=true`
+  - `FSDP_CONFIG=/workspace/llin-rl-dpo/configs/fsdp2_full_state.json`
+- exit code 为 `0`。
+- `global_step/max_steps=100/100`
+- `train_runtime=344.9065s`
+- `train_samples_per_second=2.319`
+- `train_steps_per_second=0.29`
+- `train_loss=0.01584221`
+- `memory(GiB)=52.56`
+- 最终 step：
+  - `loss=1.607e-07`
+  - `rewards/accuracies=1.0`
+  - `rewards/margins=18.0`
+
+adapter 产物：
+
+- 路径：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-ops-100step/ops-100step-20260703/v0-20260703-141605/checkpoint-100`
+- `adapter_model.safetensors` 约 `223M`。
+- `scripts/inspect_adapter.py` 检查通过：
+  - `adapter_type=LORA`
+  - `base_model=/models/Qwen3.6-27B`
+  - `num_tensors=992`
+
+固定 prompts 对照：
+
+- 参数：
+  - `RUN_ID=ops-100step-eval-20260703`
+  - `MAX_NEW_TOKENS=128`
+  - `ENABLE_THINKING=false`
+- base：
+  - `num_generated_tokens=194`
+  - `runtime=63.2442s`
+  - `tokens/s=3.0675`
+- adapter：
+  - `num_generated_tokens=194`
+  - `runtime=63.9543s`
+  - `tokens/s=3.0334`
+- base 与 adapter 在这 2 条固定 prompts 上输出完全一致。
+
+当前判断：
+
+- 100 step 半真实 DPO 链路跑通，adapter 导出和重新加载推理均通过。
+- 训练集很容易拟合，loss 和 reward margin 不能单独证明泛化效果。
+- 固定 prompts 上没有看到输出差异，说明下一步需要更真实的验证集和更贴近训练目标的评测，而不是继续依赖 2 条 prompts。
+
 ## v0.1.12 - 2026-07-03
 
 新增：

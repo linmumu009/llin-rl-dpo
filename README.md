@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.13`：新增 512 条训练运维/框架评估半真实 DPO 数据，完成 `ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2` 的 100 step 试跑；adapter 导出和重新加载推理均通过，但固定 prompts 上 base/adapter 输出完全一致，暂不能证明泛化效果。
 - `v0.1.12`：固定 prompts 对照支持 `ENABLE_THINKING=false` 并完成 128 token 实测；确认 ms-swift 会关闭思考内容但仍保留空的 `<think></think>` 前缀。base `4.7594 tokens/s`，adapter `3.0811 tokens/s`。
 - `v0.1.11`：新增固定 prompts 的 base/adapter 对照评测脚本；实测 base `4.5922 tokens/s`、adapter `3.0373 tokens/s`，两边输出方向基本一致，2 step 合成 DPO adapter 暂无可解释效果差异。
 - `v0.1.10`：新增 adapter 非交互推理 smoke test，确认 `FULL_STATE_DICT + save_only_model` 导出的 LoRA adapter 可被 ms-swift 重新加载并生成；16 token smoke 输出被截断，只证明加载/推理链路，不代表效果。
@@ -183,14 +184,27 @@ qwen3.6-27B 的本地配置是：
 - adapter：`240` generated tokens，runtime `77.8954s`，tokens/s `3.0811`。
 - 判断：`--enable_thinking false` 已传入，但 ms-swift/Qwen 模板仍保留空的 `<think></think>` 前缀；adapter 两条输出完整结束，base 两条仍在 128 token 上限处截断。
 
+已完成半真实 100 step DPO 试跑：
+
+- 新增数据生成脚本：`scripts/make_ops_dpo.py`。
+- 新增数据：`datasets/ops_dpo_512.jsonl`，共 `512` 条，主题覆盖 checkpoint、resume、共享服务器安全、框架评估、adapter 导出、实验记录和网络约束。
+- 新增启动脚本：`scripts/run_ms_swift_ops_dpo_100step.sh`。
+- 输出目录：`/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-ops-100step/ops-100step-20260703/v0-20260703-141605`。
+- 训练结果：`global_step/max_steps=100/100`，`train_runtime=344.9065s`，`train_samples_per_second=2.319`，`train_steps_per_second=0.29`，`train_loss=0.01584221`，显存记录 `52.56 GiB`。
+- 最终 step：`loss=1.607e-07`，`rewards/accuracies=1.0`，`rewards/margins=18.0`。
+- adapter：`checkpoint-100/adapter_model.safetensors` 约 `223M`，`scripts/inspect_adapter.py` 检查通过，包含 `992` 个 LoRA tensor。
+- 固定 prompts 对照：base 和 100-step adapter 均 exit `0`，两条 prompts 输出完全一致；base `3.0675 tokens/s`，adapter `3.0334 tokens/s`。
+- 判断：100 step 训练、保存、加载链路通过；但该半真实模板数据很容易拟合，固定 prompts 暂无可见输出差异，不能证明真实效果提升。
+
 仍需继续评估：
 
 - tiny 数据只能说明训练链路跑通，不能代表最终效果。
 - 合成 256 条数据只能说明短程稳定性和可优化性，不能代表真实 DPO 效果。
+- 半真实 `ops_dpo_512` 可以说明 100 step 训练和 adapter 产物路线，但仍不能代表业务泛化效果。
 - 当前 FSDP2 sharded checkpoint 可以保存，但恢复链路未通过；正式训练可以先采用 `FULL_STATE_DICT + save_only_model` 的 adapter 导出路线作为最低限度产物保障，该 adapter 导出路线已完成重新加载推理 smoke test。
 - 当前 `learning_rate=0.0` 是 1 step + 默认调度下的 smoke 现象，正式训练需要设置 warmup/scheduler。
 - 推理日志出现 `chunk_gated_delta_rule` tensor shape warning，base 和 adapter 都会出现；后续长训或正式评测前需要确认该 warning 是否影响正确性/效率。
-- 固定 prompts 在 128 token 下仍可能截断 base 输出；正式评测需要更长 `MAX_NEW_TOKENS`，或者在评测脚本里后处理移除空的 `<think></think>` 前缀。
+- 固定 prompts 在 128 token 下仍可能截断 base 输出，且 100-step adapter 对这 2 条 prompts 无可见差异；正式评测需要更真实的验证集、更长 `MAX_NEW_TOKENS`，以及后处理移除空的 `<think></think>` 前缀。
 - 官方 NPU 文档里 DPO 已验证组合偏 `deepspeed`；本次我们实际跑通的是 FSDP2，需要继续做更长步数和真实数据评估。
 - `decord` 未安装，对纯文本 DPO 不是阻塞；若后续做多模态/视频数据会成为依赖项。
 

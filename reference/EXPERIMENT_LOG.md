@@ -1378,3 +1378,173 @@ think_prefix_count=2
 - 对自动评测而言，不能仅依赖 `enable_thinking=false` 获得完全干净文本；还需要后处理移除空 `<think></think>` 前缀，或继续研究 template 参数。
 - 2 step 合成 adapter 仍只能说明链路，不说明真实效果。
 - 下一步应转向真实/半真实 DPO 小样本 100-500 step，并用本固定 prompts 流程做 base/adapter 对照。
+
+## 2026-07-03 半真实 ops DPO 512 数据与 100 step 试跑
+
+目的：
+
+- 不再继续打磨 2 step 玩具 adapter。
+- 构造一个更贴近当前任务域的半真实 DPO 数据集，覆盖训练运维、checkpoint、resume、共享服务器安全、框架评估、adapter 导出、实验记录和网络约束。
+- 使用已验证的 `FULL_STATE_DICT + save_only_model=true` 路线跑 100 step，并验证 adapter 导出和重新加载推理。
+
+新增文件：
+
+```text
+scripts/make_ops_dpo.py
+datasets/ops_dpo_512.jsonl
+scripts/run_ms_swift_ops_dpo_100step.sh
+```
+
+数据：
+
+```text
+rows=512
+source=templated_ops_dpo_v1
+format=messages + rejected_response
+```
+
+样例主题：
+
+```text
+long DPO run readiness
+checkpoint policy
+container safety
+framework comparison
+adapter export
+experiment logging
+network limits
+effect evaluation
+```
+
+训练命令：
+
+```bash
+RUN_ID=ops-100step-20260703 \
+scripts/run_ms_swift_ops_dpo_100step.sh
+```
+
+脚本实际配置：
+
+```text
+DATASET_PATH=/workspace/llin-rl-dpo/datasets/ops_dpo_512.jsonl
+OUTPUT_DIR=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-ops-100step/ops-100step-20260703
+MAX_STEPS=100
+NUM_TRAIN_EPOCHS=3
+SAVE_STRATEGY=steps
+SAVE_STEPS=100
+SAVE_TOTAL_LIMIT=1
+SAVE_ONLY_MODEL=true
+FSDP_CONFIG=/workspace/llin-rl-dpo/configs/fsdp2_full_state.json
+MASTER_PORT=29643
+```
+
+训练结果：
+
+```text
+exit_code=0
+output_dir=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-ops-100step/ops-100step-20260703/v0-20260703-141605
+global_step/max_steps=100/100
+train_runtime=344.9065
+train_samples_per_second=2.319
+train_steps_per_second=0.29
+train_loss=0.01584221
+memory(GiB)=52.56
+```
+
+最终 step：
+
+```text
+loss=1.607e-07
+learning_rate=0.0
+rewards/chosen=7.375
+rewards/rejected=-10.625
+rewards/accuracies=1.0
+rewards/margins=18.0
+epoch=1.5625
+```
+
+adapter 产物：
+
+```text
+/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-ops-100step/ops-100step-20260703/v0-20260703-141605/checkpoint-100
+```
+
+adapter 检查：
+
+```text
+adapter_model.safetensors: about 223M
+adapter_type=LORA
+base_model=/models/Qwen3.6-27B
+num_tensors=992
+first_key=base_model.model.model.language_model.layers.0.linear_attn.in_proj_a.lora_A.weight
+last_key=base_model.model.model.language_model.layers.9.mlp.up_proj.lora_B.weight
+```
+
+观察：
+
+- 训练顺利完成，100 step DPO + FSDP2 + LoRA + 8 NPU 链路通过。
+- `FULL_STATE_DICT + save_only_model=true` 再次成功导出普通 LoRA adapter。
+- 半真实模板数据非常容易拟合，step 5 后 loss 已快速降低，后续 reward accuracy 基本为 `1.0`。
+- 这说明训练链路可用，但不能单独证明模型泛化效果。
+
+## 2026-07-03 ops 100-step adapter 固定 prompts 对照
+
+目的：
+
+- 验证 100 step adapter 可以重新加载推理。
+- 使用同一套 fixed prompts 对比 base 和 100-step adapter 输出。
+
+启动命令：
+
+```bash
+RUN_ID=ops-100step-eval-20260703 \
+MAX_NEW_TOKENS=128 \
+ENABLE_THINKING=false \
+ADAPTER_PATH=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-ops-100step/ops-100step-20260703/v0-20260703-141605/checkpoint-100 \
+scripts/run_ms_swift_base_adapter_compare.sh
+```
+
+base 结果：
+
+```text
+exit_code=0
+result_path=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/base-ops-100step-eval-20260703.jsonl
+num_prompt_tokens=85
+num_generated_tokens=194
+num_samples=2
+runtime=63.244178544031456
+samples/s=0.03162346394629148
+tokens/s=3.0674760027902734
+chunk_gated_delta_rule_warning_count=2
+think_prefix_count=2
+```
+
+adapter 结果：
+
+```text
+exit_code=0
+result_path=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/adapter-ops-100step-eval-20260703.jsonl
+num_prompt_tokens=85
+num_generated_tokens=194
+num_samples=2
+runtime=63.95430243492592
+samples/s=0.03127232920779674
+tokens/s=3.0334159331562836
+chunk_gated_delta_rule_warning_count=2
+think_prefix_count=2
+```
+
+输出对比：
+
+- 两条 fixed prompts 上，base 和 adapter 输出完全一致。
+- 两边仍有空 `<think></think>` 前缀。
+- 两边各出现 2 次 `chunk_gated_delta_rule` warning。
+
+结论：
+
+- 100 step adapter 重新加载推理通过。
+- 这组 fixed prompts 没有观察到 base/adapter 输出差异。
+- 由于训练数据是模板化半真实数据，这个结果只能说明：
+  - ms-swift 训练/保存/加载链路通过。
+  - adapter 对这 2 条固定 prompts 没有可见影响。
+  - 效果评估需要真实验证集或更贴近训练目标的 held-out prompts。
