@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.7`：新增合成 DPO 数据生成脚本，完成 256 条合成数据上的 20 step 稳定性测试；运行成功，平均约 `5.92s/step`，显存记录约 `51.93 GiB`。
 - `v0.1.6`：`ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2` 在 8 NPU 上完成 1 个 optimizer step；记录 tiny DPO 数据、可复用启动脚本、环境版本和初步效率指标。
 - `v0.1.4`：扩展框架调查到阿里 ModelScope `ms-swift`、LLaMA-Factory NPU、verl Ascend、FlagScale/FlagOS、vLLM Ascend；把下一轮优先级调整为先实测 `ms-swift`。
 - `v0.1.5`：完成 `ms-swift` 首轮实测；Transformers 5.12 已能识别并 meta 构建 Qwen3.6/Qwen3_5，ms-swift 已能识别本地模型并加载 processor；当前阻塞变为 ms-swift 默认 NPU model patch 与当前 MindSpeed/Triton/CANN 版本不兼容。
@@ -118,9 +119,22 @@ qwen3.6-27B 的本地配置是：
 - 1 step 用时：约 `139.6s`
 - 记录显存：约 `51.19 GiB`
 
+已完成进一步稳定性测试：
+
+- 数据：`datasets/synthetic_dpo_256.jsonl`，由 `scripts/make_synthetic_dpo.py` 生成。
+- 步数：20 optimizer steps。
+- 输出目录：`/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-stability-20step/v0-20260703-120434`
+- 结果：`global_step/max_steps=20/20`
+- 总训练时长：`118.3962s`
+- 平均速度：约 `5.918s/step`
+- samples/s：`1.351`
+- 记录显存：约 `51.93 GiB`
+- 训练 loss：`0.0722111`
+
 仍需继续评估：
 
 - tiny 数据只能说明训练链路跑通，不能代表最终效果。
+- 合成 256 条数据只能说明短程稳定性和可优化性，不能代表真实 DPO 效果。
 - 当前 `learning_rate=0.0` 是 1 step + 默认调度下的 smoke 现象，正式训练需要设置 warmup/scheduler。
 - 官方 NPU 文档里 DPO 已验证组合偏 `deepspeed`；本次我们实际跑通的是 FSDP2，需要继续做更长步数和真实数据评估。
 - `decord` 未安装，对纯文本 DPO 不是阻塞；若后续做多模态/视频数据会成为依赖项。

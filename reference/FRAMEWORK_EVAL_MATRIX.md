@@ -4,7 +4,7 @@
 
 | 框架 | 当前适配判断 | 能否跑通 | 效率评估 | 效果评估 | 当前风险 |
 |---|---|---:|---|---|---|
-| ModelScope ms-swift | 阿里 ModelScope 框架；官方文档覆盖 Qwen3.6/Qwen3.5、DPO、人类对齐、Ascend NPU、FSDP/FSDP2/DeepSpeed/Megatron | 已跑通：Qwen3.6-27B + DPO + LoRA + FSDP2 + 8 NPU 完成 1 step | 初测：1 step 约 139.6s，samples/s 0.057，显存记录 51.19 GiB | 仅 smoke，loss=0.6914，未做验证集 | 真实数据长步数、学习率调度、FSDP2 稳定性和 deepspeed 对照仍待测 |
+| ModelScope ms-swift | 阿里 ModelScope 框架；官方文档覆盖 Qwen3.6/Qwen3.5、DPO、人类对齐、Ascend NPU、FSDP/FSDP2/DeepSpeed/Megatron | 已跑通：Qwen3.6-27B + DPO + LoRA + FSDP2 + 8 NPU 完成 1 step 和 20 step | 20 step 合成数据：平均约 5.92s/step，samples/s 1.351，显存记录 51.93 GiB | 合成数据 loss 下降到 train_loss=0.0722，未做真实验证集 | 真实数据长步数、checkpoint 保存/恢复、AICore 利用率和 deepspeed 对照仍待测 |
 | LLaMA-Factory NPU | 官方文档覆盖 Atlas A2/A3 NPU、torch_npu、Qwen3.6、DPO；生态成熟 | 待测试 | 待测 | 待测 | Qwen3.6 虽在模型表中，但 Ascend 上的 `qwen3_5` patch 和 27B DPO 仍需实测 |
 | MindSpeed-LLM FSDP2/DPO | 服务器已有 MindSpeed-LLM 镜像；当前 `llin-rl-dpo` 使用该镜像作为 8 NPU 安全底座 | 8 NPU + HCCL smoke test 通过；作为 ms-swift 运行底座已支撑 Qwen3.6 DPO 1 step | 待测 | 待测 | MindSpeed-LLM 原生命令仍未直接验证 `qwen3_5` DPO；当前成功路径来自 ms-swift |
 | MindSpeed-RL DPO | 服务器已有官方 RL 镜像；官方支持 DPO，但样例是 Qwen3-30B-A3B | 容器底座曾卡在 NPU 可见性；当前 8 NPU 底座在 MindSpeed-LLM 镜像通过 | 暂不可测 | 暂不可测 | 目标 qwen3.6-27B 是 `qwen3_5` conditional/multimodal 配置，不能直接套 Qwen3-30B-A3B DPO 样例 |

@@ -1,5 +1,38 @@
 # 更新说明
 
+## v0.1.7 - 2026-07-03
+
+新增：
+
+- 新增 `scripts/make_synthetic_dpo.py`，用于生成可复现的合成 DPO JSONL 数据。
+- 新增 `datasets/synthetic_dpo_256.jsonl`，包含 256 条合成偏好样本，用于短程稳定性和吞吐 smoke。
+
+实测：
+
+- 使用上一版跑通的 `ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2 + 8 NPU` 路线。
+- 数据集从 16 条 tiny DPO 扩展到 256 条合成 DPO。
+- 设置 `MAX_STEPS=20`，输出目录为 `/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-stability-20step/v0-20260703-120434`。
+- 训练任务 exit code 为 `0`。
+
+结果：
+
+- `global_step/max_steps=20/20`
+- `train_runtime=118.3962s`
+- `train_samples_per_second=1.351`
+- `train_steps_per_second=0.169`
+- 平均 step time 约 `5.918s/it`
+- `memory(GiB)=51.93`
+- `train_loss=0.0722111`
+- 最后一步 `loss=5.117e-05`
+- 最后一步 `rewards/accuracies=1.0`
+- 最后一步 `rewards/margins=10.25`
+
+判断：
+
+- FSDP2 路线不只是单步可跑，至少在 20 step 合成数据上完成了短程稳定性测试。
+- 1 step smoke 的 `139.6s/step` 主要受启动、首次 batch、编译/初始化影响；20 step 运行中平均约 `5.92s/step` 更接近短程训练速度。
+- 该数据集是合成数据，loss 和 reward margin 不能代表真实偏好效果；下一步必须接真实或半真实 DPO 数据和验证集。
+
 ## v0.1.6 - 2026-07-03
 
 新增：

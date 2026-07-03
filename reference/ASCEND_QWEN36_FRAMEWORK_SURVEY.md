@@ -13,7 +13,7 @@
 
 | 优先级 | 框架 | 厂商/生态 | 为什么进入候选 | 当前判断 |
 |---:|---|---|---|---|
-| 1 | ModelScope ms-swift | 阿里 / ModelScope | 官方 README 明确列出 Qwen3.6、DPO、人类对齐、Ascend NPU、FSDP/FSDP2/DeepSpeed/Megatron；NPU 最佳实践还给出 Ascend 环境、DPO 支持、Qwen3.5 FLA patch 路线 | 已实测跑通：Qwen3.6-27B + DPO + LoRA + FSDP2 + 8 NPU 完成 1 step |
+| 1 | ModelScope ms-swift | 阿里 / ModelScope | 官方 README 明确列出 Qwen3.6、DPO、人类对齐、Ascend NPU、FSDP/FSDP2/DeepSpeed/Megatron；NPU 最佳实践还给出 Ascend 环境、DPO 支持、Qwen3.5 FLA patch 路线 | 已实测跑通：Qwen3.6-27B + DPO + LoRA + FSDP2 + 8 NPU 完成 1 step 和 20 step |
 | 2 | LLaMA-Factory NPU | LLaMA-Factory 社区 | 官方文档有 NPU 安装/训练页，README 支持 Qwen3.6 和 DPO；生态成熟，适合快速验证 LoRA/DPO | 第二优先级，需实测 `qwen3_5` 和 NPU patch |
 | 3 | MindSpeed-RL | 华为 Ascend | 原生 Ascend RL 框架，官方支持 DPO；但 DPO 示例目前偏 Qwen3-30B-A3B，不是 qwen3_5/Qwen3.6-27B | 仍保留，但不是唯一主线 |
 | 4 | verl Ascend | verl + Ascend | 官方 Ascend tutorial 存在，模型/算法表列出大量 Qwen 系列 RL 组合，包括 Qwen3.5-27B GRPO 和 Qwen3-Next | 适合 RL/GRPO 路线；DPO/Qwen3.6-27B 直接证据不足 |
@@ -57,7 +57,7 @@
 6. `--deepspeed zero2` 因未安装 deepspeed 失败，训练未进入模型加载。
 7. 切换到 `--fsdp fsdp2` 后跑通 16 条 tiny DPO 数据的 1 个 optimizer step。
 
-smoke 指标：
+1 step smoke 指标：
 
 - `global_step/max_steps=1/1`
 - `loss=0.69140625`
@@ -65,10 +65,19 @@ smoke 指标：
 - `train_samples_per_second=0.057`
 - `memory(GiB)=51.19`
 
+20 step 合成数据稳定性指标：
+
+- `global_step/max_steps=20/20`
+- `train_runtime=118.3962s`
+- `train_samples_per_second=1.351`
+- `train_steps_per_second=0.169`
+- `memory(GiB)=51.93`
+- `train_loss=0.0722111`
+
 当前判断：
 
-- `ms-swift` 已经从“最强候选”变成当前第一条可执行训练路线。
-- 但这只是 smoke test；效率和效果需要真实数据、更多 step、固定验证集继续评估。
+- `ms-swift` 已经从“最强候选”变成当前第一条可执行训练路线，并且通过了 20 step 短程稳定性测试。
+- 但当前 20 step 用的是合成数据；效率和效果需要真实数据、更多 step、固定验证集继续评估。
 - 后续仍应与 LLaMA-Factory NPU、MindSpeed-RL/LLM 原生路线做同样口径对比。
 
 ### LLaMA-Factory NPU

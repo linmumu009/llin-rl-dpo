@@ -772,3 +772,102 @@ PeftModelForCausalLM: 27415.0925M Params (58.3639M Trainable [0.2129%]), 0.0001M
 3. 增加验证集，记录 DPO loss、chosen/rejected reward margin、偏好准确率。
 4. 与 LLaMA-Factory NPU 做同样最小链路对比。
 5. 视 FSDP2 长步数结果决定是否安装并测试 deepspeed zero2/zero3。
+
+## 2026-07-03 ms-swift DPO/FSDP2 20 step 稳定性测试
+
+### 数据
+
+新增脚本：
+
+- `scripts/make_synthetic_dpo.py`
+
+生成数据：
+
+```bash
+python scripts/make_synthetic_dpo.py --output datasets/synthetic_dpo_256.jsonl --num-rows 256
+```
+
+数据文件：
+
+- `datasets/synthetic_dpo_256.jsonl`
+- 256 条合成 DPO 样本。
+- 格式仍为 `messages` + `rejected_response`。
+
+说明：
+
+- 该数据只用于短程稳定性和吞吐 smoke。
+- 不能用于判断真实 DPO 效果。
+
+### 启动方式
+
+在服务器我们的容器中后台启动，并写入日志：
+
+```bash
+cd /workspace/llin-rl-dpo
+DATASET_PATH=/workspace/llin-rl-dpo/datasets/synthetic_dpo_256.jsonl \
+OUTPUT_DIR=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-stability-20step \
+MAX_STEPS=20 \
+MASTER_PORT=29619 \
+scripts/run_ms_swift_qwen36_dpo_smoke.sh
+```
+
+日志文件：
+
+```text
+/workspace/llin-rl-dpo/logs/ms_swift_qwen36_dpo_stability_20step.log
+```
+
+输出目录：
+
+```text
+/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-stability-20step/v0-20260703-120434
+```
+
+### 结果
+
+任务退出码：
+
+```text
+0
+```
+
+训练摘要：
+
+```text
+global_step/max_steps=20/20
+train_runtime=118.3962
+train_samples_per_second=1.351
+train_steps_per_second=0.169
+train_loss=0.0722111
+memory(GiB)=51.93
+```
+
+最后一步：
+
+```text
+loss=5.117e-05
+grad_norm=0.00090253
+learning_rate=0.0
+rewards/chosen=3.28125
+rewards/rejected=-6.96875
+rewards/accuracies=1.0
+rewards/margins=10.25
+logps/chosen=-26.125
+logps/rejected=-119.0
+train_speed(s/it)=5.91828
+```
+
+### 判断
+
+- FSDP2 路线至少能完成 20 step 短程稳定性测试。
+- `memory(GiB)` 从 1 step 的约 `51.19` 上升到约 `51.93`，没有出现 OOM。
+- 20 step 平均约 `5.92s/step`，比 1 step smoke 的 `139.6s/step` 更接近训练阶段速度；1 step 结果包含明显启动/初始化影响。
+- 合成数据上 loss 快速下降、reward margin 增大，只说明链路可优化，不能代表真实效果。
+
+下一步：
+
+1. 引入真实或半真实 DPO 数据，并拆分固定验证集。
+2. 跑 100 step 级别，记录 step time 分布、HBM、AICore 利用率。
+3. 尝试开启 checkpoint 保存，验证 adapter 保存/恢复。
+4. 测试 LLaMA-Factory NPU 的同口径 1 step/20 step。
+5. 评估是否安装并测试 `deepspeed zero2/zero3`，作为 FSDP2 对照。
