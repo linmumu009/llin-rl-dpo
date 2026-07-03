@@ -1,5 +1,28 @@
 # 更新说明
 
+## v0.1.2 - 2026-07-03
+
+修复：
+
+- 解决 `llin-rl-dpo` 容器内 `torch_npu.npu.device_count()` 为 `0` 的问题。
+- 根因是 Ascend Docker Runtime 的设备注入依赖 `ASCEND_VISIBLE_DEVICES`，而不是只依赖 `ASCEND_RT_VISIBLE_DEVICES` 或手动 `--device=/dev/davinci*`。
+- `ASCEND_VISIBLE_DEVICES=0` 会触发 runtime hook，但该设备已被已有容器占用，容器内 `npu-smi` 报 `device is used`。
+- 改用 `ASCEND_VISIBLE_DEVICES=1` 后，容器内 NPU 可见。
+
+当前验证：
+
+- 容器：`llin-rl-dpo`
+- 镜像：`swr.cn-south-1.myhuaweicloud.com/ascendhub/mindspeed-llm:26.0.0-a3-openeuler24.03-py3.11-aarch64`
+- `torch`：`2.7.1+cpu`
+- `torch_npu`：`2.7.1.post4`
+- `torch_npu.npu.device_count()`：`1`
+- 最小 NPU 计算：`torch.ones(4).npu().sum().cpu().item()` 返回 `4.0`
+
+注意：
+
+- 当前只是单 NPU smoke test 通过。
+- qwen3.6-27B DPO 训练通常需要多 NPU；正式训练前需要重新确认可用设备集合，例如 `ASCEND_VISIBLE_DEVICES=1,2,3,...`，并避免占用他人容器已分配设备。
+
 ## v0.1.1 - 2026-07-03
 
 新增：

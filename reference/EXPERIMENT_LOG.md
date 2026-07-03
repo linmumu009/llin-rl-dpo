@@ -228,3 +228,63 @@ NPU：
 1. 确认 Ascend Docker runtime 是否需要额外设备、annotation、用户组或 Kubernetes device plugin 分配方式。
 2. 如用户明确接受风险，再做一次 `--privileged` 对照实验，判断是否为容器权限边界导致。
 3. 若 privileged 也失败，则转向宿主 Ascend runtime/driver 配置排查。
+
+## 2026-07-03 NPU 可见性修复
+
+### 根因
+
+Ascend Docker Runtime 的 README 明确说明：
+
+- prestart hook 会根据 `ASCEND_VISIBLE_DEVICES` 挂载 NPU 设备。
+- hook 同时配置 device cgroup。
+- hook 还会挂载 Host 侧 CANN Runtime Library。
+
+此前只设置 `ASCEND_RT_VISIBLE_DEVICES`，或手动传入 `--device=/dev/davinci*`，没有正确触发 Ascend Docker Runtime 的完整设备注入链路。
+
+### 关键现象
+
+1. 使用 `ASCEND_VISIBLE_DEVICES=0` 重建容器后：
+   - `docker inspect` 中 `HostConfig.Devices=[]`，说明设备由 runtime hook 注入，不再表现为手工 `--device`。
+   - 容器内出现 `/usr/local/bin/npu-smi`。
+   - `npu-smi info` 报 `device is used`。
+
+2. 只读检查已有容器后发现：
+   - `llin-autoresearch-msllm` 已绑定 `/dev/davinci0`。
+   - `llin-autoresearch` 已绑定 `/dev/davinci0`。
+   - 因此设备 `0` 不能作为我们的首选测试设备。
+
+3. 使用 `ASCEND_VISIBLE_DEVICES=1` 重建 `llin-rl-dpo` 后：
+   - `torch_npu.npu.device_count()` 返回 `1`。
+   - 最小 NPU tensor 计算成功：
+     - 输入：`torch.ones(4).npu().sum().cpu().item()`
+     - 输出：`4.0`
+
+### 当前保留容器
+
+容器：
+
+- 名称：`llin-rl-dpo`
+- 镜像：`swr.cn-south-1.myhuaweicloud.com/ascendhub/mindspeed-llm:26.0.0-a3-openeuler24.03-py3.11-aarch64`
+- `ASCEND_VISIBLE_DEVICES=1`
+- `ASCEND_RT_VISIBLE_DEVICES=0`
+- 工作区：`/workspace/llin-rl-dpo`
+- 模型只读挂载：`/models/Qwen3.6-27B`
+
+验证：
+
+- Python：`3.11.14`
+- torch：`2.7.1+cpu`
+- torch_npu：`2.7.1.post4`
+- NPU device count：`1`
+- 最小 NPU 计算：通过
+
+### 新结论
+
+NPU 容器底座已经可用，当前是单 NPU smoke test 通过。
+
+训练 qwen3.6-27B DPO 前仍需处理：
+
+1. 多 NPU 设备集合确认，避免占用已有容器分配的设备。
+2. qwen3.6-27B 的 `qwen3_5` 架构是否被 MindSpeed-LLM/MindSpeed-RL 支持。
+3. HF safetensors 到训练框架所需权重格式的转换方案。
+4. DPO 数据格式与预处理配置。
