@@ -435,3 +435,46 @@ compose 文件引用的官方文档：
   1. 找到或移植 qwen3_5 的 Transformers/MindSpeed 训练模型类。
   2. 或把 qwen3.6 text_config 安全映射到 MindSpeed `qwen3-next` 路线做 dry-run。
   3. 或先用 MindSpeed 已支持的 Qwen3/Qwen3-Next 模型做框架效率基准，再回到 qwen3.6 适配。
+
+## 2026-07-03 外部框架扩展调查
+
+用户要求不要只考虑 MindSpeed 和 FSDP，因此补充调查了 Ascend + Qwen3.6 + DPO 相关训练框架。
+
+详细结果：
+
+- `reference/ASCEND_QWEN36_FRAMEWORK_SURVEY.md`
+
+关键结论：
+
+1. ModelScope `ms-swift` 是下一轮第一优先级。
+   - 官方资料同时覆盖 Qwen3.6、DPO、人类对齐、Ascend NPU、FSDP/FSDP2、DeepSpeed、Megatron。
+   - NPU 最佳实践里明确列出 DPO 已支持，并给出 Ascend NPU 环境准备、训练、推理、部署路径。
+   - 还有 Qwen3.5 最佳实践和 FLA patch 说明，和我们本地 `qwen3_5` 配置关系更近。
+
+2. LLaMA-Factory NPU 是第二优先级。
+   - 官方资料同时覆盖 NPU、Qwen3.6、DPO。
+   - 有官方 NPU 镜像和 NPU 训练文档。
+   - 仍需实测 `qwen3_5`/Qwen3.6-27B 在 Ascend 上是否能加载和训练。
+
+3. MindSpeed-RL / MindSpeed-LLM 仍保留，但不作为唯一主线。
+   - Ascend 原生能力强，DPO 入口存在。
+   - 当前直接卡在 `qwen3_5` 模型类支持。
+
+4. verl Ascend 适合后续 RL/GRPO 方向。
+   - 官方 Ascend 支持表中已有多种 Qwen RL 组合，包括 Qwen3.5-27B GRPO。
+   - 但未看到 Qwen3.6-27B DPO 直接证据。
+
+5. FlagScale / FlagOS / VeRL-FL 作为中长期候选。
+   - 目标是统一多芯片训练/RL/推理。
+   - 目前未看到 Qwen3.6 + DPO 直接证据。
+
+6. vLLM Ascend 只作为推理和训练前后评测服务。
+   - 官方支持 Qwen3.6-27B 推理。
+   - 不作为 DPO 训练框架。
+
+下一步执行顺序：
+
+1. 拉取 `ms-swift` 到本地 `reference/ms-swift` 作为不提交的源码参考。
+2. 在 `llin-rl-dpo` 容器中做 `ms-swift` import/help/config-load smoke test。
+3. 若 `ms-swift` 能加载本地 `/models/Qwen3.6-27B`，准备最小 DPO 数据并跑 1 个 optimizer step。
+4. 若 `ms-swift` 卡住，切到 LLaMA-Factory NPU 做同样 smoke test。

@@ -1,5 +1,23 @@
 # 更新说明
 
+## v0.1.4 - 2026-07-03
+
+新增：
+
+- 新增 `reference/ASCEND_QWEN36_FRAMEWORK_SURVEY.md`，专门记录 Ascend + Qwen3.6 + DPO 的框架调查。
+
+框架调查结论：
+
+- 不再只考虑 MindSpeed-RL 和 FSDP。
+- 将阿里 ModelScope `ms-swift` 列为下一轮第一优先级，因为官方资料同时覆盖 Qwen3.6、DPO、人类对齐、Ascend NPU、FSDP/FSDP2/DeepSpeed/Megatron。
+- 将 LLaMA-Factory NPU 列为第二优先级，因为官方资料覆盖 NPU、DPO 和 Qwen3.6，但仍需实测 `qwen3_5`/Qwen3.6 在 Ascend 上的模型加载。
+- 保留 MindSpeed-RL、verl Ascend、FlagScale/FlagOS、vLLM Ascend 作为候选，但分别标注了 DPO/Qwen3.6 直接证据不足或仅适合推理评测的限制。
+
+更新：
+
+- 更新 `README.md` 当前优先级。
+- 更新 `reference/FRAMEWORK_EVAL_MATRIX.md`，加入 `ms-swift`、LLaMA-Factory NPU、FlagScale/FlagOS，并调整评估顺序。
+
 ## v0.1.3 - 2026-07-03
 
 新增：
