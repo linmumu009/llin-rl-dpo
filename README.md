@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.10`：新增 adapter 非交互推理 smoke test，确认 `FULL_STATE_DICT + save_only_model` 导出的 LoRA adapter 可被 ms-swift 重新加载并生成；16 token smoke 输出被截断，只证明加载/推理链路，不代表效果。
 - `v0.1.9`：新增可选 `SwiftModel.load_state_dict(assign=...)` runtime patch，确认 resume 第一阶段错误可绕过；进一步定位到 FSDP2 sharded checkpoint 缺完整视觉塔权重。同时新增 `FULL_STATE_DICT + save_only_model` 配置，成功导出普通 LoRA adapter。
 - `v0.1.8`：训练脚本支持 checkpoint/resume 参数；20 step 保存测试成功生成 `checkpoint-10` 和 `checkpoint-20`，但从 FSDP2 checkpoint 恢复失败，当前恢复链路未通过。
 - `v0.1.7`：新增合成 DPO 数据生成脚本，完成 256 条合成数据上的 20 step 稳定性测试；运行成功，平均约 `5.92s/step`，显存记录约 `51.93 GiB`。
@@ -151,12 +152,23 @@ qwen3.6-27B 的本地配置是：
 - 使用 `FULL_STATE_DICT + SAVE_ONLY_MODEL=true` 跑 2 step，成功导出普通 LoRA adapter。
 - adapter 产物：`adapter_model.safetensors` 约 `223M`，`adapter_config.json` 指向 `/models/Qwen3.6-27B`，safetensors 可读取，包含 `992` 个 tensor。
 
+已完成 adapter 重新加载推理测试：
+
+- 新增脚本：`scripts/run_ms_swift_adapter_infer_smoke.sh`。
+- 新增数据：`datasets/tiny_infer.jsonl`。
+- 加载 adapter：`/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step/v0-20260703-130918/checkpoint-2`。
+- 命令：`swift infer --model /models/Qwen3.6-27B --model_type qwen3_5 --adapters <checkpoint-2> --infer_backend pt --device_map auto`。
+- 结果：exit code `0`，生成文件 `/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step/v0-20260703-130918/checkpoint-2/infer_result/20260703-132529.jsonl`。
+- 指标：`37` prompt tokens，`16` generated tokens，runtime `49.2921s`，tokens/s `0.3246`。
+- 注意：`MAX_NEW_TOKENS=16` 的 smoke 输出被截断，只说明 adapter 加载和推理链路可用，不代表效果。
+
 仍需继续评估：
 
 - tiny 数据只能说明训练链路跑通，不能代表最终效果。
 - 合成 256 条数据只能说明短程稳定性和可优化性，不能代表真实 DPO 效果。
-- 当前 FSDP2 sharded checkpoint 可以保存，但恢复链路未通过；正式训练可以先采用 `FULL_STATE_DICT + save_only_model` 的 adapter 导出路线作为最低限度产物保障。
+- 当前 FSDP2 sharded checkpoint 可以保存，但恢复链路未通过；正式训练可以先采用 `FULL_STATE_DICT + save_only_model` 的 adapter 导出路线作为最低限度产物保障，该 adapter 导出路线已完成重新加载推理 smoke test。
 - 当前 `learning_rate=0.0` 是 1 step + 默认调度下的 smoke 现象，正式训练需要设置 warmup/scheduler。
+- 推理日志出现 `chunk_gated_delta_rule` tensor shape warning，命令仍成功；后续长训或正式评测前需要确认该 warning 是否影响正确性/效率。
 - 官方 NPU 文档里 DPO 已验证组合偏 `deepspeed`；本次我们实际跑通的是 FSDP2，需要继续做更长步数和真实数据评估。
 - `decord` 未安装，对纯文本 DPO 不是阻塞；若后续做多模态/视频数据会成为依赖项。
 

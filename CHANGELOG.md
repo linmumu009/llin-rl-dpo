@@ -1,5 +1,43 @@
 # 更新说明
 
+## v0.1.10 - 2026-07-03
+
+新增：
+
+- 新增 `datasets/tiny_infer.jsonl`，用于非交互式 adapter 推理 smoke test。
+- 新增 `scripts/run_ms_swift_adapter_infer_smoke.sh`，默认加载上一版导出的 LoRA adapter：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step/v0-20260703-130918/checkpoint-2`
+
+adapter 重新加载推理测试：
+
+- 命令在 `llin-rl-dpo` 容器内运行，使用 `swift infer`。
+- 参数：
+  - `--model /models/Qwen3.6-27B`
+  - `--model_type qwen3_5`
+  - `--adapters <checkpoint-2>`
+  - `--infer_backend pt`
+  - `--device_map auto`
+  - `--max_new_tokens 16`
+  - `--val_dataset /workspace/llin-rl-dpo/datasets/tiny_infer.jsonl`
+- exit code 为 `0`。
+- 结果文件：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step/v0-20260703-130918/checkpoint-2/infer_result/20260703-132529.jsonl`
+
+推理指标：
+
+- prompt tokens: `37`
+- generated tokens: `16`
+- runtime: `49.2921s`
+- samples/s: `0.0203`
+- tokens/s: `0.3246`
+
+当前判断：
+
+- `FULL_STATE_DICT + save_only_model=true` 导出的 LoRA adapter 已验证可以被 ms-swift 重新加载并生成。
+- 16 token smoke 输出被截断，只说明加载/推理链路可用，不代表效果。
+- 日志出现 `chunk_gated_delta_rule` tensor shape warning，推理仍完成；后续长训或正式评测前需要单独确认该 warning 是否影响正确性/效率。
+- 默认 FSDP2 sharded checkpoint resume 仍未通过；当前可靠产物路线是导出普通 LoRA adapter。
+
 ## v0.1.9 - 2026-07-03
 
 新增：

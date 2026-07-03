@@ -1138,3 +1138,82 @@ last_key=base_model.model.model.language_model.layers.9.mlp.up_proj.lora_B.weigh
 1. 测试该 LoRA adapter 是否能重新加载做最小推理。
 2. 继续调查 FSDP2 sharded checkpoint resume 的根修复：是需要完整 state_dict、忽略冻结视觉塔缺失 key，还是 ms-swift/Accelerate 版本差异。
 3. 与 deepspeed zero2/zero3 保存/恢复对照。
+
+## 2026-07-03 adapter 重新加载推理 smoke test
+
+目的：
+
+- 验证 `FULL_STATE_DICT + save_only_model=true` 导出的普通 LoRA adapter 不是只能被 safetensors 读取，而是能被 ms-swift 重新挂载到 `/models/Qwen3.6-27B` 并执行一次非交互推理。
+
+新增文件：
+
+```text
+datasets/tiny_infer.jsonl
+scripts/run_ms_swift_adapter_infer_smoke.sh
+```
+
+默认 adapter：
+
+```text
+/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step/v0-20260703-130918/checkpoint-2
+```
+
+启动命令：
+
+```bash
+cd /workspace/llin-rl-dpo
+scripts/run_ms_swift_adapter_infer_smoke.sh
+```
+
+脚本核心参数：
+
+```text
+swift infer
+--model /models/Qwen3.6-27B
+--model_type qwen3_5
+--adapters /workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step/v0-20260703-130918/checkpoint-2
+--load_args false
+--infer_backend pt
+--device_map auto
+--torch_dtype bfloat16
+--max_new_tokens 16
+--stream false
+--val_dataset /workspace/llin-rl-dpo/datasets/tiny_infer.jsonl
+--val_dataset_sample 1
+```
+
+结果：
+
+```text
+exit_code=0
+result_path=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step/v0-20260703-130918/checkpoint-2/infer_result/20260703-132529.jsonl
+num_prompt_tokens=37
+num_generated_tokens=16
+runtime=49.29208978707902
+samples/s=0.020287230756893794
+tokens/s=0.3245956921103007
+```
+
+输出样例：
+
+```json
+{"response":"<think>\n\n</think>\n\nIt prevents wasting significant compute resources on a run that would fail due to corrupted or", "labels": null}
+```
+
+注意：
+
+- `MAX_NEW_TOKENS=16` 太短，输出被截断；本测试只证明 adapter 重新加载和推理链路可用，不代表模型效果。
+- 推理日志出现 `chunk_gated_delta_rule` warning：
+  - `Input tensor shape suggests format mismatch: seq_len (37) < num_heads (48).`
+- 命令仍正常完成；后续需要单独确认该 warning 是否影响长上下文、效率或正确性。
+
+当前结论：
+
+- ms-swift 目前不只是能训练 1/20 step，也能导出普通 LoRA adapter，并完成 adapter 重新加载推理 smoke test。
+- 默认 FSDP2 sharded checkpoint resume 仍未通过；当前可用的产物保障路线是 `FULL_STATE_DICT + save_only_model=true` 导出 adapter。
+
+下一步：
+
+1. 做真实 DPO 样例集或小规模业务数据集的 100-500 step 试跑。
+2. 增加固定 prompts 的 before/after adapter 对照推理，评估输出方向而不是只看 loss。
+3. 继续对照 deepspeed zero2/zero3 保存、resume 和 adapter 导出行为。
