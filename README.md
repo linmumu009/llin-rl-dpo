@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.12`：固定 prompts 对照支持 `ENABLE_THINKING=false` 并完成 128 token 实测；确认 ms-swift 会关闭思考内容但仍保留空的 `<think></think>` 前缀。base `4.7594 tokens/s`，adapter `3.0811 tokens/s`。
 - `v0.1.11`：新增固定 prompts 的 base/adapter 对照评测脚本；实测 base `4.5922 tokens/s`、adapter `3.0373 tokens/s`，两边输出方向基本一致，2 step 合成 DPO adapter 暂无可解释效果差异。
 - `v0.1.10`：新增 adapter 非交互推理 smoke test，确认 `FULL_STATE_DICT + save_only_model` 导出的 LoRA adapter 可被 ms-swift 重新加载并生成；16 token smoke 输出被截断，只证明加载/推理链路，不代表效果。
 - `v0.1.9`：新增可选 `SwiftModel.load_state_dict(assign=...)` runtime patch，确认 resume 第一阶段错误可绕过；进一步定位到 FSDP2 sharded checkpoint 缺完整视觉塔权重。同时新增 `FULL_STATE_DICT + save_only_model` 配置，成功导出普通 LoRA adapter。
@@ -173,6 +174,15 @@ qwen3.6-27B 的本地配置是：
 - adapter：`128` generated tokens，runtime `42.1431s`，tokens/s `3.0373`。
 - 判断：2 step 合成 DPO adapter 与 base 输出方向基本一致，暂不能说明效果变化；adapter 推理有可观开销。
 
+已完成 non-thinking 128 token 对照：
+
+- 脚本参数：`RUN_ID=nonthinking-128-20260703 MAX_NEW_TOKENS=128 ENABLE_THINKING=false scripts/run_ms_swift_base_adapter_compare.sh`。
+- base 结果：`/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/base-nonthinking-128-20260703.jsonl`。
+- adapter 结果：`/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/adapter-nonthinking-128-20260703.jsonl`。
+- base：`256` generated tokens，runtime `53.7887s`，tokens/s `4.7594`。
+- adapter：`240` generated tokens，runtime `77.8954s`，tokens/s `3.0811`。
+- 判断：`--enable_thinking false` 已传入，但 ms-swift/Qwen 模板仍保留空的 `<think></think>` 前缀；adapter 两条输出完整结束，base 两条仍在 128 token 上限处截断。
+
 仍需继续评估：
 
 - tiny 数据只能说明训练链路跑通，不能代表最终效果。
@@ -180,7 +190,7 @@ qwen3.6-27B 的本地配置是：
 - 当前 FSDP2 sharded checkpoint 可以保存，但恢复链路未通过；正式训练可以先采用 `FULL_STATE_DICT + save_only_model` 的 adapter 导出路线作为最低限度产物保障，该 adapter 导出路线已完成重新加载推理 smoke test。
 - 当前 `learning_rate=0.0` 是 1 step + 默认调度下的 smoke 现象，正式训练需要设置 warmup/scheduler。
 - 推理日志出现 `chunk_gated_delta_rule` tensor shape warning，base 和 adapter 都会出现；后续长训或正式评测前需要确认该 warning 是否影响正确性/效率。
-- 固定 prompts 的 64 token 输出仍有截断，正式评测需要禁用 thinking 或提高 `MAX_NEW_TOKENS`。
+- 固定 prompts 在 128 token 下仍可能截断 base 输出；正式评测需要更长 `MAX_NEW_TOKENS`，或者在评测脚本里后处理移除空的 `<think></think>` 前缀。
 - 官方 NPU 文档里 DPO 已验证组合偏 `deepspeed`；本次我们实际跑通的是 FSDP2，需要继续做更长步数和真实数据评估。
 - `decord` 未安装，对纯文本 DPO 不是阻塞；若后续做多模态/视频数据会成为依赖项。
 

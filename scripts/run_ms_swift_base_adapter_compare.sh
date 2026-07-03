@@ -6,6 +6,9 @@ RUN_ID="${RUN_ID:-$(date -u +%Y%m%d-%H%M%S)}"
 OUTPUT_DIR="${OUTPUT_DIR:-/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval}"
 LOG_DIR="${LOG_DIR:-/workspace/llin-rl-dpo/logs}"
 MAX_NEW_TOKENS="${MAX_NEW_TOKENS:-64}"
+ENABLE_THINKING="${ENABLE_THINKING:-}"
+PRESERVE_THINKING="${PRESERVE_THINKING:-}"
+TEMPERATURE="${TEMPERATURE:-}"
 
 mkdir -p "${OUTPUT_DIR}" "${LOG_DIR}"
 
@@ -18,6 +21,9 @@ adapter_exit="${LOG_DIR}/ms_swift_fixed_prompt_eval_adapter-${RUN_ID}.exit"
 
 set +e
 MAX_NEW_TOKENS="${MAX_NEW_TOKENS}" \
+ENABLE_THINKING="${ENABLE_THINKING}" \
+PRESERVE_THINKING="${PRESERVE_THINKING}" \
+TEMPERATURE="${TEMPERATURE}" \
 RESULT_PATH="${base_result}" \
 scripts/run_ms_swift_fixed_prompt_eval.sh >"${base_log}" 2>&1
 base_status=$?
@@ -25,6 +31,9 @@ printf "%s\n" "${base_status}" >"${base_exit}"
 
 ADAPTER_PATH="${ADAPTER_PATH}" \
 MAX_NEW_TOKENS="${MAX_NEW_TOKENS}" \
+ENABLE_THINKING="${ENABLE_THINKING}" \
+PRESERVE_THINKING="${PRESERVE_THINKING}" \
+TEMPERATURE="${TEMPERATURE}" \
 RESULT_PATH="${adapter_result}" \
 scripts/run_ms_swift_fixed_prompt_eval.sh >"${adapter_log}" 2>&1
 adapter_status=$?

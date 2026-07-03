@@ -10,6 +10,9 @@ DEVICE_MAP="${DEVICE_MAP:-auto}"
 MAX_NEW_TOKENS="${MAX_NEW_TOKENS:-64}"
 LOAD_ARGS="${LOAD_ARGS:-false}"
 VAL_DATASET_SAMPLE="${VAL_DATASET_SAMPLE:-}"
+ENABLE_THINKING="${ENABLE_THINKING:-}"
+PRESERVE_THINKING="${PRESERVE_THINKING:-}"
+TEMPERATURE="${TEMPERATURE:-}"
 
 export TORCH_DEVICE_BACKEND_AUTOLOAD="${TORCH_DEVICE_BACKEND_AUTOLOAD:-0}"
 export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
@@ -38,6 +41,18 @@ fi
 
 if [[ -n "${VAL_DATASET_SAMPLE}" ]]; then
   args+=(--val_dataset_sample "${VAL_DATASET_SAMPLE}")
+fi
+
+if [[ -n "${ENABLE_THINKING}" ]]; then
+  args+=(--enable_thinking "${ENABLE_THINKING}")
+fi
+
+if [[ -n "${PRESERVE_THINKING}" ]]; then
+  args+=(--preserve_thinking "${PRESERVE_THINKING}")
+fi
+
+if [[ -n "${TEMPERATURE}" ]]; then
+  args+=(--temperature "${TEMPERATURE}")
 fi
 
 swift "${args[@]}"

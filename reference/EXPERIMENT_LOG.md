@@ -1295,3 +1295,86 @@ chunk_gated_delta_rule_warning_count=2
   - 更长 token 上限或禁用 thinking，避免输出截断。
   - 固定真实验证集。
   - base vs adapter 自动打分或人工 win-rate。
+
+## 2026-07-03 non-thinking 128 token 固定 prompts 对照
+
+目的：
+
+- 在上一轮固定 prompts 对照基础上，提高输出上限到 `128`，并传入 `ENABLE_THINKING=false`。
+- 检查是否能去掉 thinking 内容、减少截断，并获得更稳定的 base/adapter 输出对比。
+
+脚本更新：
+
+```text
+scripts/run_ms_swift_fixed_prompt_eval.sh
+scripts/run_ms_swift_base_adapter_compare.sh
+```
+
+新增支持的环境变量：
+
+```text
+ENABLE_THINKING
+PRESERVE_THINKING
+TEMPERATURE
+```
+
+启动命令：
+
+```bash
+RUN_ID=nonthinking-128-20260703 \
+MAX_NEW_TOKENS=128 \
+ENABLE_THINKING=false \
+scripts/run_ms_swift_base_adapter_compare.sh
+```
+
+确认实际命令包含：
+
+```text
+--enable_thinking false
+```
+
+base 结果：
+
+```text
+exit_code=0
+result_path=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/base-nonthinking-128-20260703.jsonl
+num_prompt_tokens=85
+num_generated_tokens=256
+num_samples=2
+runtime=53.788713496993296
+samples/s=0.037182521573262704
+tokens/s=4.759362761377626
+chunk_gated_delta_rule_warning_count=2
+think_prefix_count=2
+```
+
+adapter 结果：
+
+```text
+exit_code=0
+result_path=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/adapter-nonthinking-128-20260703.jsonl
+num_prompt_tokens=85
+num_generated_tokens=240
+num_samples=2
+runtime=77.89536395308096
+samples/s=0.025675468968919233
+tokens/s=3.081056276270308
+chunk_gated_delta_rule_warning_count=2
+think_prefix_count=2
+```
+
+观察：
+
+- `ENABLE_THINKING=false` 确实传入了 ms-swift。
+- 输出没有展开思考内容，但仍保留空的 `<think></think>` 前缀；这应视为模板行为。
+- base 两条输出仍在 128 token 上限处截断。
+- adapter 两条输出均完整结束，内容方向合理：
+  - 第一条给出 reward consistency 和 data pipeline stress-test。
+  - 第二条解释 adapter 比未验证 sharded checkpoint 更容易验证和回滚。
+- adapter 推理仍慢于 base，本轮观测为 `3.0811` vs `4.7594 tokens/s`。
+
+结论：
+
+- 对自动评测而言，不能仅依赖 `enable_thinking=false` 获得完全干净文本；还需要后处理移除空 `<think></think>` 前缀，或继续研究 template 参数。
+- 2 step 合成 adapter 仍只能说明链路，不说明真实效果。
+- 下一步应转向真实/半真实 DPO 小样本 100-500 step，并用本固定 prompts 流程做 base/adapter 对照。

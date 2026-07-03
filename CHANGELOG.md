@@ -1,5 +1,39 @@
 # 更新说明
 
+## v0.1.12 - 2026-07-03
+
+新增：
+
+- `scripts/run_ms_swift_fixed_prompt_eval.sh` 支持：
+  - `ENABLE_THINKING`
+  - `PRESERVE_THINKING`
+  - `TEMPERATURE`
+- `scripts/run_ms_swift_base_adapter_compare.sh` 同步透传上述推理参数。
+
+固定 prompts non-thinking 128 token 对照：
+
+- 运行参数：
+  - `RUN_ID=nonthinking-128-20260703`
+  - `MAX_NEW_TOKENS=128`
+  - `ENABLE_THINKING=false`
+- base 结果：
+  - `result_path=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/base-nonthinking-128-20260703.jsonl`
+  - `num_generated_tokens=256`
+  - `runtime=53.7887s`
+  - `tokens/s=4.7594`
+- adapter 结果：
+  - `result_path=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/adapter-nonthinking-128-20260703.jsonl`
+  - `num_generated_tokens=240`
+  - `runtime=77.8954s`
+  - `tokens/s=3.0811`
+
+当前判断：
+
+- `--enable_thinking false` 已确认传入 ms-swift 命令。
+- 输出不再展开思考内容，但仍保留空的 `<think></think>` 前缀；这属于模板行为，不能把 `enable_thinking=false` 理解为完全删除 thinking 标签。
+- adapter 两条输出均完整结束，base 两条输出仍在 128 token 上限处截断。
+- adapter 推理速度仍低于 base，小样本观测约为 `3.08` vs `4.76 tokens/s`。
+
 ## v0.1.11 - 2026-07-03
 
 新增：
