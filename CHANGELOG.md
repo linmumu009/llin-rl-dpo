@@ -1,5 +1,30 @@
 # 更新说明
 
+## v0.1.5 - 2026-07-03
+
+新增：
+
+- 新增 `scripts/ms_swift_qwen36_probe.py`，用于在不加载 27B 权重的情况下探测 ms-swift/Transformers 对本地 Qwen3.6-27B 的支持。
+
+实测：
+
+- 记录服务器只能访问部分中国大陆网站，后续服务器侧依赖默认使用大陆镜像、ModelScope、GitCode/Gitee，本地资料通过 `scp` 同步。
+- 将 `ms-swift` 源码从本地打包同步到服务器我们的工作区。
+- 在 `llin-rl-dpo` 容器内补齐 ms-swift framework 依赖，升级 `transformers==5.12.1` 和 `mistral-common==1.11.5`。
+- 卸载 CUDA 版 `torchaudio==2.11.0`，解决 Transformers 5.12 import 链路寻找 `libcudart.so.13` 的问题。
+
+结果：
+
+- Transformers 5.12 能识别 `qwen3_5`，并能在 meta device 上构建 `Qwen3_5ForConditionalGeneration`。
+- ms-swift 能识别本地 `/models/Qwen3.6-27B` 为 `qwen3_5`，模板为 `qwen3_5`。
+- 关闭 ms-swift NPU model patch 后，Qwen3.6 processor 加载通过，tokenizer 和 chat_template 正常。
+
+当前阻塞：
+
+- 默认开启 ms-swift NPU model patch 时，Qwen3.5/Qwen3.6 linear attention 的 MindSpeed Triton 路径在当前容器中编译失败。
+- 当前容器是 `torch_npu 2.7.1.post4`、`mindspeed 0.12.1`、`triton 3.2.0`、CANN 9.0.0；与 ms-swift Qwen3.5 NPU patch 文档里的验证组合不一致。
+- 还不能开始正式 DPO 训练；下一步应寻找或构建 ms-swift Qwen3.6 适配版本组合的 Ascend 容器。
+
 ## v0.1.4 - 2026-07-03
 
 新增：

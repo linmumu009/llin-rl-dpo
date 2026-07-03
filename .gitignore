@@ -2,6 +2,8 @@ SSH_PRIVATE_KEY_LOGIN.md
 
 # Downloaded third-party source used only as local reading material.
 reference/MindSpeed-RL/
+reference/ms-swift/
+reference/LLaMA-Factory/
 
 # Runtime artifacts and large training outputs.
 runs/
@@ -11,4 +13,3 @@ checkpoints/
 *.pt
 *.pth
 *.safetensors
-

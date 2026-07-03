@@ -478,3 +478,134 @@ compose 文件引用的官方文档：
 2. 在 `llin-rl-dpo` 容器中做 `ms-swift` import/help/config-load smoke test。
 3. 若 `ms-swift` 能加载本地 `/models/Qwen3.6-27B`，准备最小 DPO 数据并跑 1 个 optimizer step。
 4. 若 `ms-swift` 卡住，切到 LLaMA-Factory NPU 做同样 smoke test。
+
+## 2026-07-03 ms-swift 初步实测
+
+### 网络约束
+
+用户补充说明：服务器只能访问部分中国大陆网站。
+
+后续服务器侧依赖来源默认按以下优先级处理：
+
+- Python 包：华为云 PyPI、阿里云 PyPI 等大陆镜像。
+- 模型与数据：ModelScope 优先，避免直接依赖 Hugging Face。
+- Ascend/MindSpeed 源码：GitCode/Gitee 优先。
+- GitHub/Hugging Face 资料：优先在本地拉取或查询，再通过 `scp` 同步到服务器我们的工作区。
+
+本轮 `ms-swift` 源码在本地拉取后，打包成 tar 上传到服务器：
+
+- 宿主机目录：`/data/liulin/llin-rl-dpo/reference/ms-swift`
+- 容器内目录：`/workspace/llin-rl-dpo/reference/ms-swift`
+
+### 已安装/调整的容器依赖
+
+均只在我们自己的 `llin-rl-dpo` 容器内执行。
+
+新增或升级：
+
+- `modelscope==1.38.0`
+- `qwen-vl-utils==0.0.14`
+- `ms-swift` 的 `requirements/framework.txt` 依赖
+- `transformers==5.12.1`
+- `mistral-common==1.11.5`
+
+卸载：
+
+- `torchaudio==2.11.0`
+
+原因：
+
+- `torchaudio 2.11.0` 会在 Transformers 5.12 import 链路中寻找 `libcudart.so.13`，但当前是 Ascend/NPU 容器，不是 CUDA 环境。
+- 对当前文本 DPO 路线，`torchaudio` 不是必要依赖。
+
+未解决依赖：
+
+- `decord`：阿里云 PyPI 与华为云 PyPI 当前都没有可安装的 aarch64 包。
+- 目前 `decord` 在 processor 加载阶段只是 warning；如果后续处理视频数据才会成为硬阻塞。文本 DPO 暂不应依赖它。
+
+### ms-swift 识别 qwen3.6-27B
+
+使用 `ms-swift` 源码和本地模型路径：
+
+- 模型：`/models/Qwen3.6-27B`
+- model type：`qwen3_5`
+
+结果：
+
+- `ms-swift` 能识别本地模型：
+  - `swift_info_model_type=qwen3_5`
+  - `swift_meta_model_type=qwen3_5`
+  - `swift_template=qwen3_5`
+- `ms-swift` 对该模型声明的依赖：
+  - `transformers>=5.0.0.dev`
+  - `qwen_vl_utils>=0.0.14`
+  - `decord`
+
+### Transformers qwen3_5 支持
+
+升级到 `transformers==5.12.1` 后：
+
+```text
+config_class=Qwen3_5Config
+model_type=qwen3_5
+architectures=['Qwen3_5ForConditionalGeneration']
+meta_model_class=Qwen3_5ForConditionalGeneration
+meta_num_parameters=27356728560
+```
+
+说明：
+
+- Transformers 5.12 可以识别 qwen3.6-27B 的 `qwen3_5` config。
+- 可以在 `accelerate.init_empty_weights()` 下构建 `Qwen3_5ForConditionalGeneration` meta 模型。
+- 该测试不加载权重，不占用 NPU 显存。
+
+### Processor 加载
+
+关闭 ms-swift NPU model patch 后，processor 加载通过：
+
+```text
+processor_model=None
+processor_class=Qwen3VLProcessor
+tokenizer_class=Qwen2Tokenizer
+has_chat_template=True
+```
+
+命令形态：
+
+```bash
+PYTHONPATH=/workspace/llin-rl-dpo/reference/ms-swift \
+TORCH_DEVICE_BACKEND_AUTOLOAD=0 \
+python scripts/ms_swift_qwen36_probe.py \
+  --disable-npu-model-patch
+```
+
+### 当前 ms-swift 阻塞点
+
+默认开启 ms-swift NPU model patch 时，会触发 Qwen3.5/Qwen3.6 linear attention 的 MindSpeed Triton 路径。
+
+当前容器版本：
+
+- `torch==2.7.1+cpu`
+- `torch_npu==2.7.1.post4`
+- `triton==3.2.0`
+- `mindspeed==0.12.1`
+- `transformers==5.12.1`
+- CANN：`/usr/local/Ascend/cann-9.0.0`
+
+失败现象：
+
+- `mindspeed.ops.triton.utils` 编译临时 `npu_utils.cpp` 失败。
+- 报错包含：`RT_LIMIT_TYPE_SIMT_WARP_STACK_SIZE` 不是 `rtLimitType_t` 成员。
+- 随后又触发 `NameError: name '_cpu_device_warning' is not defined`。
+
+判断：
+
+- 这是 `ms-swift` 的 NPU Qwen3.5/Qwen3.6 patch 与当前 MindSpeed/Triton/CANN 组合不兼容。
+- `ms-swift` 文档中的 Qwen3.5 NPU patch 精度对齐组合是 `torch 2.9.0 + MindSpeed 0.16.0 + flash-linear-attention 0.4.2 + triton-ascend 3.2.1 + transformers 5.2.0`，与当前镜像不一致。
+
+当前实事求是结论：
+
+- `ms-swift` 是目前对 Qwen3.6-27B 支持证据最强的训练框架。
+- 在当前 MindSpeed-LLM 26.0.0 容器里，ms-swift 的模型识别、Transformers config、meta 模型构建、processor 加载已经通过。
+- 还不能开始正式 DPO 训练，因为默认 NPU patch 所需 MindSpeed/Triton/CANN 组合不匹配。
+- 下一步应优先寻找或构建一个符合 ms-swift NPU Qwen3.5/Qwen3.6 patch 版本组合的容器；若继续在当前容器中试跑，只能作为关闭 patch 的慢速/风险对照。

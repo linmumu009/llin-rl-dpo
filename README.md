@@ -68,6 +68,7 @@
 当前版本：
 
 - `v0.1.4`：扩展框架调查到阿里 ModelScope `ms-swift`、LLaMA-Factory NPU、verl Ascend、FlagScale/FlagOS、vLLM Ascend；把下一轮优先级调整为先实测 `ms-swift`。
+- `v0.1.5`：完成 `ms-swift` 首轮实测；Transformers 5.12 已能识别并 meta 构建 Qwen3.6/Qwen3_5，ms-swift 已能识别本地模型并加载 processor；当前阻塞变为 ms-swift 默认 NPU model patch 与当前 MindSpeed/Triton/CANN 版本不兼容。
 
 ## 仓库维护约定
 
@@ -108,3 +109,23 @@ qwen3.6-27B 的本地配置是：
 - Transformers `4.57.1` 不识别 `qwen3_5`，`AutoConfig.from_pretrained("/models/Qwen3.6-27B")` 会失败。
 - MindSpeed-LLM FSDP2 支持 `qwen3`、`qwen3-moe`、`qwen3-next` 等，但未直接支持 `qwen3_5`。
 - vLLM Ascend 官方文档支持 Qwen3.6-27B 推理，但这不能直接等价为 DPO 训练支持。
+
+## 服务器网络约束
+
+服务器只能访问部分中国大陆网站。后续服务器侧依赖默认使用大陆镜像、ModelScope、GitCode/Gitee；GitHub/Hugging Face 资料优先在本地获取后通过 `scp` 同步到服务器我们的工作区。
+
+## ms-swift 首轮实测结论
+
+`ms-swift` 是目前对 Qwen3.6-27B 支持证据最强的训练框架。
+
+已通过：
+
+- `transformers==5.12.1` 可识别 `model_type=qwen3_5`
+- 可在 meta device 上构建 `Qwen3_5ForConditionalGeneration`
+- `ms-swift` 可识别本地 `/models/Qwen3.6-27B` 为 `qwen3_5`
+- 关闭 NPU model patch 后，processor/tokenizer/chat_template 加载通过
+
+未通过：
+
+- 默认开启 NPU model patch 时，Qwen3.5/Qwen3.6 linear attention 的 MindSpeed Triton 路径编译失败。
+- 当前容器版本组合是 `torch_npu 2.7.1.post4`、`mindspeed 0.12.1`、`triton 3.2.0`、CANN 9.0.0，和 ms-swift 文档中的 Qwen3.5 NPU patch 验证组合不一致。

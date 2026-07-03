@@ -4,7 +4,7 @@
 
 | 框架 | 当前适配判断 | 能否跑通 | 效率评估 | 效果评估 | 当前风险 |
 |---|---|---:|---|---|---|
-| ModelScope ms-swift | 阿里 ModelScope 框架；官方 README 覆盖 Qwen3.6、DPO、人类对齐、Ascend NPU、FSDP/FSDP2/DeepSpeed/Megatron | 待测试 | 待测 | 待测 | 需要验证本地 `qwen3_5`/Qwen3.6-27B 能否在当前容器加载；可能需要官方 NPU 镜像或依赖补齐 |
+| ModelScope ms-swift | 阿里 ModelScope 框架；官方 README 覆盖 Qwen3.6、DPO、人类对齐、Ascend NPU、FSDP/FSDP2/DeepSpeed/Megatron | 模型识别、Transformers meta 构建、processor 加载通过；正式 DPO 未跑通 | 待测 | 待测 | 默认 NPU model patch 在当前 `torch_npu 2.7.1` / `mindspeed 0.12.1` / CANN 9.0.0 容器中触发 MindSpeed Triton 编译失败 |
 | LLaMA-Factory NPU | 官方文档覆盖 Atlas A2/A3 NPU、torch_npu、Qwen3.6、DPO；生态成熟 | 待测试 | 待测 | 待测 | Qwen3.6 虽在模型表中，但 Ascend 上的 `qwen3_5` patch 和 27B DPO 仍需实测 |
 | MindSpeed-LLM FSDP2/DPO | 服务器已有 MindSpeed-LLM 镜像；当前 `llin-rl-dpo` 使用该镜像作为 8 NPU 安全底座 | 8 NPU + HCCL smoke test 通过；qwen3.6 模型加载未通过 | 待测 | 待测 | FSDP2 支持 DPO，但 Transformers/MindSpeed 当前不直接识别 `qwen3_5` |
 | MindSpeed-RL DPO | 服务器已有官方 RL 镜像；官方支持 DPO，但样例是 Qwen3-30B-A3B | 容器底座曾卡在 NPU 可见性；当前 8 NPU 底座在 MindSpeed-LLM 镜像通过 | 暂不可测 | 暂不可测 | 目标 qwen3.6-27B 是 `qwen3_5` conditional/multimodal 配置，不能直接套 Qwen3-30B-A3B DPO 样例 |
