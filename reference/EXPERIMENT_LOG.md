@@ -609,3 +609,166 @@ python scripts/ms_swift_qwen36_probe.py \
 - 在当前 MindSpeed-LLM 26.0.0 容器里，ms-swift 的模型识别、Transformers config、meta 模型构建、processor 加载已经通过。
 - 还不能开始正式 DPO 训练，因为默认 NPU patch 所需 MindSpeed/Triton/CANN 组合不匹配。
 - 下一步应优先寻找或构建一个符合 ms-swift NPU Qwen3.5/Qwen3.6 patch 版本组合的容器；若继续在当前容器中试跑，只能作为关闭 patch 的慢速/风险对照。
+
+## 2026-07-03 ms-swift DPO/FSDP2 smoke 跑通
+
+### 继续解决 NPU patch
+
+官方 `ms-swift` A3 镜像：
+
+- 发现 tag：`quay.io/ascend/ms-swift:v4.3.0-A3-py311-CANN9.0.0-ubuntu22.04`
+- manifest 支持 arm64。
+- 服务器 `docker pull` 多次卡在大 layer 下载，考虑到服务器只能访问部分中国大陆网站，本轮没有继续依赖该镜像。
+
+在我们自己的 `llin-rl-dpo` 容器中继续修补环境：
+
+- 安装 `triton-ascend==3.2.1`。
+- 从 GitCode 拉取 `Ascend/MindSpeed` 的 `core_r0.16.0` 分支到 `/data/liulin/llin-rl-dpo/reference/MindSpeed-core_r0.16.0`。
+- `pip install -e /workspace/llin-rl-dpo/reference/MindSpeed-core_r0.16.0` 替换容器原有 `mindspeed 0.12.1`。
+
+修补后：
+
+- `swift rlhf --help` 通过。
+- ms-swift 日志显示已 patch Qwen3.5/Qwen3.6 的 `chunk_gated_delta_rule` 到内置 MindSpeed 实现。
+
+### 关键环境版本
+
+容器内版本：
+
+```text
+ms-swift=4.5.0.dev0
+modelscope=1.38.0
+accelerate=1.13.0
+peft=0.19.1
+trl=0.29.1
+mindspeed=0.16.0
+triton-ascend=3.2.1
+triton=3.5.0
+torch=2.7.1+cpu
+torch_npu=2.7.1.post4
+transformers=5.12.1
+numpy=1.26.0
+npu_count=8
+```
+
+### 数据和脚本
+
+新增本仓库文件：
+
+- `datasets/tiny_dpo.jsonl`
+- `scripts/run_ms_swift_qwen36_dpo_smoke.sh`
+- `scripts/env_report.py`
+
+tiny DPO 数据使用 ms-swift 标准格式：
+
+- `messages`：system/user/assistant，其中 assistant 是 chosen response。
+- `rejected_response`：DPO 的 rejected response。
+
+最小训练命令由脚本固化：
+
+```bash
+cd /workspace/llin-rl-dpo
+scripts/run_ms_swift_qwen36_dpo_smoke.sh
+```
+
+核心参数：
+
+- `--rlhf_type dpo`
+- `--model /models/Qwen3.6-27B`
+- `--model_type qwen3_5`
+- `--tuner_type lora`
+- `--target_modules all-linear`
+- `--lora_rank 8`
+- `--lora_alpha 32`
+- `--lora_dropout 0`
+- `--max_length 512`
+- `--per_device_train_batch_size 1`
+- `--max_steps 1`
+- `--save_strategy no`
+- `--eval_strategy no`
+- `--check_model false`
+- `--fsdp fsdp2`
+- `NPROC_PER_NODE=8`
+
+### 尝试 1：deepspeed zero2
+
+命令使用：
+
+```bash
+--deepspeed zero2
+```
+
+结果：
+
+- 失败。
+- 原因：容器内没有安装 `deepspeed`。
+- 报错：`PackageNotFoundError: No package metadata was found for deepspeed`
+- 训练未进入模型加载阶段。
+
+判断：
+
+- 这不是 Qwen3.6 模型本身的问题。
+- 官方 NPU 文档里 DPO 已验证组合偏 `deepspeed`，后续可单独评估是否安装并测试 deepspeed。
+
+### 尝试 2：FSDP2 + 4 条 tiny 数据
+
+命令切换为：
+
+```bash
+--fsdp fsdp2
+```
+
+结果：
+
+- 模型权重加载通过。
+- Qwen3.6/Qwen3_5 NPU patch 通过。
+- LoRA 注入通过。
+- FSDP2 初始化通过。
+- 但 4 条数据在 8 rank 分片后没有形成有效训练 step，最终 `global_step=0`。
+
+判断：
+
+- 4 条数据对于 8 NPU 分布式 smoke 太少。
+- 需要至少保证每个 rank 能分到样本。
+
+### 尝试 3：FSDP2 + 16 条 tiny 数据
+
+将 `datasets/tiny_dpo.jsonl` 扩展到 16 条后重跑。
+
+结果：
+
+```text
+global_step/max_steps=1/1
+loss=0.69140625
+grad_norm=1.2919271
+train_runtime=139.6129
+train_samples_per_second=0.057
+train_steps_per_second=0.007
+memory(GiB)=51.19
+```
+
+输出目录：
+
+```text
+/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-smoke/v1-20260703-094330
+```
+
+模型参数信息：
+
+```text
+PeftModelForCausalLM: 27415.0925M Params (58.3639M Trainable [0.2129%]), 0.0001M Buffers.
+```
+
+结论：
+
+- 在不修改物理机、不动其他用户 Docker 的前提下，我们自己的 `llin-rl-dpo` 容器已经跑通 Qwen3.6-27B 的 DPO 最小训练链路。
+- 本次跑通路线是 `ms-swift + Transformers 5.12 + MindSpeed 0.16 + triton-ascend 3.2.1 + LoRA + FSDP2`。
+- 这是 smoke test，只说明链路可执行；效率和效果还不能定论。
+
+下一步：
+
+1. 准备真实或半真实 DPO 数据集，先跑 20-100 step 稳定性测试。
+2. 记录 step time、HBM、AICore 利用率、通信开销。
+3. 增加验证集，记录 DPO loss、chosen/rejected reward margin、偏好准确率。
+4. 与 LLaMA-Factory NPU 做同样最小链路对比。
+5. 视 FSDP2 长步数结果决定是否安装并测试 deepspeed zero2/zero3。

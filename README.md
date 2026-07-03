@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.6`：`ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2` 在 8 NPU 上完成 1 个 optimizer step；记录 tiny DPO 数据、可复用启动脚本、环境版本和初步效率指标。
 - `v0.1.4`：扩展框架调查到阿里 ModelScope `ms-swift`、LLaMA-Factory NPU、verl Ascend、FlagScale/FlagOS、vLLM Ascend；把下一轮优先级调整为先实测 `ms-swift`。
 - `v0.1.5`：完成 `ms-swift` 首轮实测；Transformers 5.12 已能识别并 meta 构建 Qwen3.6/Qwen3_5，ms-swift 已能识别本地模型并加载 processor；当前阻塞变为 ms-swift 默认 NPU model patch 与当前 MindSpeed/Triton/CANN 版本不兼容。
 
@@ -96,7 +97,7 @@
 - 只设置 `ASCEND_RT_VISIBLE_DEVICES` 或手动 `--device=/dev/davinci*` 不足以让 torch_npu 正常看到设备。
 - 设备 `0` 已被已有容器占用；使用 `ASCEND_VISIBLE_DEVICES=0` 时容器内 `npu-smi` 报 `device is used`。
 
-## 当前训练阻塞点
+## 当前训练状态
 
 qwen3.6-27B 的本地配置是：
 
@@ -104,17 +105,31 @@ qwen3.6-27B 的本地配置是：
 - `architectures`: `Qwen3_5ForConditionalGeneration`
 - `task`: `image-text-to-text`
 
-当前训练容器内：
+当前已经跑通：
 
-- Transformers `4.57.1` 不识别 `qwen3_5`，`AutoConfig.from_pretrained("/models/Qwen3.6-27B")` 会失败。
-- MindSpeed-LLM FSDP2 支持 `qwen3`、`qwen3-moe`、`qwen3-next` 等，但未直接支持 `qwen3_5`。
-- vLLM Ascend 官方文档支持 Qwen3.6-27B 推理，但这不能直接等价为 DPO 训练支持。
+- 框架：`ms-swift 4.5.0.dev0`
+- 路线：DPO + LoRA + Transformers/FSDP2
+- 设备：8 逻辑 NPU
+- 模型：本地 `/models/Qwen3.6-27B`
+- 数据：`datasets/tiny_dpo.jsonl`
+- 脚本：`scripts/run_ms_swift_qwen36_dpo_smoke.sh`
+- 结果：`global_step/max_steps=1/1`
+- DPO loss：`0.69140625`
+- 1 step 用时：约 `139.6s`
+- 记录显存：约 `51.19 GiB`
+
+仍需继续评估：
+
+- tiny 数据只能说明训练链路跑通，不能代表最终效果。
+- 当前 `learning_rate=0.0` 是 1 step + 默认调度下的 smoke 现象，正式训练需要设置 warmup/scheduler。
+- 官方 NPU 文档里 DPO 已验证组合偏 `deepspeed`；本次我们实际跑通的是 FSDP2，需要继续做更长步数和真实数据评估。
+- `decord` 未安装，对纯文本 DPO 不是阻塞；若后续做多模态/视频数据会成为依赖项。
 
 ## 服务器网络约束
 
 服务器只能访问部分中国大陆网站。后续服务器侧依赖默认使用大陆镜像、ModelScope、GitCode/Gitee；GitHub/Hugging Face 资料优先在本地获取后通过 `scp` 同步到服务器我们的工作区。
 
-## ms-swift 首轮实测结论
+## ms-swift 实测结论
 
 `ms-swift` 是目前对 Qwen3.6-27B 支持证据最强的训练框架。
 
@@ -125,7 +140,14 @@ qwen3.6-27B 的本地配置是：
 - `ms-swift` 可识别本地 `/models/Qwen3.6-27B` 为 `qwen3_5`
 - 关闭 NPU model patch 后，processor/tokenizer/chat_template 加载通过
 
-未通过：
+已修复：
 
-- 默认开启 NPU model patch 时，Qwen3.5/Qwen3.6 linear attention 的 MindSpeed Triton 路径编译失败。
-- 当前容器版本组合是 `torch_npu 2.7.1.post4`、`mindspeed 0.12.1`、`triton 3.2.0`、CANN 9.0.0，和 ms-swift 文档中的 Qwen3.5 NPU patch 验证组合不一致。
+- 安装 `triton-ascend==3.2.1`。
+- 从 GitCode 安装 `MindSpeed core_r0.16.0`，替换容器原有 `mindspeed 0.12.1`。
+- 默认 NPU model patch 现在可以加载，并将 Qwen3.5/Qwen3.6 的 `chunk_gated_delta_rule` 指向 ms-swift 内置 MindSpeed 实现。
+
+已通过：
+
+- `swift rlhf --help` 正常。
+- `ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2` 跑通 1 step。
+- 训练输出目录：`/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-smoke/v1-20260703-094330`。

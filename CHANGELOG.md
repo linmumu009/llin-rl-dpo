@@ -1,5 +1,45 @@
 # 更新说明
 
+## v0.1.6 - 2026-07-03
+
+新增：
+
+- 新增 `datasets/tiny_dpo.jsonl`，提供 16 条标准 `messages` + `rejected_response` 的 tiny DPO smoke 数据。
+- 新增 `scripts/run_ms_swift_qwen36_dpo_smoke.sh`，固化 `ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2` 的 8 NPU 最小训练命令。
+- 新增 `scripts/env_report.py`，用于记录容器内关键包版本和 NPU 可见数量。
+
+环境推进：
+
+- 记录官方 `quay.io/ascend/ms-swift:v4.3.0-A3-py311-CANN9.0.0-ubuntu22.04` 镜像 tag 存在且 manifest 支持 arm64，但服务器下载大层不稳定，未作为本轮主路线。
+- 在现有 `llin-rl-dpo` 容器中安装 `triton-ascend==3.2.1`。
+- 从 GitCode 拉取并安装 `MindSpeed core_r0.16.0`，替换容器原有 `mindspeed 0.12.1`。
+- `ms-swift` 默认 NPU model patch 已能正常加载 Qwen3.5/Qwen3.6 linear attention 的 MindSpeed 实现。
+
+实测：
+
+- `swift rlhf --help` 通过。
+- 首次 `--deepspeed zero2` smoke 因容器内未安装 `deepspeed` 失败，训练未进入模型加载阶段。
+- 切换到 `--fsdp fsdp2` 后，4 条数据版本成功加载模型并初始化 LoRA/FSDP2，但 8 rank 分片后没有形成有效训练 step，停在 `global_step=0`。
+- 扩展 tiny 数据到 16 条后，`ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2` 完成 1 个 optimizer step。
+
+结果：
+
+- 输出目录：`/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-smoke/v1-20260703-094330`
+- `global_step/max_steps=1/1`
+- `loss=0.69140625`
+- `grad_norm=1.2919271`
+- `train_runtime=139.6129s`
+- `train_samples_per_second=0.057`
+- `train_steps_per_second=0.007`
+- `memory(GiB)=51.19`
+- 参数规模：`27415.0925M`，其中 LoRA 可训练参数 `58.3639M`，约 `0.2129%`
+
+当前判断：
+
+- 当前服务器和我们自己的 `llin-rl-dpo` 容器已经能跑通 Qwen3.6-27B 的 DPO 最小训练链路。
+- 这只是 smoke test，不代表最终效率或效果；下一步应换真实 DPO 数据，跑 20-100 step 级别的稳定性/吞吐评估，并补充验证集偏好指标。
+- 官方 NPU 文档里 DPO 已验证组合偏 `deepspeed`，但本轮实际跑通的是 FSDP2；后续需评估 FSDP2 长步数稳定性，并决定是否安装/测试 deepspeed。
+
 ## v0.1.5 - 2026-07-03
 
 新增：
