@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.8`：训练脚本支持 checkpoint/resume 参数；20 step 保存测试成功生成 `checkpoint-10` 和 `checkpoint-20`，但从 FSDP2 checkpoint 恢复失败，当前恢复链路未通过。
 - `v0.1.7`：新增合成 DPO 数据生成脚本，完成 256 条合成数据上的 20 step 稳定性测试；运行成功，平均约 `5.92s/step`，显存记录约 `51.93 GiB`。
 - `v0.1.6`：`ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2` 在 8 NPU 上完成 1 个 optimizer step；记录 tiny DPO 数据、可复用启动脚本、环境版本和初步效率指标。
 - `v0.1.4`：扩展框架调查到阿里 ModelScope `ms-swift`、LLaMA-Factory NPU、verl Ascend、FlagScale/FlagOS、vLLM Ascend；把下一轮优先级调整为先实测 `ms-swift`。
@@ -131,10 +132,20 @@ qwen3.6-27B 的本地配置是：
 - 记录显存：约 `51.93 GiB`
 - 训练 loss：`0.0722111`
 
+已完成 checkpoint 测试：
+
+- 脚本：`scripts/run_ms_swift_qwen36_dpo_smoke.sh` 已支持 `SAVE_STRATEGY`、`SAVE_STEPS`、`SAVE_TOTAL_LIMIT`、`RESUME_FROM_CHECKPOINT`。
+- 保存测试：20 step 成功，`save_steps=10`，输出 `checkpoint-10` 和 `checkpoint-20`。
+- checkpoint 形态：FSDP2 sharded checkpoint，包含 `pytorch_model_fsdp_0`、`optimizer_0`、scheduler、trainer state 和每 rank RNG。
+- checkpoint 大小：`checkpoint-10` 约 `713M`，`checkpoint-20` 约 `713M`。
+- 恢复测试：从 `checkpoint-10` 恢复到 `max_steps=12` 失败。
+- 失败点：`SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'`。
+
 仍需继续评估：
 
 - tiny 数据只能说明训练链路跑通，不能代表最终效果。
 - 合成 256 条数据只能说明短程稳定性和可优化性，不能代表真实 DPO 效果。
+- 当前 FSDP2 checkpoint 可以保存，但恢复链路未通过；正式训练前必须解决 resume 或改用其他保存/导出方案。
 - 当前 `learning_rate=0.0` 是 1 step + 默认调度下的 smoke 现象，正式训练需要设置 warmup/scheduler。
 - 官方 NPU 文档里 DPO 已验证组合偏 `deepspeed`；本次我们实际跑通的是 FSDP2，需要继续做更长步数和真实数据评估。
 - `decord` 未安装，对纯文本 DPO 不是阻塞；若后续做多模态/视频数据会成为依赖项。

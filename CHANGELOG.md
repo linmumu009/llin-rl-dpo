@@ -1,5 +1,61 @@
 # 更新说明
 
+## v0.1.8 - 2026-07-03
+
+新增：
+
+- `scripts/run_ms_swift_qwen36_dpo_smoke.sh` 增加环境变量配置：
+  - `NUM_TRAIN_EPOCHS`
+  - `SAVE_STRATEGY`
+  - `SAVE_STEPS`
+  - `SAVE_TOTAL_LIMIT`
+  - `EVAL_STRATEGY`
+  - `RESUME_FROM_CHECKPOINT`
+
+实测：
+
+- 使用 `ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2 + 8 NPU` 路线。
+- 使用 `datasets/synthetic_dpo_256.jsonl`。
+- 跑 20 step checkpoint 保存测试：
+  - `MAX_STEPS=20`
+  - `SAVE_STRATEGY=steps`
+  - `SAVE_STEPS=10`
+  - `SAVE_TOTAL_LIMIT=2`
+- 输出目录：`/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-checkpoint-20step/v0-20260703-124743`
+
+保存测试结果：
+
+- 训练 exit code 为 `0`。
+- `global_step/max_steps=20/20`
+- `train_runtime=97.8253s`
+- `train_samples_per_second=1.636`
+- `train_steps_per_second=0.204`
+- `memory(GiB)=51.85`
+- 生成 `checkpoint-10` 和 `checkpoint-20`。
+- 每个 checkpoint 约 `713M`。
+- checkpoint 形态为 FSDP2 sharded checkpoint：
+  - `pytorch_model_fsdp_0`
+  - `optimizer_0`
+  - `scheduler.pt`
+  - `trainer_state.json`
+  - `rng_state_0.pth` 到 `rng_state_7.pth`
+
+恢复测试结果：
+
+- 尝试从 `checkpoint-10` 恢复并跑到 `max_steps=12`。
+- 训练 exit code 为 `1`。
+- 失败点：
+  - `TypeError: SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'`
+- 发生位置：
+  - `accelerate.utils.fsdp_utils.fsdp2_load_full_state_dict`
+  - `model.load_state_dict(sharded_sd, assign=True)`
+
+当前判断：
+
+- FSDP2 checkpoint 保存链路通过。
+- FSDP2 checkpoint resume 链路未通过。
+- 正式长训前必须解决恢复问题，或采用可验证的 adapter 导出/保存方案作为备选。
+
 ## v0.1.7 - 2026-07-03
 
 新增：

@@ -871,3 +871,119 @@ train_speed(s/it)=5.91828
 3. 尝试开启 checkpoint 保存，验证 adapter 保存/恢复。
 4. 测试 LLaMA-Factory NPU 的同口径 1 step/20 step。
 5. 评估是否安装并测试 `deepspeed zero2/zero3`，作为 FSDP2 对照。
+
+## 2026-07-03 ms-swift DPO/FSDP2 checkpoint 保存与恢复测试
+
+### 脚本更新
+
+`scripts/run_ms_swift_qwen36_dpo_smoke.sh` 从固定 smoke 脚本改成可配置实验入口。
+
+新增环境变量：
+
+- `NUM_TRAIN_EPOCHS`
+- `SAVE_STRATEGY`
+- `SAVE_STEPS`
+- `SAVE_TOTAL_LIMIT`
+- `EVAL_STRATEGY`
+- `RESUME_FROM_CHECKPOINT`
+
+### checkpoint 保存测试
+
+启动参数：
+
+```bash
+DATASET_PATH=/workspace/llin-rl-dpo/datasets/synthetic_dpo_256.jsonl \
+OUTPUT_DIR=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-checkpoint-20step \
+MAX_STEPS=20 \
+SAVE_STRATEGY=steps \
+SAVE_STEPS=10 \
+SAVE_TOTAL_LIMIT=2 \
+MASTER_PORT=29621 \
+scripts/run_ms_swift_qwen36_dpo_smoke.sh
+```
+
+输出目录：
+
+```text
+/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-checkpoint-20step/v0-20260703-124743
+```
+
+结果：
+
+```text
+exit_code=0
+global_step/max_steps=20/20
+train_runtime=97.8253
+train_samples_per_second=1.636
+train_steps_per_second=0.204
+train_loss=0.0722111
+memory(GiB)=51.85
+```
+
+checkpoint：
+
+```text
+checkpoint-10: about 713M
+checkpoint-20: about 713M
+```
+
+`checkpoint-20` 结构：
+
+```text
+optimizer_0/
+pytorch_model_fsdp_0/
+rng_state_0.pth ... rng_state_7.pth
+scheduler.pt
+trainer_state.json
+```
+
+说明：
+
+- 这是 FSDP2 sharded checkpoint，不是单文件 `adapter_model.safetensors`。
+- 保存时出现 HCCL warning：`HCCL doesn't support gather at the moment. Implemented with allgather instead.`，但保存流程完成。
+
+### checkpoint 恢复测试
+
+启动参数：
+
+```bash
+DATASET_PATH=/workspace/llin-rl-dpo/datasets/synthetic_dpo_256.jsonl \
+OUTPUT_DIR=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-resume-10-to-12 \
+MAX_STEPS=12 \
+SAVE_STRATEGY=no \
+RESUME_FROM_CHECKPOINT=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-checkpoint-20step/v0-20260703-124743/checkpoint-10 \
+MASTER_PORT=29623 \
+scripts/run_ms_swift_qwen36_dpo_smoke.sh
+```
+
+结果：
+
+```text
+exit_code=1
+```
+
+失败点：
+
+```text
+TypeError: SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'
+```
+
+调用链关键位置：
+
+```text
+accelerate.utils.fsdp_utils.fsdp2_load_full_state_dict
+model.load_state_dict(sharded_sd, assign=True)
+```
+
+判断：
+
+- 当前环境下 `ms-swift + FSDP2 + SwiftModel` 的 checkpoint 保存能成功。
+- 当前环境下 FSDP2 checkpoint 恢复不能成功。
+- 这会影响正式长训：如果中断后无法 resume，长时间训练风险较高。
+
+下一步：
+
+1. 调查 ms-swift/Accelerate/FSDP2 对 `SwiftModel.load_state_dict(assign=...)` 的兼容修复。
+2. 测试是否能导出或保存 LoRA adapter 为普通 `adapter_model.safetensors`，作为最低限度可用产物。
+3. 对比 `--fsdp fsdp2` 与其他后端，例如 deepspeed zero2/zero3 或 FSDP1，检查保存/恢复行为。
+4. 在 checkpoint 恢复解决前，不建议直接启动长时间正式训练。
