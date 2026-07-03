@@ -140,3 +140,91 @@ NPU：
    - 再做权重转换 dry-run 或小模型替代验证。
    - 最后尝试 qwen3.6-27B 单步/少步 DPO。
 
+## 2026-07-03 容器创建与 smoke test
+
+已创建服务器工作区：
+
+- `/data/liulin/llin-rl-dpo/logs`
+- `/data/liulin/llin-rl-dpo/configs`
+- `/data/liulin/llin-rl-dpo/scripts`
+- `/data/liulin/llin-rl-dpo/outputs`
+- `/data/liulin/llin-rl-dpo/datasets`
+- `/data/liulin/llin-rl-dpo/reference`
+
+### 尝试 1：MindSpeed-RL 专用镜像
+
+镜像：
+
+- `swr.cn-south-1.myhuaweicloud.com/ascendhub/mindspeed_rl_pt25_25rc3:2.2.0-A3-ARM`
+
+发现：
+
+- 默认 `python` 是 `/usr/local/bin/python`，只有 `pip` 和 `setuptools`，没有 torch。
+- 实际训练环境在 `/root/miniconda3/envs/mindspeed_rl_2.2.0`。
+- 源码在 `/env/MindSpeed-RL`。
+- `torch` 版本：`2.5.1`
+- `torch_npu` 版本：`2.5.1.post4.dev20250922`
+
+问题：
+
+- 未 source Ascend toolkit 时，import torch_npu 缺 `libhccl.so`。
+- source `/usr/local/Ascend/ascend-toolkit/set_env.sh` 后，缺 `libascend_hal.so`。
+- 手动补充 `LD_LIBRARY_PATH=/usr/local/Ascend/driver/lib64/driver:$LD_LIBRARY_PATH` 后可以 import torch_npu。
+- 但 `torch_npu.npu.device_count()` 返回 `0`。
+- 单设备 `/dev/davinci0` 和全设备 `/dev/davinci0-15` 暴露都未解决。
+
+判断：
+
+- 该镜像能作为代码/环境参考，但当前与宿主 Ascend runtime/driver 的设备可见性没有打通。
+
+### 尝试 2：MindSpeed-LLM 26.0.0 A3 镜像
+
+镜像：
+
+- `swr.cn-south-1.myhuaweicloud.com/ascendhub/mindspeed-llm:26.0.0-a3-openeuler24.03-py3.11-aarch64`
+
+当前保留的容器：
+
+- 名称：`llin-rl-dpo`
+- 状态：running
+- privileged：false
+- 工作区：`/workspace/llin-rl-dpo`
+- 模型只读挂载：`/models/Qwen3.6-27B`
+
+发现：
+
+- Python：`3.11.14`
+- Python 路径：`/opt/conda/bin/python`
+- torch：`2.7.1+cpu`
+- torch_npu：`2.7.1.post4`
+- 镜像内环境变量已经包含 CANN 9.0.0、driver lib64/common/driver、ATB/NNAL 等路径。
+- 可以 import torch 与 torch_npu。
+
+问题：
+
+- `torch_npu.npu.device_count()` 仍返回 `0`。
+- 单设备和全设备挂载都未解决。
+- `npu-smi` 在容器内不在 PATH；宿主机路径是 `/usr/local/sbin/npu-smi`。
+
+### 未执行项
+
+尝试用 `--privileged` 重建容器做隔离实验时，被安全审查拦截。
+
+原因：
+
+- `--privileged` 会显著扩大容器对宿主机的访问权限。
+- 在没有用户明确确认该风险前，不执行该方案。
+
+### 当前结论
+
+`llin-rl-dpo` 容器已经按约束创建并运行，但训练前置 smoke test 未完全通过。
+
+当前阻塞点：
+
+- 容器内 torch_npu 能 import，但 NPU device_count 为 `0`。
+
+下一步建议：
+
+1. 确认 Ascend Docker runtime 是否需要额外设备、annotation、用户组或 Kubernetes device plugin 分配方式。
+2. 如用户明确接受风险，再做一次 `--privileged` 对照实验，判断是否为容器权限边界导致。
+3. 若 privileged 也失败，则转向宿主 Ascend runtime/driver 配置排查。
