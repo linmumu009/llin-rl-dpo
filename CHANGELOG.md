@@ -1,5 +1,41 @@
 # 更新说明
 
+## v0.1.15 - 2026-07-06
+
+新增：
+
+- `scripts/make_msmm_sft_probe_assets.py` 支持生成 long-answer probe：
+  - `--prompt-repeat`
+  - `--answer-repeat`
+  - `--train-iters`
+  - `--name-suffix`
+
+MindSpeed-MM cutoff=4096 复查：
+
+- 使用我们自己的 `llin-rl-dpo` 容器、8 逻辑 NPU、隔离 venv `/workspace/llin-rl-dpo/.venvs/msmm-qwen36`。
+- `cutoff=4096` 短 answer 版本完成 2 step：
+  - 日志：`logs/msmm_qwen36_sft_cutoff4096_2step_8npu_venv_20260706.log`
+  - exit code：`0`
+  - iteration 1：`16419.2 ms`，loss `1.006310E+01`
+  - iteration 2：`14716.3 ms`，loss `2.602338E+00`
+  - max reserved memory：约 `61132 MB`
+  - 未出现 `aclnnRotaryPositionEmbeddingGrad`、`561002` 或 OOM。
+- `cutoff=4096` long-answer 版本完成 2 step：
+  - 日志：`logs/msmm_qwen36_sft_cutoff4096_longanswer_2step_8npu_venv_20260706.log`
+  - exit code：`0`
+  - iteration 1：`16957.6 ms`，loss `1.215048E+01`
+  - iteration 2：`14105.7 ms`，loss `5.574024E-02`
+  - cache 中 `input_ids` 长度全部为 `4096`
+  - `labels != -100` 的监督 token 为 `4073`，位置范围 `23..4095`
+  - max reserved memory：约 `61132 MB`
+  - 未出现 `aclnnCat` OOM、`RotaryPositionEmbeddingGrad` 或 `561002`。
+
+当前判断：
+
+- 我们本轮不是“上下文没到 4096”：long-answer cache 证明训练实际吃到了 4096，并且几乎全长都有 loss。
+- 但本轮仍不等同于老板截图中的全参数/patch 场景。我们的配置冻结了 `model.visual`、没有图像输入、开启 `recompute` 和 `chunk loss`，且未走截图里提到的 `torch.cat([q_embed, q_pass], dim=-1)` extra allocation 路径。
+- 显存边际很紧：max reserved 约 `61.1GB/64GB`。如果换成 torch 原生 rotary patch、真实多模态数据、不同 checkpoint/optimizer 状态、少一些重计算或更多可训练模块，`aclnnCat alloc device memory failed` 是合理风险。
+
 ## v0.1.13 - 2026-07-03
 
 新增：

@@ -1613,3 +1613,93 @@ think_prefix_count=2
 - 在本次环境、数据和 8 NPU 1 step SFT 复现条件下，`cutoff=4096` 没有复现老板截图中的 `aclnnRotaryPositionEmbeddingGrad error 561002`。
 - 这不能证明所有 MindSpeed-MM SFT 场景都不会触发该错误；差异可能来自 MindSpeed-MM/MindSpeed/torch_npu/CANN 版本、真实数据长度分布、是否走 fused/fast path、NPU 数量和容器映射方式。
 - 如果要进一步逼近老板的结果，下一步应复用他的 MindSpeed-MM commit、CANN/torch_npu 版本、完整真实 SFT 数据和原始启动参数，再跑 `cutoff=4096/8192/16384`。
+
+## 2026-07-06 MindSpeed-MM cutoff=4096 2-step 与 long-answer 复查
+
+目的：
+
+- 回答“是不是我们刚刚的训练数据其实没有到 4096”的问题。
+- 对照老板截图中 iteration 2 才 OOM 的现象，补充 `cutoff=4096` 的 2-step 测试。
+- 构造 long-answer 样本，确认 answer loss 覆盖到 4096 附近，而不是只有 prompt 被截断到 4096。
+
+运行环境：
+
+- 容器：`llin-rl-dpo`
+- venv：`/workspace/llin-rl-dpo/.venvs/msmm-qwen36`
+- 设备：`ASCEND_VISIBLE_DEVICES=8,9,10,11,12,13,14,15`
+- 逻辑 NPU：8
+- 权重：`/workspace/llin-rl-dpo/checkpoints/msmm-qwen36-27b-dcp`
+- 关键配置保持：
+  - `freeze: model.visual`
+  - `recompute: true`
+  - `enable_chunk_loss: true`
+  - `chunk_size: 1024`
+  - `micro_batch_size: 1`
+  - `gradient_accumulation_steps: 1`
+
+短 answer 2-step：
+
+```text
+config=/workspace/llin-rl-dpo/configs/msmm_qwen36_sft_cutoff4096_2step.yaml
+log=/data/liulin/llin-rl-dpo/logs/msmm_qwen36_sft_cutoff4096_2step_8npu_venv_20260706.log
+exit_code=0
+iteration 1/2 elapsed=16419.2 ms loss=1.006310E+01 grad_norm=505.511
+iteration 2/2 elapsed=14716.3 ms loss=2.602338E+00 grad_norm=90.934
+allocated=38700.54248046875 MB
+max_allocated=58801.4921875 MB
+reserved=58880.0 MB
+max_reserved=61132.0 MB
+```
+
+结果：
+
+- 未出现 `aclnnRotaryPositionEmbeddingGrad`。
+- 未出现 `561002`。
+- 未出现 `aclnnCat alloc device memory failed`。
+- checkpoint 保存到 `/workspace/llin-rl-dpo/outputs/msmm-qwen36-sft-cutoff4096-2step/iter_0000002`。
+
+long-answer 2-step：
+
+```text
+dataset=/workspace/llin-rl-dpo/datasets/msmm_sft_probe_long_answer.jsonl
+config=/workspace/llin-rl-dpo/configs/msmm_qwen36_sft_cutoff4096_longanswer_2step.yaml
+log=/data/liulin/llin-rl-dpo/logs/msmm_qwen36_sft_cutoff4096_longanswer_2step_8npu_venv_20260706.log
+exit_code=0
+iteration 1/2 elapsed=16957.6 ms loss=1.215048E+01 grad_norm=3243.944
+iteration 2/2 elapsed=14105.7 ms loss=5.574024E-02 grad_norm=3.186
+allocated=38700.54248046875 MB
+max_allocated=58801.4921875 MB
+reserved=58880.0 MB
+max_reserved=61132.0 MB
+```
+
+结果：
+
+- 未出现 `aclnnRotaryPositionEmbeddingGrad`。
+- 未出现 `561002`。
+- 未出现 `aclnnCat alloc device memory failed`。
+- checkpoint 保存到 `/workspace/llin-rl-dpo/outputs/msmm-qwen36-sft-cutoff4096-longanswer-2step/iter_0000002`。
+
+long-answer cache 统计：
+
+```text
+cache=/workspace/llin-rl-dpo/cache/msmm_sft_cutoff4096_longanswer_2step
+rows=8
+input_ids length min/max=4096/4096
+labels != -100 min/max=4073/4073
+first supervised label position=23
+last supervised label position=4095
+```
+
+判断：
+
+- 这次 long-answer 测试可以排除“我们的训练没有真正到 4096”这一解释。
+- 在当前 MindSpeed-MM 路径、当前配置、8 NPU 和无图像输入条件下，`cutoff=4096` 的 forward/backward、第二步 optimizer 前后、checkpoint 保存都能通过。
+- 但这仍不等同于老板截图里的全参数/patch 场景。截图中提到的 torch 原生 rotary patch 可能走 `torch.cat([q_embed, q_pass], dim=-1)`，会额外分配 tensor；而本次 max reserved 已达到约 `61.1GB/64GB`，显存余量很薄。
+- 因此，老板截图中 `aclnnCat alloc device memory failed` 与我们本轮通过并不矛盾：它更像是 patch 绕过 rotary 算子限制后引入的显存压力问题，而不是同一个 `aclnnRotaryPositionEmbeddingGrad error 561002` 问题。
+
+下一步建议：
+
+1. 如果目标是复现老板截图，需获取其原始启动参数、是否启用 torch 原生 rotary patch、是否全参数训练、是否含图像输入、是否冻结视觉塔、是否开启 recompute/chunk loss。
+2. 在确认真实配置前，不建议把当前结果表述为“4096 全参数一定没问题”；更准确说法是：当前隔离环境下，MindSpeed-MM Qwen3.6-27B SFT `cutoff=4096` 在 8 NPU、冻结视觉塔、重计算和 chunk loss 条件下可跑通 2 step。
+3. 若必须跑全参数 4096，优先考虑更多卡分片、保持 fused rotary、开启/加大重计算、降低 micro batch 或改 LoRA；否则很容易越过 64GB HBM 边界。

@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.15`：复查 MindSpeed-MM `cutoff=4096` 的 2 step 与 long-answer 场景；确认 long-answer cache 实际为 4096 token，监督 label 为 4073 token、覆盖到位置 4095，训练仍在 8 NPU 上通过；同时记录显存 max reserved 约 61.1GB，说明老板截图中的 torch 原生 rotary patch / `aclnnCat` OOM 仍是合理风险。
 - `v0.1.14`：补充 MindSpeed-MM Qwen3.6-27B SFT cutoff 复现实验；在 8 NPU 隔离 venv 路径下 `cutoff=2048` 和 `cutoff=4096` 均完成 1 step，未复现 `aclnnRotaryPositionEmbeddingGrad error 561002`；同时记录 4 卡 OOM、transformers 版本不匹配和容器 NPU 映射差异。
 - `v0.1.13`：新增 512 条训练运维/框架评估半真实 DPO 数据，完成 `ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2` 的 100 step 试跑；adapter 导出和重新加载推理均通过，但固定 prompts 上 base/adapter 输出完全一致，暂不能证明泛化效果。
 - `v0.1.12`：固定 prompts 对照支持 `ENABLE_THINKING=false` 并完成 128 token 实测；确认 ms-swift 会关闭思考内容但仍保留空的 `<think></think>` 前缀。base `4.7594 tokens/s`，adapter `3.0811 tokens/s`。
@@ -131,6 +132,14 @@ qwen3.6-27B 的本地配置是：
 
 - `cutoff=2048`：8 NPU 完成 1 step，exit code `0`；`elapsed time per iteration (ms): 125604.0`，`global batch size: 8`，`loss: 1.220408E+01`，未出现 `RotaryPositionEmbeddingGrad` 或 `561002`。
 - `cutoff=4096`：8 NPU 完成 1 step，exit code `0`；`elapsed time per iteration (ms): 53971.2`，`global batch size: 8`，`loss: 1.006310E+01`，未出现 `RotaryPositionEmbeddingGrad` 或 `561002`。
+- `cutoff=4096` 短 answer：8 NPU 完成 2 step，exit code `0`；iteration 1/2 分别约 `16419.2 ms` / `14716.3 ms`，未出现 `RotaryPositionEmbeddingGrad`、`561002` 或 OOM。
+- `cutoff=4096` long-answer：8 NPU 完成 2 step，exit code `0`；iteration 1/2 分别约 `16957.6 ms` / `14105.7 ms`；cache 中 `input_ids` 全部为 `4096`，`labels != -100` 为 `4073`，覆盖位置 `23..4095`；未出现 `aclnnCat` OOM、`RotaryPositionEmbeddingGrad` 或 `561002`。
+
+对老板截图中 OOM 的解释：
+
+- 我们本轮确认不是“训练数据没到 4096”。long-answer cache 已证明真实训练 token 到 4096，且几乎全长都有 answer loss。
+- 但我们当前配置和截图里的“全参数 4096 + torch 原生 rotary patch”仍不完全一样：本配置冻结 `model.visual`、没有图像输入、开启 `recompute` 和 `chunk loss`，也没有走截图里 `torch.cat([q_embed, q_pass], dim=-1)` 的额外分配路径。
+- 本轮 `cutoff=4096` max reserved memory 约 `61132 MB`，距离 64GB HBM 很近；一旦引入 torch 原生 rotary 的额外 tensor、真实多模态输入、更多可训练模块或不同优化器状态，`aclnnCat alloc device memory failed` 是合理风险。
 
 排查中遇到的真实限制：
 
