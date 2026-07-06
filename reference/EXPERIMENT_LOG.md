@@ -1548,3 +1548,68 @@ think_prefix_count=2
   - ms-swift 训练/保存/加载链路通过。
   - adapter 对这 2 条固定 prompts 没有可见影响。
   - 效果评估需要真实验证集或更贴近训练目标的 held-out prompts。
+## 2026-07-06 MindSpeed-MM Qwen3.6-27B SFT cutoff 复现
+
+目标：复查老板反馈的 MindSpeed-MM SFT 在 `cutoff > 2048` 时可能触发 `aclnnRotaryPositionEmbeddingGrad error 561002`。
+
+约束：
+
+- 不改宿主机。
+- 不动别人的 Docker。
+- 优先使用我们自己的容器和工作区。
+- 服务器只能稳定访问部分中国大陆网站，依赖安装优先使用大陆镜像。
+
+准备过程：
+
+1. 在我们自己的容器/工作区中准备 MindSpeed-MM 参考源码：`reference/MindSpeed-MM`。
+2. 补齐配套 MindSpeed：`reference/MindSpeed-26.0.0_core_r0.12.1`，对应 MindSpeed-MM 26.0.0 文档要求。
+3. 使用 `checkpoint.convert_cli Qwen35Converter hf_to_dcp` 将 `/models/Qwen3.6-27B` 转换为 DCP 权重，输出到 `/workspace/llin-rl-dpo/checkpoints/msmm-qwen36-27b-dcp`。
+4. 生成 8 条长样本 SFT probe 数据：`datasets/msmm_sft_probe_long.jsonl`。
+5. 生成两份 1 step 配置：`configs/msmm_qwen36_sft_cutoff2048_1step.yaml` 和 `configs/msmm_qwen36_sft_cutoff4096_1step.yaml`。
+6. 新建多个 MindSpeed-MM 探测容器时发现 NPU runtime 映射不稳定：部分新容器即使设备节点存在，`torch.npu.device_count()` 仍为 `0`。
+7. 最终采用稳定可见 8 NPU 的我们自己的 `llin-rl-dpo` 容器，并创建隔离 venv：`/workspace/llin-rl-dpo/.venvs/msmm-qwen36`。
+
+关键环境：
+
+- `torch 2.7.1+cpu`
+- `torch_npu 2.7.1.post4`
+- `transformers 5.2.0`
+- `accelerate 1.2.0`
+- `datasets 5.0.0`
+- `triton-ascend 3.2.1`
+- `ASCEND_VISIBLE_DEVICES=8,9,10,11,12,13,14,15`
+- `ASCEND_RT_VISIBLE_DEVICES=0,1,2,3,4,5,6,7`
+
+中间失败与修复：
+
+- `transformers 5.13.0` 失败于 `create_causal_mask() got an unexpected keyword argument 'cache_position'`，按 MindSpeed-MM Qwen3.6 README 降到 `transformers==5.2.0` 后解决。
+- 4 NPU 能进入初始化但 Qwen3.6-27B SFT OOM；官方 `examples/qwen3_6/finetune_qwen3_6_27B.sh` 默认 `NPUS_PER_NODE=16`，因此 4 NPU OOM 不代表 rotary 失败。
+- HCCL 默认 NPU socket 端口可能冲突，复现实验中显式设置 `HCCL_NPU_SOCKET_PORT_RANGE`。
+
+结果：
+
+- `cutoff=2048`：
+  - 日志：`logs/msmm_qwen36_sft_cutoff2048_1step_8npu_venv_20260706.log`
+  - exit code：`0`
+  - `iteration 1/1`
+  - `elapsed time per iteration (ms): 125604.0`
+  - `global batch size: 8`
+  - `loss: 1.220408E+01`
+  - checkpoint：`outputs/msmm-qwen36-sft-cutoff2048-1step/iter_0000001`
+  - 未出现 `RotaryPositionEmbeddingGrad` 或 `561002`
+
+- `cutoff=4096`：
+  - 日志：`logs/msmm_qwen36_sft_cutoff4096_1step_8npu_venv_20260706.log`
+  - exit code：`0`
+  - `iteration 1/1`
+  - `elapsed time per iteration (ms): 53971.2`
+  - `global batch size: 8`
+  - `loss: 1.006310E+01`
+  - checkpoint：`outputs/msmm-qwen36-sft-cutoff4096-1step/iter_0000001`
+  - 未出现 `RotaryPositionEmbeddingGrad` 或 `561002`
+
+当前判断：
+
+- 在本次环境、数据和 8 NPU 1 step SFT 复现条件下，`cutoff=4096` 没有复现老板截图中的 `aclnnRotaryPositionEmbeddingGrad error 561002`。
+- 这不能证明所有 MindSpeed-MM SFT 场景都不会触发该错误；差异可能来自 MindSpeed-MM/MindSpeed/torch_npu/CANN 版本、真实数据长度分布、是否走 fused/fast path、NPU 数量和容器映射方式。
+- 如果要进一步逼近老板的结果，下一步应复用他的 MindSpeed-MM commit、CANN/torch_npu 版本、完整真实 SFT 数据和原始启动参数，再跑 `cutoff=4096/8192/16384`。

@@ -507,3 +507,12 @@ adapter 导出结果：
 - 当前有 8 个 Ascend910 逻辑 NPU，训练进程为空。
 - 服务器已有 MindSpeed-RL 2.2.0 A3 ARM 镜像，可作为第一阶段容器基础镜像。
 - `/data/models/Qwen3.6-27B` 是 `qwen3_5` conditional/multimodal 配置，不是 MindSpeed-RL 官方 DPO 样例里的普通 `qwen3_30b_a3b`，需要先做架构支持验证。
+## v0.1.14 - 2026-07-06
+
+- 新增 MindSpeed-MM Qwen3.6-27B SFT cutoff 复现实验记录。
+- 在 8 NPU 隔离 venv 路径下完成 `cutoff=2048` 和 `cutoff=4096` 各 1 step。
+- `cutoff=2048`：exit code `0`，`elapsed time per iteration (ms): 125604.0`，`loss: 1.220408E+01`。
+- `cutoff=4096`：exit code `0`，`elapsed time per iteration (ms): 53971.2`，`loss: 1.006310E+01`。
+- 两组实验均未出现 `aclnnRotaryPositionEmbeddingGrad` 或 `561002`。
+- 记录排查限制：4 NPU 初始化 OOM；`transformers 5.13.0` 与 MindSpeed-MM Qwen3.6 路径不兼容；新建 MindSpeed-MM 容器存在 NPU device_count 为 0 的 runtime/镜像映射问题。
+- 新增 MindSpeed-MM/NPU rotary/cutoff 相关探针与 SFT probe asset 生成脚本。

@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.14`：补充 MindSpeed-MM Qwen3.6-27B SFT cutoff 复现实验；在 8 NPU 隔离 venv 路径下 `cutoff=2048` 和 `cutoff=4096` 均完成 1 step，未复现 `aclnnRotaryPositionEmbeddingGrad error 561002`；同时记录 4 卡 OOM、transformers 版本不匹配和容器 NPU 映射差异。
 - `v0.1.13`：新增 512 条训练运维/框架评估半真实 DPO 数据，完成 `ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2` 的 100 step 试跑；adapter 导出和重新加载推理均通过，但固定 prompts 上 base/adapter 输出完全一致，暂不能证明泛化效果。
 - `v0.1.12`：固定 prompts 对照支持 `ENABLE_THINKING=false` 并完成 128 token 实测；确认 ms-swift 会关闭思考内容但仍保留空的 `<think></think>` 前缀。base `4.7594 tokens/s`，adapter `3.0811 tokens/s`。
 - `v0.1.11`：新增固定 prompts 的 base/adapter 对照评测脚本；实测 base `4.5922 tokens/s`、adapter `3.0373 tokens/s`，两边输出方向基本一致，2 step 合成 DPO adapter 暂无可解释效果差异。
@@ -111,6 +112,31 @@ qwen3.6-27B 的本地配置是：
 - `model_type`: `qwen3_5`
 - `architectures`: `Qwen3_5ForConditionalGeneration`
 - `task`: `image-text-to-text`
+
+## MindSpeed-MM SFT cutoff 复现
+
+针对老板反馈的 MindSpeed-MM SFT `cutoff > 2048` 可能触发 `aclnnRotaryPositionEmbeddingGrad error 561002`，已完成一轮可复核复现。
+
+关键环境：
+
+- 框架源码：`reference/MindSpeed-MM`，Qwen3.6 示例使用 `mindspeed_mm/fsdp/models/qwen3_5`。
+- 配套 MindSpeed：`reference/MindSpeed-26.0.0_core_r0.12.1`。
+- 模型：`/models/Qwen3.6-27B`。
+- 权重格式：HF 权重已转换为 DCP，路径 `/workspace/llin-rl-dpo/checkpoints/msmm-qwen36-27b-dcp`。
+- 运行容器：复用我们自己的 `llin-rl-dpo` 容器，新建隔离 venv `/workspace/llin-rl-dpo/.venvs/msmm-qwen36`，没有改宿主机和别人的容器。
+- 设备：`ASCEND_VISIBLE_DEVICES=8,9,10,11,12,13,14,15`，8 张逻辑 NPU。
+- 关键 Python 版本：`torch 2.7.1+cpu`，`torch_npu 2.7.1.post4`，`transformers 5.2.0`，`accelerate 1.2.0`，`datasets 5.0.0`，`triton-ascend 3.2.1`。
+
+结果：
+
+- `cutoff=2048`：8 NPU 完成 1 step，exit code `0`；`elapsed time per iteration (ms): 125604.0`，`global batch size: 8`，`loss: 1.220408E+01`，未出现 `RotaryPositionEmbeddingGrad` 或 `561002`。
+- `cutoff=4096`：8 NPU 完成 1 step，exit code `0`；`elapsed time per iteration (ms): 53971.2`，`global batch size: 8`，`loss: 1.006310E+01`，未出现 `RotaryPositionEmbeddingGrad` 或 `561002`。
+
+排查中遇到的真实限制：
+
+- 4 NPU 路径可以启动但 Qwen3.6-27B SFT 初始化 OOM，官方 MindSpeed-MM Qwen3.6 27B 脚本默认是 `NPUS_PER_NODE=16`。
+- `transformers 5.13.0` 会触发 `create_causal_mask() got an unexpected keyword argument 'cache_position'`；按 MindSpeed-MM Qwen3.6 文档降到 `transformers==5.2.0` 后通过。
+- 新建多个 MindSpeed-MM 容器时出现 `torch.npu.device_count()==0`，即使设备节点存在；目前稳定可复核路径是在已有我们自己的 `llin-rl-dpo` 容器内用隔离 venv 跑 MindSpeed-MM。
 
 当前已经跑通：
 
