@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.19`：补充 561002 的变量对照和根因收敛：`cutoff=2048` 通过，`micro_batch_size=1` 仍在 row20 形状复现，关闭 activation offload 仍复现，`ASCEND_LAUNCH_BLOCKING=1` 确认真实触发点是 `npu_rotary_mul_backward/aclnnRotaryPositionEmbeddingGrad`；旧 MindSpeed-MM/transformers 5.2 对照通过是因为模板把 row20 从 `2506/2052` 缩到 `475/21`，不是证明底层算子问题消失。
 - `v0.1.18`：按老板给出的真实数据、配置、启动脚本和 MindSpeed-MM 源码快照，在我们自己的 `llin-rl-dpo` 容器内原生复现 `aclnnRotaryPositionEmbeddingGrad error 561002`；全量数据第 2 step rank4 失败，最小化到前 32 条数据跑 2 step 仍可复现，16-31 条单独 1 step 不复现。详见 [reference/RJX_561002_REPRO_20260707.md](reference/RJX_561002_REPRO_20260707.md)。
 - `v0.1.17`：补充冻结视觉塔 3-step 对照；同样 8 NPU、`cutoff=4096`、long-answer、原始上下文超过 4096，`freeze: ['model.visual']` 完成 3 step 并保存 checkpoint。与全参数 OOM 形成直接对照，支持纯文本 SFT/DPO 默认冻结视觉塔。
 - `v0.1.16`：复查老板反馈的 8 卡全参 `cutoff=4096`、原始上下文超过 4096、3 step 场景；第 1 step 跑通，随后在第二步 backward / FSDP reduce-scatter 附近 OOM，报 `runtime result = 207001`，working operator 显示 `aclnnFlashAttentionScore`；未出现 rotary `561002` 或 `aclnnCat`。
@@ -131,6 +132,8 @@ qwen3.6-27B 的本地配置是：
 - 前 32 条数据、同配置、2 step：同样 iteration 1 通过，iteration 2 rank4 复现同一个 `561002`。
 - 只取原全量第 16-31 条数据、同配置、1 step：通过，说明不是单独这 16 条数据一出现就失败，而是和前一轮之后第二个 global batch 的 rank-local shape/状态有关。
 - 失败 rank4 的第二步本地样本来自原始行 `20` 和 `28`，tokenized 长度分别为 `2506` 和 `1264`；全量数据中只有两条达到 `4096`，所以它不是“任意 4096-token 样本都会失败”的简单问题。
+- 变量对照显示：`cutoff=2048` 通过；`micro_batch_size=1` 仍在原始 row20 形状处复现；关闭 activation offload 仍复现；`ASCEND_LAUNCH_BLOCKING=1` 确认真实失败点是 `npu_rotary_mul_backward`。
+- 旧 MindSpeed-MM/`transformers 5.2.0` 路径用老板数据内容可跑通，但不是等价配置：旧源码不支持 `formatting: openai` 和 `template: qwen3_6`，转换到 `sharegpt + qwen3_vl` 后 row20 从 `2506/2052` 变成 `475/21`，避开了危险 shape。
 
 详细路径、日志和最小复现记录见 [reference/RJX_561002_REPRO_20260707.md](reference/RJX_561002_REPRO_20260707.md)。
 

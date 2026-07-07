@@ -1,5 +1,16 @@
 # 更新说明
 
+## v0.1.19 - 2026-07-07
+
+MindSpeed-MM 561002 根因收敛：
+
+- 补充 `cutoff=2048` 对照：前 32 条数据、同事源码/venv/配置规模下完成 2 step，未触发 561002；row20 从 `2506/2052` 截到 `2048/1594`。
+- 补充 `micro_batch_size=1` 对照：仍在 rank4 处理原始 row20 时复现 `aclnnRotaryPositionEmbeddingGrad error 561002`，说明不需要 row20 和 row28 同 batch 才触发。
+- 补充关闭 activation offload 对照：仍先报同一个 rotary 561002，说明 offload 不是必要触发条件；后续 OOM 属于异常后的连带错误。
+- 补充 `ASCEND_LAUNCH_BLOCKING=1` 同步栈：确认真实失败点是 `loss.backward()` 中的 `npu_rotary_mul_backward/aclnnRotaryPositionEmbeddingGrad`，不是 FSDP reduce-scatter 本身。
+- 补充旧 MindSpeed-MM/`transformers 5.2.0` 对照：旧源码不支持 `formatting: openai` 和 `template: qwen3_6`；转换到 `sharegpt + qwen3_vl` 后可以跑通，但 cache 显示 row20 从 `2506/2052` 变成 `475/21`，因此通过原因是模板/预处理避开危险 shape，不是底层 NPU rotary 问题消失。
+- 更新 `reference/RJX_561002_REPRO_20260707.md` 和 README 的当前结论。
+
 ## v0.1.18 - 2026-07-07
 
 MindSpeed-MM 同事真实配置 561002 复现：
