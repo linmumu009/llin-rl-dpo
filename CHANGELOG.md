@@ -1,5 +1,17 @@
 # 更新说明
 
+## v0.1.22 - 2026-07-07
+
+MindSpeed-MM latest 训练复现 561002：
+
+- 在用户授权后停止旧的空闲 `llin-msmm-*` / `llin-autoresearch*` 实验容器释放 Ascend 设备；保留 `llin-rl-dpo`、`llin-rl-dpo-lrsearch`、`swift_sft_rjx`、`mindspeed_mm_rjx` 和 k8s 容器。
+- 新建非 DPO SFT 容器 `llin-msmm-sft-latest-run`，使用逻辑 NPU `0-7`，8 卡 NPU smoke 全部通过。
+- 使用 latest `MindSpeed-MM@643738f` + latest `MindSpeed@38ecf80`，在隔离 venv 中按 Qwen3.6 官方示例对齐到 `transformers 5.2.0`、`accelerate 1.2.0`，并补 `triton-ascend 3.2.1`。
+- 配置：老板数据前 32 条、`formatting: openai`、`template: qwen3_6`、Full SFT、`freeze: []`、`cutoff_len: 4096`、`micro_batch_size: 2`、`global_batch_size: 16`、activation offload、chunk loss `256`、`train_iters: 2`。
+- 结果：iteration 1 通过，loss `6.545060E-01`，grad norm `8.827`，elapsed `161933.9 ms`；iteration 2 rank4 复现 `aclnnRotaryPositionEmbeddingGrad error 561002`，同样包含 `reserveAlignNum = 2592 too large, aicore do not support`。
+- 结论：latest MindSpeed-MM 已支持 Qwen3.6/OpenAI 数据路径，但 latest 训练仍复现同一个 NPU rotary backward tiling 限制；问题不是旧版缺 OpenAI/qwen3_6 支持导致。
+- 新增记录：`reference/MSMM_LATEST_561002_REPRO_20260707.md`。
+
 ## v0.1.21 - 2026-07-07
 
 MindSpeed-MM latest Qwen3.6/OpenAI 支持验证：

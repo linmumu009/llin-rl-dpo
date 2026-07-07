@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.22`：在非 DPO SFT 容器 `llin-msmm-sft-latest-run` 中实测 latest `MindSpeed-MM@643738f` + latest `MindSpeed@38ecf80`；老板数据前 32 条、OpenAI 格式、`template=qwen3_6`、8 卡全参、`cutoff=4096`、`micro_batch_size=2`、2 step。iteration 1 通过，iteration 2 rank4 复现 `aclnnRotaryPositionEmbeddingGrad error 561002`，同样是 `reserveAlignNum=2592`。结论：latest 支持 Qwen3.6/OpenAI，但没有解决该 NPU rotary backward tiling 限制。详见 [reference/MSMM_LATEST_561002_REPRO_20260707.md](reference/MSMM_LATEST_561002_REPRO_20260707.md)。
 - `v0.1.21`：按要求改在原 SFT 实验容器 `llin-msmm-sft-probe-8rtm` 中验证 latest MindSpeed-MM，没有进入或修改 `llin-rl-dpo` DPO 容器；latest `MindSpeed-MM@643738f` + latest `MindSpeed@38ecf80` 的隔离 venv import probe 通过，确认 `OpenAIDatasetConverter`、`qwen3_6` 和 `qwen3_6_nothink` 均可加载，自带 OpenAI converter 单测 `22 passed`。结论：latest MindSpeed-MM 已支持 Qwen3.6 + OpenAI 数据格式，但这还不等于 rotary `561002` 已解决。详见 [reference/MSMM_LATEST_QWEN36_OPENAI_20260707.md](reference/MSMM_LATEST_QWEN36_OPENAI_20260707.md)。
 - `v0.1.20`：按“我们旧 MindSpeed-MM + transformers 5.2.0 + torch_npu 2.7.1.post4”做完整老板数据、8 卡全参、`cutoff=4096`、`micro_batch_size=2`、activation offload、10 step 对照；因旧源码不支持 `openai/qwen3_6`，数据转为 `sharegpt`、模板用 `qwen3_vl`。结果第 2 step 未复现 rotary 561002，跑过 6 step 后在视觉塔 forward OOM；说明旧版本栈没有老板的第二步 rotary 错，但该对照仍受模板/预处理差异影响。
 - `v0.1.19`：补充 561002 的变量对照和根因收敛：`cutoff=2048` 通过，`micro_batch_size=1` 仍在 row20 形状复现，关闭 activation offload 仍复现，`ASCEND_LAUNCH_BLOCKING=1` 确认真实触发点是 `npu_rotary_mul_backward/aclnnRotaryPositionEmbeddingGrad`；旧 MindSpeed-MM/transformers 5.2 对照通过是因为模板把 row20 从 `2506/2052` 缩到 `475/21`，不是证明底层算子问题消失。
@@ -129,6 +130,18 @@ qwen3.6-27B 的本地配置是：
 2026-07-07 在原 SFT 实验容器 `llin-msmm-sft-probe-8rtm` 中验证 latest MindSpeed-MM，不进入 DPO 容器 `llin-rl-dpo`。现有 SFT 容器自带 `/workspace/MindSpeed-MM@9e6ca6ca` 未包含 `qwen3_6/openai` 路径；隔离拉取 latest `MindSpeed-MM@643738f` 和配套 latest `MindSpeed@38ecf80` 后，`OpenAIDatasetConverter`、`qwen3_6`、`qwen3_6_nothink` 均可 import，自带 `tests/ut_fsdp/data/test_openai_converter.py` 全部通过，`22 passed`。
 
 结论：latest MindSpeed-MM 已经支持 Qwen3.6 + OpenAI ChatCompletion 风格数据；但这只是数据/模板链路验证，尚未证明 full Qwen3.6-27B 训练能避开 rotary `561002`。详见 [reference/MSMM_LATEST_QWEN36_OPENAI_20260707.md](reference/MSMM_LATEST_QWEN36_OPENAI_20260707.md)。
+
+### latest MindSpeed-MM 训练复现 561002
+
+2026-07-07 在新建非 DPO SFT 容器 `llin-msmm-sft-latest-run` 中继续实测 latest 训练路径。因为保留的 DPO 容器声明 `8-15`，本次使用另一组空闲逻辑 NPU `0-7`。配置对齐此前最小复现：老板数据前 32 条、8 NPU、Full SFT、`freeze: []`、`cutoff_len=4096`、`micro_batch_size=2`、`global_batch_size=16`、activation offload、chunk loss `256`、`train_iters=2`。
+
+结论：latest 仍复现同一个问题。
+
+- iteration 1 通过：loss `6.545060E-01`，grad norm `8.827`，elapsed `161933.9 ms`。
+- iteration 2 rank4 失败：`aclnnRotaryPositionEmbeddingGrad error 561002`。
+- 错误核心仍是：`reserveAlignNum = 2592 too large, aicore do not support`。
+
+这说明 latest 的 Qwen3.6/OpenAI 支持只解决“能不能正确走数据/模板链路”，没有解决 Ascend NPU rotary backward tiling 限制。详见 [reference/MSMM_LATEST_561002_REPRO_20260707.md](reference/MSMM_LATEST_561002_REPRO_20260707.md)。
 
 ### 同事真实配置复现 561002
 
