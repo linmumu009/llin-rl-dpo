@@ -1,5 +1,15 @@
 # 更新说明
 
+## v0.1.18 - 2026-07-07
+
+MindSpeed-MM 同事真实配置 561002 复现：
+
+- 按老板给出的真实数据、配置、启动脚本、失败日志和 `mindspeed_mm_rjx` 源码快照，在我们自己的 `llin-rl-dpo` 工作区内复现；没有修改同事容器或宿主机。
+- 新增 `reference/RJX_561002_REPRO_20260707.md`，记录对齐环境、完整路径、全量复现和 32 行最小复现。
+- 原生、不 patch rotary 的情况下复现 `aclnnRotaryPositionEmbeddingGrad error 561002`：iteration 1 通过，iteration 2 rank4 失败，日志包含 `reserveAlignNum = 2592 too large`。
+- 确认 16-31 行单独 1 step 可以通过，但 0-31 行 2 step 会在第二步复现，说明触发条件不是单条样本孤立出现，而是第一步完成后的第二个 global batch / rank-local shape 或运行状态。
+- README 已同步更新当前版本说明和 MindSpeed-MM cutoff 复现结论。
+
 ## v0.1.17 - 2026-07-07
 
 MindSpeed-MM freeze visual 对照：

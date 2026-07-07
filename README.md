@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.18`：按老板给出的真实数据、配置、启动脚本和 MindSpeed-MM 源码快照，在我们自己的 `llin-rl-dpo` 容器内原生复现 `aclnnRotaryPositionEmbeddingGrad error 561002`；全量数据第 2 step rank4 失败，最小化到前 32 条数据跑 2 step 仍可复现，16-31 条单独 1 step 不复现。详见 [reference/RJX_561002_REPRO_20260707.md](reference/RJX_561002_REPRO_20260707.md)。
 - `v0.1.17`：补充冻结视觉塔 3-step 对照；同样 8 NPU、`cutoff=4096`、long-answer、原始上下文超过 4096，`freeze: ['model.visual']` 完成 3 step 并保存 checkpoint。与全参数 OOM 形成直接对照，支持纯文本 SFT/DPO 默认冻结视觉塔。
 - `v0.1.16`：复查老板反馈的 8 卡全参 `cutoff=4096`、原始上下文超过 4096、3 step 场景；第 1 step 跑通，随后在第二步 backward / FSDP reduce-scatter 附近 OOM，报 `runtime result = 207001`，working operator 显示 `aclnnFlashAttentionScore`；未出现 rotary `561002` 或 `aclnnCat`。
 - `v0.1.15`：复查 MindSpeed-MM `cutoff=4096` 的 2 step 与 long-answer 场景；确认 long-answer cache 实际为 4096 token，监督 label 为 4073 token、覆盖到位置 4095，训练仍在 8 NPU 上通过；同时记录显存 max reserved 约 61.1GB，说明老板截图中的 torch 原生 rotary patch / `aclnnCat` OOM 仍是合理风险。
@@ -119,6 +120,19 @@ qwen3.6-27B 的本地配置是：
 ## MindSpeed-MM SFT cutoff 复现
 
 针对老板反馈的 MindSpeed-MM SFT `cutoff > 2048` 可能触发 `aclnnRotaryPositionEmbeddingGrad error 561002`，已完成一轮可复核复现。
+
+### 同事真实配置复现 561002
+
+2026-07-07 按老板给出的同事环境信息复制数据、配置、启动脚本和日志到我们自己的 `llin-rl-dpo` 工作区，并复制 `mindspeed_mm_rjx` 容器中的 MindSpeed-MM 源码快照到 `reference/MindSpeed-MM-rjx-snapshot`。我们没有修改同事容器、没有改宿主机，也没有做 rotary patch。
+
+结论：可以复现。
+
+- 全量 `20260702_openai.jsonl`、8 NPU、Full SFT、`cutoff_len=4096`、`micro_batch_size=2`、`enable_activation_offload=true`：iteration 1 通过，iteration 2 rank4 在 `aclnnRotaryPositionEmbeddingGrad` 报 `561002`，`reserveAlignNum = 2592 too large`。
+- 前 32 条数据、同配置、2 step：同样 iteration 1 通过，iteration 2 rank4 复现同一个 `561002`。
+- 只取原全量第 16-31 条数据、同配置、1 step：通过，说明不是单独这 16 条数据一出现就失败，而是和前一轮之后第二个 global batch 的 rank-local shape/状态有关。
+- 失败 rank4 的第二步本地样本来自原始行 `20` 和 `28`，tokenized 长度分别为 `2506` 和 `1264`；全量数据中只有两条达到 `4096`，所以它不是“任意 4096-token 样本都会失败”的简单问题。
+
+详细路径、日志和最小复现记录见 [reference/RJX_561002_REPRO_20260707.md](reference/RJX_561002_REPRO_20260707.md)。
 
 关键环境：
 
