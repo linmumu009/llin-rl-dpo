@@ -1839,3 +1839,85 @@ aclnnCat
 1. 若必须在 8 卡上做 `cutoff=4096`，不建议全参数；优先 LoRA、冻结视觉塔、或进一步降低激活/优化器显存。
 2. 若必须全参数 4096，应优先增加卡数做更细分片，或进一步启用 activation offload / 更激进 recompute / 更小 chunk。
 3. 如果要判断 rotary patch 的影响，需要在同一全参配置下对比 fused rotary 与 torch 原生 rotary patch；但当前全参基线已经 OOM，patch 对照大概率更差。
+
+## 2026-07-07 MindSpeed-MM freeze visual 3-step 对照
+
+目的：
+
+- 回答“视觉塔是否影响纯文本任务训练，如果不影响是否应直接冻结”。
+- 与上一节 8 卡全参数 `cutoff=4096` OOM 形成同条件对照。
+
+配置：
+
+```text
+configs/msmm_qwen36_sft_cutoff4096_longanswer_freezevisual_3step.yaml
+```
+
+关键条件：
+
+```text
+container=llin-rl-dpo
+venv=/workspace/llin-rl-dpo/.venvs/msmm-qwen36
+world_size=8
+cutoff_len=4096
+dataset=/workspace/llin-rl-dpo/datasets/msmm_sft_probe_long_answer.jsonl
+images=[]
+freeze=['model.visual']
+train_iters=3
+micro_batch_size=1
+gradient_accumulation_steps=1
+recompute=true
+enable_chunk_loss=true
+chunk_size=1024
+```
+
+结果：
+
+```text
+log=/data/liulin/llin-rl-dpo/logs/msmm_qwen36_sft_cutoff4096_longanswer_freezevisual_3step_8npu_venv_20260707.log
+exit_code=0
+```
+
+step 记录：
+
+```text
+iteration 1/3 elapsed=16885.2 ms loss=1.215048E+01 grad_norm=3237.883
+iteration 2/3 elapsed=13886.2 ms loss=5.530391E-02 grad_norm=3.164
+iteration 3/3 elapsed=19824.2 ms loss=3.774317E-02 grad_norm=0.577
+```
+
+显存记录：
+
+```text
+after 2 iterations:
+allocated=38700.54248046875 MB
+max_allocated=58801.4921875 MB
+reserved=58880.0 MB
+max_reserved=61132.0 MB
+```
+
+产物：
+
+```text
+/workspace/llin-rl-dpo/outputs/msmm-qwen36-sft-cutoff4096-longanswer-freezevisual-3step/iter_0000003
+```
+
+未出现：
+
+```text
+OutOfMemory
+runtime result = 207001
+aclnnRotaryPositionEmbeddingGrad
+561002
+aclnnCat
+```
+
+判断：
+
+- 当前数据是纯文本样本，`images=[]`，视觉塔不参与文本监督目标。
+- 在这个任务设定下，冻结 `model.visual` 不影响我们要验证的文本 SFT/DPO 训练目标，反而是合理默认。
+- 与上一节全参数实验形成清楚对照：
+  - 冻结视觉塔：同样 8 卡、同样 `cutoff=4096`、同样 long-answer、同样 3 step，训练通过。
+  - 全参数：第 1 step 通过，第二步附近 OOM。
+- 因此当前可落地结论是：纯文本训练优先冻结视觉塔；8 卡全参数 `cutoff=4096` 是显存不够。
+- 但这仍不等同于老板截图里的精确错误链：本轮没有复现 rotary `561002`，也没有复现 patch 后的 `aclnnCat`；我们复现到的是全参数显存压力。

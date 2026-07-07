@@ -1,5 +1,34 @@
 # 更新说明
 
+## v0.1.17 - 2026-07-07
+
+MindSpeed-MM freeze visual 对照：
+
+- 为回答“纯文本任务视觉塔是否可以冻结”，补充同条件 3-step 对照。
+- 配置：`configs/msmm_qwen36_sft_cutoff4096_longanswer_freezevisual_3step.yaml`
+- 日志：`logs/msmm_qwen36_sft_cutoff4096_longanswer_freezevisual_3step_8npu_venv_20260707.log`
+- 条件：
+  - 8 NPU
+  - `cutoff_len: 4096`
+  - long-answer 数据，原始上下文超过 4096
+  - `freeze: ['model.visual']`
+  - `train_iters: 3`
+  - `recompute: true`
+  - `enable_chunk_loss: true`
+- 结果：
+  - exit code：`0`
+  - iteration 1/3：`16885.2 ms`，loss `1.215048E+01`
+  - iteration 2/3：`13886.2 ms`，loss `5.530391E-02`
+  - iteration 3/3：`19824.2 ms`，loss `3.774317E-02`
+  - after 2 iterations memory：allocated `38700.54 MB`，max allocated `58801.49 MB`，reserved `58880.0 MB`，max reserved `61132.0 MB`
+  - checkpoint 保存到 `outputs/msmm-qwen36-sft-cutoff4096-longanswer-freezevisual-3step/iter_0000003`
+
+判断：
+
+- 纯文本数据 `images=[]` 时，冻结视觉塔不影响当前文本 SFT 目标，是推荐默认路线。
+- 与 `v0.1.16` 的全参数 OOM 形成直接对照：同样 8 卡、同样 `cutoff=4096`、同样 long-answer 3 step，冻结视觉塔通过，全参数在第二步附近 OOM。
+- 当前可确认的问题是 8 卡全参数显存不足；仍未复现老板截图中的 rotary `561002` 或 patch 后 `aclnnCat` 精确路径。
+
 ## v0.1.16 - 2026-07-07
 
 新增：

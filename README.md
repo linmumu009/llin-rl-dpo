@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.17`：补充冻结视觉塔 3-step 对照；同样 8 NPU、`cutoff=4096`、long-answer、原始上下文超过 4096，`freeze: ['model.visual']` 完成 3 step 并保存 checkpoint。与全参数 OOM 形成直接对照，支持纯文本 SFT/DPO 默认冻结视觉塔。
 - `v0.1.16`：复查老板反馈的 8 卡全参 `cutoff=4096`、原始上下文超过 4096、3 step 场景；第 1 step 跑通，随后在第二步 backward / FSDP reduce-scatter 附近 OOM，报 `runtime result = 207001`，working operator 显示 `aclnnFlashAttentionScore`；未出现 rotary `561002` 或 `aclnnCat`。
 - `v0.1.15`：复查 MindSpeed-MM `cutoff=4096` 的 2 step 与 long-answer 场景；确认 long-answer cache 实际为 4096 token，监督 label 为 4073 token、覆盖到位置 4095，训练仍在 8 NPU 上通过；同时记录显存 max reserved 约 61.1GB，说明老板截图中的 torch 原生 rotary patch / `aclnnCat` OOM 仍是合理风险。
 - `v0.1.14`：补充 MindSpeed-MM Qwen3.6-27B SFT cutoff 复现实验；在 8 NPU 隔离 venv 路径下 `cutoff=2048` 和 `cutoff=4096` 均完成 1 step，未复现 `aclnnRotaryPositionEmbeddingGrad error 561002`；同时记录 4 卡 OOM、transformers 版本不匹配和容器 NPU 映射差异。
@@ -136,12 +137,13 @@ qwen3.6-27B 的本地配置是：
 - `cutoff=4096` 短 answer：8 NPU 完成 2 step，exit code `0`；iteration 1/2 分别约 `16419.2 ms` / `14716.3 ms`，未出现 `RotaryPositionEmbeddingGrad`、`561002` 或 OOM。
 - `cutoff=4096` long-answer：8 NPU 完成 2 step，exit code `0`；iteration 1/2 分别约 `16957.6 ms` / `14105.7 ms`；cache 中 `input_ids` 全部为 `4096`，`labels != -100` 为 `4073`，覆盖位置 `23..4095`；未出现 `aclnnCat` OOM、`RotaryPositionEmbeddingGrad` 或 `561002`。
 - `cutoff=4096` long-answer 全参数：8 NPU 目标 3 step，exit code `1`；配置确认 `freeze: []`，iteration 1/3 跑通，`17755.8 ms`，loss `1.215048E+01`；随后 OOM，`runtime result = 207001`，working operator 显示 `aclnnFlashAttentionScore`，当时部分 rank 只剩约 `29-97 MiB` 可用显存。
+- `cutoff=4096` long-answer 冻结视觉塔：8 NPU 完成 3 step，exit code `0`；配置确认 `freeze: ['model.visual']`，iteration 1/2/3 分别约 `16885.2 ms` / `13886.2 ms` / `19824.2 ms`；checkpoint 保存到 `outputs/msmm-qwen36-sft-cutoff4096-longanswer-freezevisual-3step/iter_0000003`。
 
 对老板截图中 OOM 的解释：
 
 - 我们本轮确认不是“训练数据没到 4096”。long-answer cache 已证明真实训练 token 到 4096，且几乎全长都有 answer loss。
 - 冻结视觉塔时，`cutoff=4096` long-answer 2 step 可以跑通，但 max reserved memory 已约 `61132 MB`，距离 64GB HBM 很近。
-- 去掉 `freeze: model.visual` 做全参数后，8 卡只能完成第 1 step，第二步附近 OOM；这说明老板说的 8 卡全参 4096 显存不够是对的。
+- 冻结视觉塔 3 step 已通过；去掉 `freeze: model.visual` 做全参数后，8 卡只能完成第 1 step，第二步附近 OOM。这说明纯文本任务默认冻结视觉塔是合理的，也说明老板说的 8 卡全参 4096 显存不够是对的。
 - 当前我们复现到的全参错误是显存硬限制，报 `207001`，不是 rotary `561002`；如果再叠加 torch 原生 rotary patch 的额外 `torch.cat` 分配，`aclnnCat` OOM 也很合理。
 
 排查中遇到的真实限制：
