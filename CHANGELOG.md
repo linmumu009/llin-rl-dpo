@@ -1,5 +1,17 @@
 # 更新说明
 
+## v0.1.20 - 2026-07-07
+
+MindSpeed-MM 旧版本栈完整数据对照：
+
+- 生成完整老板数据的旧源码兼容格式：`datasets/rjx/20260702_openai_sharegpt.jsonl`，25167 条；只改字段结构，保留 message 内容。
+- 使用我们旧环境路径：`MindSpeed-MM@1050e5ba`、`transformers 5.2.0`、`torch_npu 2.7.1.post4`、`accelerate 1.2.0`、`datasets 5.0.0`。
+- 对齐老板训练规模：8 NPU、Full SFT、`freeze: []`、`cutoff_len: 4096`、`micro_batch_size: 2`、`global_batch_size: 16`、`enable_activation_offload: true`、`chunk_size: 256`、`train_iters: 10`。
+- 兼容性差异：旧源码不支持 `formatting: openai` 和 `template: qwen3_6`，因此使用 `sharegpt + qwen3_vl`。
+- 结果：第 2 step 通过，未出现 `aclnnRotaryPositionEmbeddingGrad`、`npu_rotary` 或 `561002`；完成 6 step 后在第 7 step forward 的视觉塔路径 `get_image_features/self.visual` OOM。
+- 结论：老板的第二步 rotary 561002 在我们旧版本栈/旧模板路径下不复现，但该实验仍不能把差异归因到单一包版本，因为数据格式和模板路径不可避免地改变了 token/label shape。
+- 更新 README 和 `reference/RJX_561002_REPRO_20260707.md`。
+
 ## v0.1.19 - 2026-07-07
 
 MindSpeed-MM 561002 根因收敛：

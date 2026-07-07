@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.20`：按“我们旧 MindSpeed-MM + transformers 5.2.0 + torch_npu 2.7.1.post4”做完整老板数据、8 卡全参、`cutoff=4096`、`micro_batch_size=2`、activation offload、10 step 对照；因旧源码不支持 `openai/qwen3_6`，数据转为 `sharegpt`、模板用 `qwen3_vl`。结果第 2 step 未复现 rotary 561002，跑过 6 step 后在视觉塔 forward OOM；说明旧版本栈没有老板的第二步 rotary 错，但该对照仍受模板/预处理差异影响。
 - `v0.1.19`：补充 561002 的变量对照和根因收敛：`cutoff=2048` 通过，`micro_batch_size=1` 仍在 row20 形状复现，关闭 activation offload 仍复现，`ASCEND_LAUNCH_BLOCKING=1` 确认真实触发点是 `npu_rotary_mul_backward/aclnnRotaryPositionEmbeddingGrad`；旧 MindSpeed-MM/transformers 5.2 对照通过是因为模板把 row20 从 `2506/2052` 缩到 `475/21`，不是证明底层算子问题消失。
 - `v0.1.18`：按老板给出的真实数据、配置、启动脚本和 MindSpeed-MM 源码快照，在我们自己的 `llin-rl-dpo` 容器内原生复现 `aclnnRotaryPositionEmbeddingGrad error 561002`；全量数据第 2 step rank4 失败，最小化到前 32 条数据跑 2 step 仍可复现，16-31 条单独 1 step 不复现。详见 [reference/RJX_561002_REPRO_20260707.md](reference/RJX_561002_REPRO_20260707.md)。
 - `v0.1.17`：补充冻结视觉塔 3-step 对照；同样 8 NPU、`cutoff=4096`、long-answer、原始上下文超过 4096，`freeze: ['model.visual']` 完成 3 step 并保存 checkpoint。与全参数 OOM 形成直接对照，支持纯文本 SFT/DPO 默认冻结视觉塔。
@@ -134,6 +135,7 @@ qwen3.6-27B 的本地配置是：
 - 失败 rank4 的第二步本地样本来自原始行 `20` 和 `28`，tokenized 长度分别为 `2506` 和 `1264`；全量数据中只有两条达到 `4096`，所以它不是“任意 4096-token 样本都会失败”的简单问题。
 - 变量对照显示：`cutoff=2048` 通过；`micro_batch_size=1` 仍在原始 row20 形状处复现；关闭 activation offload 仍复现；`ASCEND_LAUNCH_BLOCKING=1` 确认真实失败点是 `npu_rotary_mul_backward`。
 - 旧 MindSpeed-MM/`transformers 5.2.0` 路径用老板数据内容可跑通，但不是等价配置：旧源码不支持 `formatting: openai` 和 `template: qwen3_6`，转换到 `sharegpt + qwen3_vl` 后 row20 从 `2506/2052` 变成 `475/21`，避开了危险 shape。
+- 更严格的完整数据旧版本栈对照中，8 卡全参、`cutoff=4096`、`micro_batch_size=2`、activation offload、10 step 配置下第 2 step 没有 rotary 561002，完成 6 step 后在旧 `qwen3_vl` 视觉塔 forward OOM。这说明老板第二步 rotary 错在旧版本/旧模板路径下不复现，但不能把原因归结为单一 Python 包版本，因为旧源码必须换数据格式和模板。
 
 详细路径、日志和最小复现记录见 [reference/RJX_561002_REPRO_20260707.md](reference/RJX_561002_REPRO_20260707.md)。
 
