@@ -1,5 +1,38 @@
 # 更新说明
 
+## v0.1.24 - 2026-07-07
+
+ms-swift DPO 长上下文压力测试准备：
+
+- `scripts/run_ms_swift_qwen36_dpo_smoke.sh` 增加可配置训练参数：
+  - `MAX_LENGTH`
+  - `PER_DEVICE_TRAIN_BATCH_SIZE`
+  - `GRADIENT_ACCUMULATION_STEPS`
+  - `LEARNING_RATE`
+- 新增 `scripts/make_long_context_dpo.py`，生成长上下文、长 answer 的 DPO 压力测试数据。
+- 新增 `datasets/long_context_dpo_192.jsonl`，共 `192` 条样本，文件约 `10.97 MB`。
+- 新增 `scripts/check_dpo_token_lengths.py`，用目标模型 tokenizer 检查 prompt/chosen/rejected token 长度。
+- 新增 `scripts/run_ms_swift_long_context_4096_b2_10step.sh`，封装目标测试：
+  - `MAX_LENGTH=4096`
+  - `PER_DEVICE_TRAIN_BATCH_SIZE=2`
+  - `MAX_STEPS=10`
+  - 8 卡 FSDP2 DPO
+
+预检结果：
+
+- 容器内 tokenizer 检查确认样本原始上下文超过 `4096`：
+  - sample 0: `prompt_tokens=8659`, `chosen_tokens=10309`, `rejected_tokens=10156`
+  - sample 1: `prompt_tokens=8659`, `chosen_tokens=10314`, `rejected_tokens=10155`
+  - sample 2: `prompt_tokens=8659`, `chosen_tokens=10316`, `rejected_tokens=10155`
+
+当前阻塞：
+
+- 用户要求只使用 `llin-rl-dpo`，不使用 `llin-rl-dpo-p2`。
+- `llin-rl-dpo` 当前有 `/dev/davinci8-15` 和 Ascend 环境变量，但容器内 `npu-smi` 返回 `device is used`。
+- `torch_npu.npu.device_count()` 在 `llin-rl-dpo` 中返回 `0`。
+- 主机 `npu-smi info` 显示 16 张卡均有 python 进程占用。
+- 因此 4096/batch2/10step 压力测试已准备好，但尚未启动；需要释放 `llin-rl-dpo` 绑定的 8 张卡后才能按要求运行。
+
 ## v0.1.23 - 2026-07-07
 
 MindSpeed-MM Qwen3.6 `561002` 中文根因分析：

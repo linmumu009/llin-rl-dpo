@@ -1921,3 +1921,106 @@ aclnnCat
   - 全参数：第 1 step 通过，第二步附近 OOM。
 - 因此当前可落地结论是：纯文本训练优先冻结视觉塔；8 卡全参数 `cutoff=4096` 是显存不够。
 - 但这仍不等同于老板截图里的精确错误链：本轮没有复现 rotary `561002`，也没有复现 patch 后的 `aclnnCat`；我们复现到的是全参数显存压力。
+
+## 2026-07-07 ms-swift DPO 长上下文 4096/batch2/10step 准备与阻塞
+
+用户要求：
+
+```text
+只使用 llin-rl-dpo
+8 张卡
+cutoff / MAX_LENGTH = 4096
+per_device_train_batch_size = 2
+每条数据原始上下文超过 4096
+answer 很长
+跑 10 step DPO 看是否 OK
+```
+
+新增文件：
+
+```text
+scripts/make_long_context_dpo.py
+scripts/check_dpo_token_lengths.py
+scripts/run_ms_swift_long_context_4096_b2_10step.sh
+datasets/long_context_dpo_192.jsonl
+```
+
+训练脚本参数化：
+
+```text
+scripts/run_ms_swift_qwen36_dpo_smoke.sh
+MAX_LENGTH
+PER_DEVICE_TRAIN_BATCH_SIZE
+GRADIENT_ACCUMULATION_STEPS
+LEARNING_RATE
+```
+
+数据：
+
+```text
+dataset=datasets/long_context_dpo_192.jsonl
+rows=192
+size=about 10.97 MB
+source=long_context_dpo_v1
+```
+
+tokenizer 预检：
+
+```bash
+python scripts/check_dpo_token_lengths.py \
+  --dataset datasets/long_context_dpo_192.jsonl \
+  --model /models/Qwen3.6-27B \
+  --sample-size 3
+```
+
+结果：
+
+```text
+sample 0: prompt_tokens=8659, chosen_tokens=10309, rejected_tokens=10156
+sample 1: prompt_tokens=8659, chosen_tokens=10314, rejected_tokens=10155
+sample 2: prompt_tokens=8659, chosen_tokens=10316, rejected_tokens=10155
+```
+
+这确认原始 prompt 已超过 4096，chosen/rejected 总长度约 10k token，满足本轮压力测试数据要求。
+
+预期启动脚本：
+
+```bash
+RUN_ID=longctx-4096-b2-10step-20260707 \
+scripts/run_ms_swift_long_context_4096_b2_10step.sh
+```
+
+脚本内关键配置：
+
+```text
+MAX_STEPS=10
+NUM_TRAIN_EPOCHS=1
+MAX_LENGTH=4096
+PER_DEVICE_TRAIN_BATCH_SIZE=2
+GRADIENT_ACCUMULATION_STEPS=1
+SAVE_STRATEGY=no
+FSDP_CONFIG=fsdp2
+```
+
+当前阻塞：
+
+```text
+container=llin-rl-dpo
+ASCEND_VISIBLE_DEVICES=8,9,10,11,12,13,14,15
+ASCEND_RT_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+/dev/davinci8-15 exist
+npu-smi inside container: device is used
+torch_npu.npu.device_count()=0
+```
+
+主机只读检查：
+
+```text
+npu-smi info shows python processes occupying all 16 cards.
+```
+
+判断：
+
+- 按用户要求不使用 `llin-rl-dpo-p2`，只使用 `llin-rl-dpo`。
+- 当前 `llin-rl-dpo` 绑定的 8 张卡被占用，容器内无法获得 NPU，因此不能安全启动训练。
+- 本轮已经完成数据、脚本和 token 长度预检；真正的 10 step DPO 需要先释放 `llin-rl-dpo` 绑定的 8 张卡。

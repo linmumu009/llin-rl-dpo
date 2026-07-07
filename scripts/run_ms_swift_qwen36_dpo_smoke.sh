@@ -16,6 +16,10 @@ RESUME_FROM_CHECKPOINT="${RESUME_FROM_CHECKPOINT:-}"
 LLIN_SWIFTMODEL_ASSIGN_PATCH="${LLIN_SWIFTMODEL_ASSIGN_PATCH:-0}"
 FSDP_CONFIG="${FSDP_CONFIG:-fsdp2}"
 SAVE_ONLY_MODEL="${SAVE_ONLY_MODEL:-}"
+MAX_LENGTH="${MAX_LENGTH:-512}"
+PER_DEVICE_TRAIN_BATCH_SIZE="${PER_DEVICE_TRAIN_BATCH_SIZE:-1}"
+GRADIENT_ACCUMULATION_STEPS="${GRADIENT_ACCUMULATION_STEPS:-1}"
+LEARNING_RATE="${LEARNING_RATE:-1e-4}"
 
 export TORCH_DEVICE_BACKEND_AUTOLOAD="${TORCH_DEVICE_BACKEND_AUTOLOAD:-0}"
 export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
@@ -44,10 +48,10 @@ args=(
   --lora_rank 8
   --lora_alpha 32
   --lora_dropout 0
-  --max_length 512
-  --per_device_train_batch_size 1
-  --gradient_accumulation_steps 1
-  --learning_rate 1e-4
+  --max_length "${MAX_LENGTH}"
+  --per_device_train_batch_size "${PER_DEVICE_TRAIN_BATCH_SIZE}"
+  --gradient_accumulation_steps "${GRADIENT_ACCUMULATION_STEPS}"
+  --learning_rate "${LEARNING_RATE}"
   --num_train_epochs "${NUM_TRAIN_EPOCHS}"
   --max_steps "${MAX_STEPS}"
   --logging_steps 1
