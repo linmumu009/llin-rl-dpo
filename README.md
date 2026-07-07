@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.23`：补充 MindSpeed-MM Qwen3.6 `561002` 中文根因分析。确认 OpenAI converter 会把 `reasoning_content` 合并进 assistant，row20 真实长度为 `2506/2052`；第二步 rank4 本地 batch pad 后进入 rotary 的真实 shape 为 `(2,24,2576,64)` 和 `(2,4,2576,64)`，随后 `npu_rotary_mul_backward -> aclnnRotaryPositionEmbeddingGrad` 报 `reserveAlignNum=2592`。单独构造相同 shape 调用可通过，说明问题不是单纯 shape 数字，而是完整 MindSpeed-MM 训练路径下的 Ascend fused rotary backward tiling 缺陷。详见 [reference/MSMM_561002_ROOT_CAUSE_CN_20260707.md](reference/MSMM_561002_ROOT_CAUSE_CN_20260707.md)。
 - `v0.1.22`：在非 DPO SFT 容器 `llin-msmm-sft-latest-run` 中实测 latest `MindSpeed-MM@643738f` + latest `MindSpeed@38ecf80`；老板数据前 32 条、OpenAI 格式、`template=qwen3_6`、8 卡全参、`cutoff=4096`、`micro_batch_size=2`、2 step。iteration 1 通过，iteration 2 rank4 复现 `aclnnRotaryPositionEmbeddingGrad error 561002`，同样是 `reserveAlignNum=2592`。结论：latest 支持 Qwen3.6/OpenAI，但没有解决该 NPU rotary backward tiling 限制。详见 [reference/MSMM_LATEST_561002_REPRO_20260707.md](reference/MSMM_LATEST_561002_REPRO_20260707.md)。
 - `v0.1.21`：按要求改在原 SFT 实验容器 `llin-msmm-sft-probe-8rtm` 中验证 latest MindSpeed-MM，没有进入或修改 `llin-rl-dpo` DPO 容器；latest `MindSpeed-MM@643738f` + latest `MindSpeed@38ecf80` 的隔离 venv import probe 通过，确认 `OpenAIDatasetConverter`、`qwen3_6` 和 `qwen3_6_nothink` 均可加载，自带 OpenAI converter 单测 `22 passed`。结论：latest MindSpeed-MM 已支持 Qwen3.6 + OpenAI 数据格式，但这还不等于 rotary `561002` 已解决。详见 [reference/MSMM_LATEST_QWEN36_OPENAI_20260707.md](reference/MSMM_LATEST_QWEN36_OPENAI_20260707.md)。
 - `v0.1.20`：按“我们旧 MindSpeed-MM + transformers 5.2.0 + torch_npu 2.7.1.post4”做完整老板数据、8 卡全参、`cutoff=4096`、`micro_batch_size=2`、activation offload、10 step 对照；因旧源码不支持 `openai/qwen3_6`，数据转为 `sharegpt`、模板用 `qwen3_vl`。结果第 2 step 未复现 rotary 561002，跑过 6 step 后在视觉塔 forward OOM；说明旧版本栈没有老板的第二步 rotary 错，但该对照仍受模板/预处理差异影响。
@@ -142,6 +143,18 @@ qwen3.6-27B 的本地配置是：
 - 错误核心仍是：`reserveAlignNum = 2592 too large, aicore do not support`。
 
 这说明 latest 的 Qwen3.6/OpenAI 支持只解决“能不能正确走数据/模板链路”，没有解决 Ascend NPU rotary backward tiling 限制。详见 [reference/MSMM_LATEST_561002_REPRO_20260707.md](reference/MSMM_LATEST_561002_REPRO_20260707.md)。
+
+### 561002 根因收敛
+
+2026-07-07 追加中文根因分析。关键新证据：
+
+- OpenAI 数据里的短 `content` 不是真实训练答案长度；MindSpeed-MM 会把 `reasoning_content` 包成 `<think>...</think>` 后合并进 assistant。row20 因此是 `2506` token，其中 label 为 `2052`。
+- `shuffle=false`、8 卡、`micro_batch_size=2` 下，iteration 2 的 rank4 正好处理 rows `20` 和 `28`。
+- shape probe 显示失败前 rank4 的真实 rotary 输入为 `(2,24,2576,64)` 和 `(2,4,2576,64)`；`2576` 是 rank-local batch padding 后的长度。
+- 同步栈确认第一失败点是 `loss.backward()` 里的 `npu_rotary_mul_backward/aclnnRotaryPositionEmbeddingGrad`，CANN tiling 报 `reserveAlignNum=2592`。
+- 单独构造完全相同 shape、stride 的普通 tensor 调 `torch_npu.npu_rotary_mul` backward 可以通过；所以不能把问题简化成“长度超过 2048 必挂”或“2576 shape 必挂”。更准确的说法是：完整 MindSpeed-MM 训练路径下，Qwen3.6 partial rotary + FSDP/recompute/offload/autograd/NPU 内部格式共同触发了 Ascend fused rotary backward tiling 缺陷。
+
+详见 [reference/MSMM_561002_ROOT_CAUSE_CN_20260707.md](reference/MSMM_561002_ROOT_CAUSE_CN_20260707.md)。
 
 ### 同事真实配置复现 561002
 

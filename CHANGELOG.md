@@ -1,5 +1,18 @@
 # 更新说明
 
+## v0.1.23 - 2026-07-07
+
+MindSpeed-MM Qwen3.6 `561002` 中文根因分析：
+
+- 新增中文记录：`reference/MSMM_561002_ROOT_CAUSE_CN_20260707.md`。
+- 确认 latest MindSpeed-MM 的 OpenAI converter 会把 assistant 的 `reasoning_content` 包成 `<think>...</think>` 后合并进训练标签；此前只看 `content` 会低估真实 token 长度。
+- 按真实 tokenizer/template 重新计算前 32 条数据：row20 为 `2506` token，其中 label `2052`；row28 为 `1264` token，其中 label `707`；row31 为 `3506` token，其中 label `3045`。
+- sampler 对齐：`shuffle=false`、8 卡、`micro_batch_size=2` 时，iteration 2 rank4 正好处理 rows `20` 和 `28`。
+- 增加临时 shape probe wrapper，只记录 `torch_npu.npu_rotary_mul` 输入，不替换 rotary 算法；shape probe 日志为 `/workspace/MindSpeed-MM-latest/llin_logs/latest_rjx_rows0_31_shapeprobe_8npu_20260707_081147.log`。
+- 捕获失败前真实 shape：rank4 iteration 2 的 text rotary 输入为 `(2,24,2576,64)` 和 `(2,4,2576,64)`，dtype `bfloat16`，q tensor 非连续；随后同步报 `npu_rotary_mul_backward -> aclnnRotaryPositionEmbeddingGrad`，`reserveAlignNum=2592`。
+- 单独构造相同 `(2,24,2576,64)` / `(2,4,2576,64)` shape 和非连续 stride 调用 `torch_npu.npu_rotary_mul` backward 可以通过；因此根因不是单纯 shape 数字，而是完整 MindSpeed-MM 训练路径下的 Ascend fused rotary backward tiling 缺陷。
+- 更新 README 当前版本和 MindSpeed-MM `561002` 根因收敛小节。
+
 ## v0.1.22 - 2026-07-07
 
 MindSpeed-MM latest 训练复现 561002：
