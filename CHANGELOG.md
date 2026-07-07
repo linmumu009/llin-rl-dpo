@@ -1,5 +1,35 @@
 # 更新说明
 
+## v0.1.16 - 2026-07-07
+
+新增：
+
+- `scripts/make_msmm_sft_probe_assets.py` 增加 `--full-param`，用于生成不冻结 `model.visual` 的 MindSpeed-MM SFT probe 配置。
+
+MindSpeed-MM full-param 复查：
+
+- 用户反馈老板已试：8 卡、全参、`cutoff=4096`、上下文超过 4096。按同条件在昨天实际可见 8 NPU 的实验容器里复查 3 step。
+- 配置：`configs/msmm_qwen36_sft_cutoff4096_longanswer_fullparam_3step.yaml`
+- 日志：`logs/msmm_qwen36_sft_cutoff4096_longanswer_fullparam_3step_8npu_venv_20260707.log`
+- exit code：`1`
+- 配置确认：
+  - `freeze: []`
+  - `train_iters: 3`
+  - `cutoff_len: 4096`
+  - long-answer 数据，原始上下文超过 4096，cache 仍按 cutoff 截到 4096。
+- 结果：
+  - iteration 1/3 跑通，`elapsed time per iteration (ms): 17755.8`，loss `1.215048E+01`，grad norm `3245.044`。
+  - 随后在下一次 backward / FSDP reduce-scatter 附近 OOM。
+  - 关键错误：`NPUWorkspaceAllocator tried to allocate 31.06 MiB`，设备可用显存只剩约 `29.20-97.34 MiB`。
+  - 报错含 `runtime result = 207001`，当前 working operator 显示为 `aclnnFlashAttentionScore`。
+  - 未出现 `aclnnRotaryPositionEmbeddingGrad`、`561002` 或 `aclnnCat`。
+
+判断：
+
+- 老板的“8 卡全参 cutoff=4096 上下文超过 4096 会 OOM”在本轮复查中成立。
+- 与上一版冻结视觉塔的 2-step 通过不矛盾：去掉 `freeze: model.visual` 后显存余量被吃完，第二步附近只剩几十 MiB，无法再分配 31 MiB workspace。
+- 当前复现到的是显存硬限制，不是 rotary 算子 561002 问题。
+
 ## v0.1.15 - 2026-07-06
 
 新增：

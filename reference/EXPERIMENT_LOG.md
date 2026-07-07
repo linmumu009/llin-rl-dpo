@@ -1703,3 +1703,139 @@ last supervised label position=4095
 1. 如果目标是复现老板截图，需获取其原始启动参数、是否启用 torch 原生 rotary patch、是否全参数训练、是否含图像输入、是否冻结视觉塔、是否开启 recompute/chunk loss。
 2. 在确认真实配置前，不建议把当前结果表述为“4096 全参数一定没问题”；更准确说法是：当前隔离环境下，MindSpeed-MM Qwen3.6-27B SFT `cutoff=4096` 在 8 NPU、冻结视觉塔、重计算和 chunk loss 条件下可跑通 2 step。
 3. 若必须跑全参数 4096，优先考虑更多卡分片、保持 fused rotary、开启/加大重计算、降低 micro batch 或改 LoRA；否则很容易越过 64GB HBM 边界。
+
+## 2026-07-07 MindSpeed-MM 8 卡全参数 cutoff=4096 3-step 复查
+
+用户反馈：
+
+- 老板已试：8 卡、全参、`cutoff=4096`、上下文超过 4096。
+- 用户要求在该条件下试 3 step。
+- 用户随后指出已有 MindSpeed-MM 容器可能没有 8 卡，允许在昨天实际跑通的实验容器里改配置复查。
+
+容器排查：
+
+- 检查了 `llin-msmm-*` 系列容器。
+- 多数 MindSpeed-MM 专用容器有工作区和设备节点，但 `torch_npu` 下 `torch.npu.device_count()` 为 `0`。
+- 部分容器内 `npu-smi` 报 driver symbol 或 device used 类错误。
+- `llin-msmm-sft-probe-6x` 只看到 `4` 张卡，`llin-msmm-sft-probe-dev1` 只看到 `1` 张卡。
+- 因此，本轮实际使用昨天已验证可见 8 NPU 的 `llin-rl-dpo` 容器，并继续使用隔离 venv `/workspace/llin-rl-dpo/.venvs/msmm-qwen36`。
+
+配置生成：
+
+- 基于 `configs/msmm_qwen36_sft_cutoff4096_longanswer_2step.yaml` 生成新配置：
+
+```text
+configs/msmm_qwen36_sft_cutoff4096_longanswer_fullparam_3step.yaml
+```
+
+关键改动：
+
+```text
+freeze: []
+train_iters: 3
+cutoff_len: 4096
+dataset=/workspace/llin-rl-dpo/datasets/msmm_sft_probe_long_answer.jsonl
+cache_dir=/workspace/llin-rl-dpo/cache/msmm_sft_cutoff4096_longanswer_fullparam_3step
+save=/workspace/llin-rl-dpo/outputs/msmm-qwen36-sft-cutoff4096-longanswer-fullparam-3step
+```
+
+保留项：
+
+```text
+recompute: true
+enable_chunk_loss: true
+chunk_size: 1024
+micro_batch_size: 1
+gradient_accumulation_steps: 1
+```
+
+启动方式：
+
+```bash
+cd /workspace/llin-rl-dpo/reference/MindSpeed-MM
+source /usr/local/Ascend/ascend-toolkit/set_env.sh
+source /workspace/llin-rl-dpo/.venvs/msmm-qwen36/bin/activate
+export PYTHONPATH=/workspace/llin-rl-dpo/reference/MindSpeed-MM:/workspace/llin-rl-dpo/reference/MindSpeed-26.0.0_core_r0.12.1:${PYTHONPATH}
+export NON_MEGATRON=true
+export MULTI_STREAM_MEMORY_REUSE=2
+export TASK_QUEUE_ENABLE=2
+export ASCEND_LAUNCH_BLOCKING=0
+export ACLNN_CACHE_LIMIT=100000
+export CPU_AFFINITY_CONF=1
+export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
+export HCCL_CONNECT_TIMEOUT=7200
+export HCCL_NPU_SOCKET_PORT_RANGE=21600-21695
+export ASCEND_VISIBLE_DEVICES=8,9,10,11,12,13,14,15
+export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+/workspace/llin-rl-dpo/.venvs/msmm-qwen36/bin/python -m torch.distributed.run \
+  --nproc_per_node 8 \
+  --nnodes 1 \
+  --node_rank 0 \
+  --master_addr localhost \
+  --master_port 29632 \
+  mindspeed_mm/fsdp/train/trainer.py \
+  /workspace/llin-rl-dpo/configs/msmm_qwen36_sft_cutoff4096_longanswer_fullparam_3step.yaml
+```
+
+注意：
+
+- 第一次尝试误用了普通 `torchrun`，实际调用 `/opt/conda/bin/python3.11`，失败于 `ModuleNotFoundError: No module named 'torchdata'`。
+- 该次没有进入训练，不计为训练结果。
+- 第二次显式使用 venv Python 后进入训练。
+
+结果：
+
+```text
+log=/data/liulin/llin-rl-dpo/logs/msmm_qwen36_sft_cutoff4096_longanswer_fullparam_3step_8npu_venv_20260707.log
+exit_code=1
+freeze=[]
+train_iters=3
+world_size=8
+global_batch_size=8
+```
+
+已完成的 step：
+
+```text
+iteration 1/3
+elapsed time per iteration (ms): 17755.8
+loss: 1.215048E+01
+grad norm: 3245.044
+```
+
+失败点：
+
+```text
+NPU out of memory. NPUWorkspaceAllocator tried to allocate 31.06 MiB
+NPU 2: 61.27 GiB total capacity; 97.34 MiB free
+NPU 6: 61.27 GiB total capacity; 29.90 MiB free
+NPU 0: 61.27 GiB total capacity; 29.20 MiB free
+torch.OutOfMemoryError
+current working operator name is aclnnFlashAttentionScore
+alloc device memory failed, runtime result = 207001
+```
+
+未出现：
+
+```text
+aclnnRotaryPositionEmbeddingGrad
+561002
+aclnnCat
+```
+
+收尾：
+
+- 训练失败后检查 `npu-smi info`，没有残留 running processes。
+
+判断：
+
+- 老板反馈的 8 卡全参 `cutoff=4096` 上下文超过 4096 会 OOM，在本轮复查中成立。
+- 与上一轮“冻结视觉塔 long-answer 2 step 通过”不矛盾：冻结视觉塔时显存已接近上限，全参数后第二步附近只剩几十 MiB，31 MiB workspace 都无法分配。
+- 当前复现到的是显存硬限制，错误码 `207001`；不是 rotary 算子 `561002`。
+- 如果额外使用 torch 原生 rotary patch 并引入 `torch.cat` 中间 tensor，可能进一步把错误表现推向 `aclnnCat` OOM。
+
+下一步建议：
+
+1. 若必须在 8 卡上做 `cutoff=4096`，不建议全参数；优先 LoRA、冻结视觉塔、或进一步降低激活/优化器显存。
+2. 若必须全参数 4096，应优先增加卡数做更细分片，或进一步启用 activation offload / 更激进 recompute / 更小 chunk。
+3. 如果要判断 rotary patch 的影响，需要在同一全参配置下对比 fused rotary 与 torch 原生 rotary patch；但当前全参基线已经 OOM，patch 对照大概率更差。
