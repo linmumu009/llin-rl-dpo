@@ -1,5 +1,20 @@
 # 更新说明
 
+## v0.1.21 - 2026-07-07
+
+MindSpeed-MM latest Qwen3.6/OpenAI 支持验证：
+
+- 按用户要求，改在原 SFT 实验容器 `llin-msmm-sft-probe-8rtm` 中验证，没有进入或修改 `llin-rl-dpo` DPO 容器。
+- 现有 SFT 容器默认 `/workspace/MindSpeed-MM` 版本为 `9e6ca6ca`，未搜到 `qwen3_6`、`formatting: openai` 或 `OpenAIDatasetConverter`。
+- 在同一 SFT 容器内隔离拉取 latest MindSpeed-MM：`/workspace/MindSpeed-MM-latest`，commit `643738f`。
+- latest MindSpeed-MM 源码包含 `examples/qwen3_6`、`OpenAIDatasetConverter`、`formatting: openai`、`template: qwen3_6` 和 `template: qwen3_6_nothink`。
+- latest MindSpeed-MM 需要配套 latest MindSpeed 的 `mindspeed.fsdp`；现有旧 MindSpeed 目录不包含该模块，因此隔离拉取 `/workspace/MindSpeed-latest`，commit `38ecf80`。
+- 新建隔离 venv `/workspace/msmm-latest-probe-venv`，只在其中补 `torchdata`、`datasets`、`av`、`pytest`。
+- import probe 通过：`openai_converter=True`，`has_qwen3_6=True`，`has_qwen3_6_nothink=True`。
+- 运行 latest 自带 `tests/ut_fsdp/data/test_openai_converter.py`，结果 `22 passed`。
+- 结论：latest MindSpeed-MM 在源码、import 和单测层面支持 Qwen3.6 + OpenAI 数据格式；但尚未证明 latest 栈能解决 Qwen3.6-27B 全量训练中的 rotary `561002`。
+- 新增记录：`reference/MSMM_LATEST_QWEN36_OPENAI_20260707.md`。
+
 ## v0.1.20 - 2026-07-07
 
 MindSpeed-MM 旧版本栈完整数据对照：

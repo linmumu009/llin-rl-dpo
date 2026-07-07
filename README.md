@@ -67,6 +67,7 @@
 
 当前版本：
 
+- `v0.1.21`：按要求改在原 SFT 实验容器 `llin-msmm-sft-probe-8rtm` 中验证 latest MindSpeed-MM，没有进入或修改 `llin-rl-dpo` DPO 容器；latest `MindSpeed-MM@643738f` + latest `MindSpeed@38ecf80` 的隔离 venv import probe 通过，确认 `OpenAIDatasetConverter`、`qwen3_6` 和 `qwen3_6_nothink` 均可加载，自带 OpenAI converter 单测 `22 passed`。结论：latest MindSpeed-MM 已支持 Qwen3.6 + OpenAI 数据格式，但这还不等于 rotary `561002` 已解决。详见 [reference/MSMM_LATEST_QWEN36_OPENAI_20260707.md](reference/MSMM_LATEST_QWEN36_OPENAI_20260707.md)。
 - `v0.1.20`：按“我们旧 MindSpeed-MM + transformers 5.2.0 + torch_npu 2.7.1.post4”做完整老板数据、8 卡全参、`cutoff=4096`、`micro_batch_size=2`、activation offload、10 step 对照；因旧源码不支持 `openai/qwen3_6`，数据转为 `sharegpt`、模板用 `qwen3_vl`。结果第 2 step 未复现 rotary 561002，跑过 6 step 后在视觉塔 forward OOM；说明旧版本栈没有老板的第二步 rotary 错，但该对照仍受模板/预处理差异影响。
 - `v0.1.19`：补充 561002 的变量对照和根因收敛：`cutoff=2048` 通过，`micro_batch_size=1` 仍在 row20 形状复现，关闭 activation offload 仍复现，`ASCEND_LAUNCH_BLOCKING=1` 确认真实触发点是 `npu_rotary_mul_backward/aclnnRotaryPositionEmbeddingGrad`；旧 MindSpeed-MM/transformers 5.2 对照通过是因为模板把 row20 从 `2506/2052` 缩到 `475/21`，不是证明底层算子问题消失。
 - `v0.1.18`：按老板给出的真实数据、配置、启动脚本和 MindSpeed-MM 源码快照，在我们自己的 `llin-rl-dpo` 容器内原生复现 `aclnnRotaryPositionEmbeddingGrad error 561002`；全量数据第 2 step rank4 失败，最小化到前 32 条数据跑 2 step 仍可复现，16-31 条单独 1 step 不复现。详见 [reference/RJX_561002_REPRO_20260707.md](reference/RJX_561002_REPRO_20260707.md)。
@@ -122,6 +123,12 @@ qwen3.6-27B 的本地配置是：
 ## MindSpeed-MM SFT cutoff 复现
 
 针对老板反馈的 MindSpeed-MM SFT `cutoff > 2048` 可能触发 `aclnnRotaryPositionEmbeddingGrad error 561002`，已完成一轮可复核复现。
+
+### latest MindSpeed-MM 支持性验证
+
+2026-07-07 在原 SFT 实验容器 `llin-msmm-sft-probe-8rtm` 中验证 latest MindSpeed-MM，不进入 DPO 容器 `llin-rl-dpo`。现有 SFT 容器自带 `/workspace/MindSpeed-MM@9e6ca6ca` 未包含 `qwen3_6/openai` 路径；隔离拉取 latest `MindSpeed-MM@643738f` 和配套 latest `MindSpeed@38ecf80` 后，`OpenAIDatasetConverter`、`qwen3_6`、`qwen3_6_nothink` 均可 import，自带 `tests/ut_fsdp/data/test_openai_converter.py` 全部通过，`22 passed`。
+
+结论：latest MindSpeed-MM 已经支持 Qwen3.6 + OpenAI ChatCompletion 风格数据；但这只是数据/模板链路验证，尚未证明 full Qwen3.6-27B 训练能避开 rotary `561002`。详见 [reference/MSMM_LATEST_QWEN36_OPENAI_20260707.md](reference/MSMM_LATEST_QWEN36_OPENAI_20260707.md)。
 
 ### 同事真实配置复现 561002
 
