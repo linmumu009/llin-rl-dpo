@@ -1,5 +1,24 @@
 # 更新说明
 
+## v0.1.25 - 2026-07-08
+
+ms-swift DPO 长上下文压力测试实测：
+
+- 按用户要求只使用 `llin-rl-dpo`，重启后确认 `torch_npu.npu.device_count()` 恢复为 `8`。
+- 第一次运行保持默认 `truncation_strategy=delete`：
+  - `MAX_LENGTH=4096`
+  - `PER_DEVICE_TRAIN_BATCH_SIZE=2`
+  - `MAX_STEPS=10`
+  - 8 卡 FSDP2 DPO
+  - 结果：exit code `1`，失败在数据预处理；因所有样本超过 `MAX_LENGTH=4096`，`train_dataset[0]` 无法取出，报 `Failed to retrieve the dataset. You can avoid this issue by increasing max_length or modifying truncation_strategy`。
+- `scripts/run_ms_swift_qwen36_dpo_smoke.sh` 新增可选 `TRUNCATION_STRATEGY` 参数。
+- `scripts/run_ms_swift_long_context_4096_b2_10step.sh` 默认设置 `TRUNCATION_STRATEGY=left`，用于在 cutoff 4096 时保留序列尾部，尽量保住长 answer 训练信号。
+- 第二次运行使用 `TRUNCATION_STRATEGY=left`：
+  - 数据预处理通过并进入训练。
+  - 首个训练 step 在多 rank 上 NPU OOM，exit code `1`。
+  - 典型日志：`NPU out of memory. Tried to allocate 194.00 MiB (NPU 7; 61.28 GiB total capacity; 57.02 GiB already allocated; 198.39 MiB free; 60.31 GiB reserved in total by PyTorch)`。
+- 结论：当前 ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2 下，`8 NPU / max_length 4096 / per_device_train_batch_size 2 / long answer / 10 steps` 不能跑通；真实瓶颈是首个 step 显存不足，而不是容器或 HCCL 启动问题。
+
 ## v0.1.24 - 2026-07-07
 
 ms-swift DPO 长上下文压力测试准备：

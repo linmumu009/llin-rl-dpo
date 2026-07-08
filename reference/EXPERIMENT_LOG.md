@@ -2024,3 +2024,171 @@ npu-smi info shows python processes occupying all 16 cards.
 - 按用户要求不使用 `llin-rl-dpo-p2`，只使用 `llin-rl-dpo`。
 - 当前 `llin-rl-dpo` 绑定的 8 张卡被占用，容器内无法获得 NPU，因此不能安全启动训练。
 - 本轮已经完成数据、脚本和 token 长度预检；真正的 10 step DPO 需要先释放 `llin-rl-dpo` 绑定的 8 张卡。
+
+## 2026-07-08 ms-swift DPO 长上下文 4096/batch2/10step 实测
+
+用户要求继续实际试跑：
+
+```text
+只使用 llin-rl-dpo
+8 张卡
+cutoff / MAX_LENGTH = 4096
+per_device_train_batch_size = 2
+每条数据原始上下文超过 4096
+answer 很长
+跑 10 step DPO 看是否 OK
+```
+
+容器恢复：
+
+```bash
+docker start llin-rl-dpo
+docker exec llin-rl-dpo bash -lc 'python - <<PY
+import os, torch, torch_npu
+print("ASCEND_VISIBLE_DEVICES", os.environ.get("ASCEND_VISIBLE_DEVICES"))
+print("ASCEND_RT_VISIBLE_DEVICES", os.environ.get("ASCEND_RT_VISIBLE_DEVICES"))
+print("torch", torch.__version__)
+print("torch_npu", torch_npu.__version__)
+print("npu_count", torch_npu.npu.device_count())
+PY'
+```
+
+结果：
+
+```text
+ASCEND_VISIBLE_DEVICES=8,9,10,11,12,13,14,15
+ASCEND_RT_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+torch=2.7.1+cpu
+torch_npu=2.7.1.post4
+npu_count=8
+```
+
+### Run A: 默认 truncation_strategy=delete
+
+启动：
+
+```bash
+RUN_ID=longctx-4096-b2-10step-20260708-0158 \
+scripts/run_ms_swift_long_context_4096_b2_10step.sh \
+  > logs/ms_swift_longctx_4096_b2_10step.log 2>&1
+```
+
+关键参数：
+
+```text
+--max_length 4096
+--per_device_train_batch_size 2
+--max_steps 10
+--fsdp fsdp2
+truncation_strategy=delete
+```
+
+结果：
+
+```text
+exit_code=1
+```
+
+失败点：
+
+```text
+ValueError: Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or modifying the `truncation_strategy`.
+```
+
+判断：
+
+- 数据确实满足“原始上下文超过 4096、answer 很长”。
+- 但 ms-swift 默认 `truncation_strategy=delete` 会把超过 `MAX_LENGTH=4096` 的样本删除。
+- 本测试数据所有样本都超过 4096，因此训练数据无法取出，未进入训练 step。
+
+### Run B: truncation_strategy=left
+
+为了保持 `MAX_LENGTH=4096` 不变，同时允许超长样本进入训练，脚本新增：
+
+```text
+TRUNCATION_STRATEGY
+```
+
+并让长上下文 wrapper 默认：
+
+```text
+TRUNCATION_STRATEGY=left
+```
+
+原因：
+
+- `left` 保留序列尾部，更可能保住长 answer 训练信号。
+- `right` 会保留序列开头，在 prompt 已超过 4096 时容易只保留前半截上下文。
+
+启动：
+
+```bash
+RUN_ID=longctx-4096-b2-left-10step-20260708-0203 \
+TRUNCATION_STRATEGY=left \
+scripts/run_ms_swift_long_context_4096_b2_10step.sh \
+  > logs/ms_swift_longctx_4096_b2_left_10step.log 2>&1
+```
+
+关键参数：
+
+```text
+--max_length 4096
+--per_device_train_batch_size 2
+--max_steps 10
+--fsdp fsdp2
+--truncation_strategy left
+```
+
+结果：
+
+```text
+exit_code=1
+数据预处理通过
+进入训练首个 step
+首个 step 多 rank NPU OOM
+```
+
+典型 OOM：
+
+```text
+NPU out of memory. Tried to allocate 194.00 MiB
+NPU 7: 61.28 GiB total capacity
+57.02 GiB already allocated
+198.39 MiB free
+60.31 GiB reserved in total by PyTorch
+```
+
+其他 rank 也出现相同显存形态：
+
+```text
+NPU 1: 57.20 GiB allocated, 198.75 MiB free
+NPU 3: 57.20 GiB allocated, 167.67 MiB free
+NPU 5: 57.02 GiB allocated, 112.75 MiB free
+NPU 2/4/6: attempted 386.00 MiB allocation and failed
+```
+
+失败调用链：
+
+```text
+swift rlhf -> dpo_trainer.py -> concatenated_forward
+Qwen3_5ForConditionalGeneration
+chunk_gated_delta_rule_fwd_h
+w.permute(...).contiguous()
+torch.OutOfMemoryError
+```
+
+当前结论：
+
+- `llin-rl-dpo` 容器和 8 卡 NPU 可见性已恢复，训练启动链路没有阻塞。
+- 默认截断策略下，超长样本会被删光，不能用于这类压力测试。
+- 使用 `TRUNCATION_STRATEGY=left` 后，数据能进入训练，但 `8 NPU / MAX_LENGTH=4096 / per_device_train_batch_size=2 / DPO concatenated forward / long answer` 在当前 LoRA+FSDP2 配置下首个 step 即 OOM。
+- 因此对用户问题“跑 10 step DPO 看看 OK 吗”的实测答案是：当前配置不 OK，未跑完 10 step；失败原因是显存不足。
+
+可行的下一步候选：
+
+```text
+1. 保持 max_length=4096，把 PER_DEVICE_TRAIN_BATCH_SIZE 降到 1，再用 gradient_accumulation_steps=2 保持有效 batch。
+2. 保持 batch=2，把 MAX_LENGTH 降到 2048/3072，验证边界。
+3. 尝试减少 DPO concatenated forward 压力，例如更小 LoRA target、关闭不必要模块、进一步冻结视觉塔。
+4. 如果必须 batch=2 且 cutoff=4096，需要换更省显存的并行/优化配置或更大显存资源。
+```
