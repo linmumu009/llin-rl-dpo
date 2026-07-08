@@ -2192,3 +2192,114 @@ torch.OutOfMemoryError
 3. 尝试减少 DPO concatenated forward 压力，例如更小 LoRA target、关闭不必要模块、进一步冻结视觉塔。
 4. 如果必须 batch=2 且 cutoff=4096，需要换更省显存的并行/优化配置或更大显存资源。
 ```
+
+## 2026-07-08 ms-swift DPO 长上下文 4096/batch1/gradacc2/10step 实测
+
+目的：
+
+```text
+接续上一轮 batch2 OOM 结果。
+保持 max_length=4096、8 卡、长上下文长 answer 数据和 DPO 不变。
+把 per_device_train_batch_size 从 2 降到 1。
+把 gradient_accumulation_steps 从 1 提到 2。
+观察能否跑完 10 step，并记录效率和 DPO 指标。
+```
+
+新增脚本：
+
+```text
+scripts/run_ms_swift_long_context_4096_b1_ga2_10step.sh
+```
+
+脚本关键配置：
+
+```text
+MAX_STEPS=10
+NUM_TRAIN_EPOCHS=1
+MAX_LENGTH=4096
+PER_DEVICE_TRAIN_BATCH_SIZE=1
+GRADIENT_ACCUMULATION_STEPS=2
+TRUNCATION_STRATEGY=left
+SAVE_STRATEGY=no
+EVAL_STRATEGY=no
+FSDP_CONFIG=fsdp2
+MASTER_PORT=29657
+```
+
+启动前检查：
+
+```text
+container=llin-rl-dpo
+torch_npu.npu.device_count()=8
+host npu-smi: No running processes found
+```
+
+启动：
+
+```bash
+RUN_ID=longctx-4096-b1-ga2-10step-20260708-0214 \
+TRUNCATION_STRATEGY=left \
+scripts/run_ms_swift_long_context_4096_b1_ga2_10step.sh \
+  > logs/ms_swift_longctx_4096_b1_ga2_10step.log 2>&1
+```
+
+实际命令核心参数：
+
+```text
+--model /models/Qwen3.6-27B
+--model_type qwen3_5
+--dataset /workspace/llin-rl-dpo/datasets/long_context_dpo_192.jsonl
+--rlhf_type dpo
+--torch_dtype bfloat16
+--tuner_type lora
+--target_modules all-linear
+--lora_rank 8
+--lora_alpha 32
+--max_length 4096
+--per_device_train_batch_size 1
+--gradient_accumulation_steps 2
+--max_steps 10
+--fsdp fsdp2
+--truncation_strategy left
+```
+
+结果：
+
+```text
+exit_code=0
+global_step/max_steps=10/10
+train_runtime=644.1705
+train_samples_per_second=0.248
+train_steps_per_second=0.016
+train_loss=0.09997398
+memory(GiB)=60.16
+train_speed(s/it)=64.42
+```
+
+step 指标摘要：
+
+```text
+step 1:  loss=0.6914, rewards/accuracies=0.0,    rewards/margins=0.0
+step 2:  loss=0.007552, rewards/accuracies=1.0,  rewards/margins=5.03125
+step 3:  loss=1.3e-07, rewards/accuracies=1.0,   rewards/margins=16.125
+step 4:  loss=0.0, rewards/accuracies=1.0,       rewards/margins=27.625
+step 5:  loss=0.0, rewards/accuracies=1.0,       rewards/margins=47.375
+step 6:  loss=0.0, rewards/accuracies=1.0,       rewards/margins=58.5
+step 7:  loss=0.30078125, rewards/accuracies=0.9375, rewards/margins=75.75
+step 8:  loss=0.0, rewards/accuracies=1.0,       rewards/margins=44.0
+step 9:  loss=0.0, rewards/accuracies=1.0,       rewards/margins=45.0
+step 10: loss=0.0, rewards/accuracies=1.0,       rewards/margins=46.75
+```
+
+完成后状态：
+
+```text
+host npu-smi: No running processes found
+```
+
+判断：
+
+- 能不能跑通：可以。`8 NPU / max_length 4096 / per-device batch 1 / grad_acc 2 / long answer / DPO / 10 step` 在 `llin-rl-dpo` 中完成。
+- 效率怎么样：很慢但稳定，约 `64.4s/optimizer step`，`0.016 steps/s`，`0.248 samples/s`；显存贴近上限，日志记录约 `60.16 GiB`。
+- 效果怎么样：smoke 数据上 reward margin 明显变大，多数 step reward accuracy 为 `1.0`；但这是合成长上下文压力测试，不是业务评测，因此只能证明链路可优化，不能证明真实效果。
+- 与上一轮对比：batch2 在首个 step OOM；batch1+gradacc2 能跑完 10 step，因此当前可用基线应先采用 batch1+gradacc2。

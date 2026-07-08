@@ -1,5 +1,34 @@
 # 更新说明
 
+## v0.1.26 - 2026-07-08
+
+ms-swift DPO 长上下文压力测试第二档实测：
+
+- 新增 `scripts/run_ms_swift_long_context_4096_b1_ga2_10step.sh`，用于在保持 `MAX_LENGTH=4096` 和长 answer 数据不变的情况下，把显存压力从每卡 batch 2 降到每卡 batch 1，并用梯度累积保持等效 batch：
+  - `PER_DEVICE_TRAIN_BATCH_SIZE=1`
+  - `GRADIENT_ACCUMULATION_STEPS=2`
+  - `TRUNCATION_STRATEGY=left`
+  - `MAX_STEPS=10`
+  - `FSDP_CONFIG=fsdp2`
+- 在 `llin-rl-dpo` 容器内确认 `torch_npu.npu.device_count()` 为 `8`，且 NPU 无遗留训练进程。
+- 实际运行：
+  - `RUN_ID=longctx-4096-b1-ga2-10step-20260708-0214`
+  - 日志：`logs/ms_swift_longctx_4096_b1_ga2_10step.log`
+  - 退出码：`0`
+- 跑通结果：
+  - `global_step/max_steps=10/10`
+  - `train_runtime=644.1705`
+  - `train_steps_per_second=0.016`
+  - `train_samples_per_second=0.248`
+  - `train_loss=0.09997398`
+  - 日志显存：`memory(GiB)=60.16`
+- 效果观察：
+  - 第 1 step reward margin 为 `0`。
+  - 第 10 step reward margin 为 `46.75`。
+  - 多数 step 的 reward accuracy 为 `1.0`，第 7 step 为 `0.9375`。
+  - 因数据是合成长上下文压力测试数据，这只能说明训练链路和 DPO 信号在该 smoke 数据上可优化，不代表真实业务效果。
+- 结论：当前 ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2 下，`8 NPU / max_length 4096 / per-device batch 1 / grad_acc 2 / long answer / 10 steps` 可以跑通；相比 v0.1.25 的 batch 2 OOM，这是当前可用的 4096 长上下文 DPO 基线。
+
 ## v0.1.25 - 2026-07-08
 
 ms-swift DPO 长上下文压力测试实测：
