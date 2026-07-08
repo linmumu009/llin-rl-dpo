@@ -2303,3 +2303,183 @@ host npu-smi: No running processes found
 - 效率怎么样：很慢但稳定，约 `64.4s/optimizer step`，`0.016 steps/s`，`0.248 samples/s`；显存贴近上限，日志记录约 `60.16 GiB`。
 - 效果怎么样：smoke 数据上 reward margin 明显变大，多数 step reward accuracy 为 `1.0`；但这是合成长上下文压力测试，不是业务评测，因此只能证明链路可优化，不能证明真实效果。
 - 与上一轮对比：batch2 在首个 step OOM；batch1+gradacc2 能跑完 10 step，因此当前可用基线应先采用 batch1+gradacc2。
+
+## 2026-07-08 ms-swift SFT 当前环境不改依赖 smoke test
+
+用户问题：
+
+```text
+当前环境，不要改变任何的依赖，能跑 SFT 吗？
+```
+
+边界：
+
+```text
+container=llin-rl-dpo
+不 pip install
+不卸载或升级包
+不修改物理机
+不使用其他人的 Docker
+只测试当前 ms-swift / torch_npu / transformers 组合
+```
+
+新增文件：
+
+```text
+datasets/tiny_sft.jsonl
+scripts/run_ms_swift_qwen36_sft_smoke.sh
+```
+
+环境确认：
+
+```text
+torch=2.7.1+cpu
+torch_npu=2.7.1.post4
+transformers=5.12.1
+swift=4.5.0.dev0
+torch_npu.npu.device_count()=8
+host npu-smi: No running processes found
+```
+
+数据：
+
+```text
+dataset=/workspace/llin-rl-dpo/datasets/tiny_sft.jsonl
+format=messages jsonl
+rows=32
+```
+
+脚本默认参数：
+
+```text
+swift sft
+--model /models/Qwen3.6-27B
+--model_type qwen3_5
+--dataset /workspace/llin-rl-dpo/datasets/tiny_sft.jsonl
+--torch_dtype bfloat16
+--tuner_type lora
+--target_modules all-linear
+--lora_rank 8
+--lora_alpha 32
+--max_length 512
+--per_device_train_batch_size 1
+--gradient_accumulation_steps 1
+--max_steps 3
+--save_strategy no
+--eval_strategy no
+--fsdp fsdp2
+```
+
+### Run A: 默认 SFT smoke
+
+启动：
+
+```bash
+RUN_ID=sft-smoke-3step-20260708-0247 \
+OUTPUT_DIR=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-sft-smoke/sft-smoke-3step-20260708-0247 \
+scripts/run_ms_swift_qwen36_sft_smoke.sh \
+  > logs/ms_swift_qwen36_sft_smoke_3step.log 2>&1
+```
+
+结果：
+
+```text
+exit_code=1
+global_step=0
+Train: 0/3
+```
+
+失败点：
+
+```text
+ImportError: Qwen3.5 linear attention padding free/sequence parallel requires flash-linear-attention.
+Install: https://github.com/fla-org/flash-linear-attention#installation
+```
+
+调用链摘要：
+
+```text
+swift sft
+-> seq2seq_trainer.py compute_loss
+-> template/base.py compute_sft_loss
+-> Qwen3_5ForConditionalGeneration.forward
+-> Qwen3_5GatedDeltaNet.forward
+-> _ensure_linear_attention_kernels
+-> ImportError
+```
+
+### Run B: 显式关闭 logits/padding/packing/sequence-parallel
+
+目的：
+
+```text
+验证是否可以通过当前 CLI 参数避开 flash-linear-attention 依赖。
+```
+
+启动：
+
+```bash
+RUN_ID=sft-smoke-3step-nologits-20260708-0254 \
+OUTPUT_DIR=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-sft-smoke/sft-smoke-3step-nologits-20260708-0254 \
+USE_LOGITS_TO_KEEP=false \
+PADDING_FREE=false \
+PACKING=false \
+SEQUENCE_PARALLEL_SIZE=1 \
+scripts/run_ms_swift_qwen36_sft_smoke.sh \
+  > logs/ms_swift_qwen36_sft_smoke_3step_nologits.log 2>&1
+```
+
+实际命令确认包含：
+
+```text
+--use_logits_to_keep false
+--padding_free false
+--packing false
+--sequence_parallel_size 1
+```
+
+日志确认实际参数：
+
+```text
+packing=False
+padding_free=False
+sequence_parallel_size=1
+use_logits_to_keep=False
+```
+
+结果：
+
+```text
+exit_code=1
+global_step=0
+Train: 0/3
+```
+
+失败点仍然相同：
+
+```text
+ImportError: Qwen3.5 linear attention padding free/sequence parallel requires flash-linear-attention.
+```
+
+原因判断：
+
+- `tiny_sft.jsonl` 数据格式已被接受，日志中打印了 `train_dataset`、`INPUT_IDS` 和 `LABELS`。
+- 失败不是 schema 错，也不是 OOM。
+- 即使显式关闭 `use_logits_to_keep/padding_free/packing/sequence_parallel_size`，当前 `qwen3_5` SFT 路径仍会把 `cu_seq_lens_q` 传入 Qwen3.5 linear attention patch。
+- 本地源码中触发条件是 `sequence_parallel.enabled()` 或 forward kwargs 中存在 `cu_seq_lens_q`；一旦进入该分支，就要求 `flash-linear-attention`。
+- 当前容器没有该依赖，而用户要求不改变依赖，因此不能通过安装 FLA 解决。
+
+结论：
+
+```text
+当前依赖不变时，ms-swift + Qwen3.6/Qwen3_5 的 SFT 不能跑通。
+当前依赖不变时，ms-swift DPO 路径此前可以跑通，说明问题集中在 SFT compute_sft_loss / Qwen3.5 linear attention 分支。
+```
+
+可选后续方案：
+
+```text
+1. 若允许改依赖：研究在 Ascend 当前 CANN/torch_npu 栈中安装或适配 flash-linear-attention。
+2. 若不允许改依赖但允许改源码：做最小 runtime patch，避免 SFT forward 给 Qwen3.5 linear attention 传 cu_seq_lens_q，再验证数值和显存。
+3. 若换框架：继续用已验证过的 MindSpeed-MM SFT 路径，或测试 LLaMA-Factory NPU 的 SFT。
+```

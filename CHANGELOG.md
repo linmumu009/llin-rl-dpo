@@ -1,5 +1,42 @@
 # 更新说明
 
+## v0.1.27 - 2026-07-08
+
+ms-swift SFT 当前环境 smoke test：
+
+- 按用户要求“不改变任何依赖”，只在既有 `llin-rl-dpo` 容器和当前 ms-swift 环境中测试。
+- 新增 `datasets/tiny_sft.jsonl`：
+  - 32 条 messages 格式 SFT 样本。
+  - 用于验证数据读取、tokenize、model forward/backward 和 optimizer step。
+- 新增 `scripts/run_ms_swift_qwen36_sft_smoke.sh`：
+  - `swift sft`
+  - `model=/models/Qwen3.6-27B`
+  - `model_type=qwen3_5`
+  - `tuner_type=lora`
+  - `fsdp=fsdp2`
+  - `max_length=512`
+  - `per_device_train_batch_size=1`
+  - `max_steps=3`
+  - `save_strategy=no`
+- 环境确认：
+  - `torch=2.7.1+cpu`
+  - `torch_npu=2.7.1.post4`
+  - `transformers=5.12.1`
+  - `swift=4.5.0.dev0`
+  - `torch_npu.npu.device_count()=8`
+- Run A 默认 SFT：
+  - 日志：`logs/ms_swift_qwen36_sft_smoke_3step.log`
+  - exit code `1`
+  - 在 `Train: 0/3` 后失败，未进入 optimizer step。
+  - 错误：`Qwen3.5 linear attention padding free/sequence parallel requires flash-linear-attention`。
+- Run B 显式关闭相关路径：
+  - 参数：`--use_logits_to_keep false --padding_free false --packing false --sequence_parallel_size 1`
+  - 日志：`logs/ms_swift_qwen36_sft_smoke_3step_nologits.log`
+  - exit code `1`
+  - 实际日志确认 `use_logits_to_keep=False`、`padding_free=False`、`packing=False`、`sequence_parallel_size=1`。
+  - 仍然在 `Train: 0/3` 后触发同一 `flash-linear-attention` ImportError。
+- 结论：不改变依赖时，当前 ms-swift + Qwen3.6/Qwen3_5 + SFT 路径不能跑通；DPO 路径此前可以跑通，是因为它没有触发同一个 SFT `compute_sft_loss`/Qwen3.5 linear attention 分支。
+
 ## v0.1.26 - 2026-07-08
 
 ms-swift DPO 长上下文压力测试第二档实测：
