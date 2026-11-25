@@ -1,0 +1,100 @@
+W0706 08:08:36.294000 12637 site-packages/torch/distributed/run.py:766] 
+W0706 08:08:36.294000 12637 site-packages/torch/distributed/run.py:766] *****************************************
+W0706 08:08:36.294000 12637 site-packages/torch/distributed/run.py:766] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0706 08:08:36.294000 12637 site-packages/torch/distributed/run.py:766] *****************************************
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 25, in <module>
+    from mindspeed_mm.fsdp.data import build_mm_dataloader, build_mm_dataset
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/__init__.py", line 2, in <module>
+    from mindspeed_mm.fsdp.data.dataloader.dataloader import (
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/dataloader/dataloader.py", line 27, in <module>
+    from mindspeed_mm.fsdp.data.dataloader.data_collator import DATA_COLLATOR
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/dataloader/data_collator.py", line 7, in <module>
+    from mindspeed_mm.fsdp.data.data_utils.func_utils.collator import MultiModalDataCollatorForSeq2Seq
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/collator.py", line 29, in <module>
+    from .mm_plugin import IGNORE_INDEX, IMAGE_PLACEHOLDER, AUDIO_PLACEHOLDER
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/mm_plugin.py", line 11, in <module>
+    import av
+ModuleNotFoundError: No module named 'av'
+[ERROR] 2026-07-06-08:08:43 (PID:12702, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 25, in <module>
+    from mindspeed_mm.fsdp.data import build_mm_dataloader, build_mm_dataset
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/__init__.py", line 2, in <module>
+    from mindspeed_mm.fsdp.data.dataloader.dataloader import (
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/dataloader/dataloader.py", line 27, in <module>
+    from mindspeed_mm.fsdp.data.dataloader.data_collator import DATA_COLLATOR
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/dataloader/data_collator.py", line 7, in <module>
+    from mindspeed_mm.fsdp.data.data_utils.func_utils.collator import MultiModalDataCollatorForSeq2Seq
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/collator.py", line 29, in <module>
+    from .mm_plugin import IGNORE_INDEX, IMAGE_PLACEHOLDER, AUDIO_PLACEHOLDER
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/mm_plugin.py", line 11, in <module>
+    import av
+ModuleNotFoundError: No module named 'av'
+[ERROR] 2026-07-06-08:08:43 (PID:12705, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 25, in <module>
+    from mindspeed_mm.fsdp.data import build_mm_dataloader, build_mm_dataset
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/__init__.py", line 2, in <module>
+    from mindspeed_mm.fsdp.data.dataloader.dataloader import (
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/dataloader/dataloader.py", line 27, in <module>
+    from mindspeed_mm.fsdp.data.dataloader.data_collator import DATA_COLLATOR
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/dataloader/data_collator.py", line 7, in <module>
+    from mindspeed_mm.fsdp.data.data_utils.func_utils.collator import MultiModalDataCollatorForSeq2Seq
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/collator.py", line 29, in <module>
+    from .mm_plugin import IGNORE_INDEX, IMAGE_PLACEHOLDER, AUDIO_PLACEHOLDER
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/mm_plugin.py", line 11, in <module>
+    import av
+ModuleNotFoundError: No module named 'av'
+[ERROR] 2026-07-06-08:08:43 (PID:12703, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 25, in <module>
+    from mindspeed_mm.fsdp.data import build_mm_dataloader, build_mm_dataset
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/__init__.py", line 2, in <module>
+    from mindspeed_mm.fsdp.data.dataloader.dataloader import (
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/dataloader/dataloader.py", line 27, in <module>
+    from mindspeed_mm.fsdp.data.dataloader.data_collator import DATA_COLLATOR
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/dataloader/data_collator.py", line 7, in <module>
+    from mindspeed_mm.fsdp.data.data_utils.func_utils.collator import MultiModalDataCollatorForSeq2Seq
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/collator.py", line 29, in <module>
+    from .mm_plugin import IGNORE_INDEX, IMAGE_PLACEHOLDER, AUDIO_PLACEHOLDER
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/mm_plugin.py", line 11, in <module>
+    import av
+ModuleNotFoundError: No module named 'av'
+[ERROR] 2026-07-06-08:08:43 (PID:12704, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+W0706 08:08:44.618000 12637 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 12703 closing signal SIGTERM
+W0706 08:08:44.619000 12637 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 12704 closing signal SIGTERM
+W0706 08:08:44.619000 12637 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 12705 closing signal SIGTERM
+E0706 08:08:44.864000 12637 site-packages/torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 0 (pid: 12702) of binary: /opt/conda/bin/python3.11
+Traceback (most recent call last):
+  File "/opt/conda/bin/torchrun", line 6, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 892, in main
+    run(args)
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 883, in run
+    elastic_launch(
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 270, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+mindspeed_mm/fsdp/train/trainer.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-07-06_08:08:44
+  host      : 7bcf46746544
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 12702)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

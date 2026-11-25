@@ -1,0 +1,15 @@
+python=3.11.14
+IMPORT torch failed RuntimeError: Failed to load the backend extension: torch_npu. You can disable extension auto-loading with TORCH_DEVICE_BACKEND_AUTOLOAD=0.
+IMPORT torch_npu failed RuntimeError: Only a single TORCH_LIBRARY can be used to register the namespace triton; please put all of your definitions in a single TORCH_LIBRARY block.  If you were trying to specify implementations, consider using TORCH_LIBRARY_IMPL (which can be duplicated).  If you really intended to define operators for a single namespace in a distributed way, you can use TORCH_LIBRARY_FRAGMENT to explicitly indicate this.  Previous registration of TORCH_LIBRARY was registered at /dev/null:2630; latest registration was registered at /dev/null:2630
+IMPORT mindspeed_mm failed ModuleNotFoundError: No module named 'mindspeed_mm'
+IMPORT mindspeed failed ModuleNotFoundError: No module named 'mindspeed'
+IMPORT megatron failed ModuleNotFoundError: No module named 'megatron'
+npu_count_error=RuntimeError: Only a single TORCH_LIBRARY can be used to register the namespace triton; please put all of your definitions in a single TORCH_LIBRARY block.  If you were trying to specify implementations, consider using TORCH_LIBRARY_IMPL (which can be duplicated).  If you really intended to define operators for a single namespace in a distributed way, you can use TORCH_LIBRARY_FRAGMENT to explicitly indicate this.  Previous registration of TORCH_LIBRARY was registered at /dev/null:2630; latest registration was registered at /dev/null:2630
+model_type=qwen3_5
+architectures=['Qwen3_5ForConditionalGeneration']
+text_layers=64
+text_heads=24
+text_kv_heads=4
+which_torchrun=/opt/conda/bin/torchrun
+which_pretrain_gpt.py=None
+which_pretrain_vlm.py=None

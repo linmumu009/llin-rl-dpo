@@ -1,0 +1,656 @@
+{
+  "model_path": "/models/Qwen3.6-27B",
+  "adapter_path": "",
+  "dataset": "/workspace/llin-rl-dpo/datasets/ops_dpo_512.jsonl",
+  "limit": 64,
+  "offset": 384,
+  "summary": {
+    "count": 64,
+    "win_rate": 0.796875,
+    "mean_margin": 0.697166601400164,
+    "mean_chosen_logprob": -4.1023799977744035,
+    "mean_rejected_logprob": -4.799546599174567
+  },
+  "records": [
+    {
+      "index": 384,
+      "case_id": 384,
+      "topic": "long DPO run readiness",
+      "chosen_mean_logprob": -4.5,
+      "rejected_mean_logprob": -4.380952380952381,
+      "margin": -0.11904761904761862,
+      "chosen_tokens": 40,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 385,
+      "case_id": 385,
+      "topic": "checkpoint policy",
+      "chosen_mean_logprob": -4.428571428571429,
+      "rejected_mean_logprob": -4.5,
+      "margin": 0.07142857142857117,
+      "chosen_tokens": 35,
+      "rejected_tokens": 25
+    },
+    {
+      "index": 386,
+      "case_id": 386,
+      "topic": "container safety",
+      "chosen_mean_logprob": -3.390625,
+      "rejected_mean_logprob": -5.083333333333333,
+      "margin": 1.692708333333333,
+      "chosen_tokens": 32,
+      "rejected_tokens": 24
+    },
+    {
+      "index": 387,
+      "case_id": 387,
+      "topic": "framework comparison",
+      "chosen_mean_logprob": -3.9696969696969697,
+      "rejected_mean_logprob": -4.868421052631579,
+      "margin": 0.898724082934609,
+      "chosen_tokens": 33,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 388,
+      "case_id": 388,
+      "topic": "adapter export",
+      "chosen_mean_logprob": -3.0416666666666665,
+      "rejected_mean_logprob": -5.25,
+      "margin": 2.2083333333333335,
+      "chosen_tokens": 36,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 389,
+      "case_id": 389,
+      "topic": "experiment logging",
+      "chosen_mean_logprob": -4.029411764705882,
+      "rejected_mean_logprob": -5.4523809523809526,
+      "margin": 1.4229691876750703,
+      "chosen_tokens": 34,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 390,
+      "case_id": 390,
+      "topic": "network limits",
+      "chosen_mean_logprob": -4.870967741935484,
+      "rejected_mean_logprob": -5.275,
+      "margin": 0.40403225806451637,
+      "chosen_tokens": 31,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 391,
+      "case_id": 391,
+      "topic": "effect evaluation",
+      "chosen_mean_logprob": -4.6,
+      "rejected_mean_logprob": -3.4782608695652173,
+      "margin": -1.1217391304347823,
+      "chosen_tokens": 35,
+      "rejected_tokens": 23
+    },
+    {
+      "index": 392,
+      "case_id": 392,
+      "topic": "long DPO run readiness",
+      "chosen_mean_logprob": -4.325,
+      "rejected_mean_logprob": -4.357142857142857,
+      "margin": 0.032142857142856585,
+      "chosen_tokens": 40,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 393,
+      "case_id": 393,
+      "topic": "checkpoint policy",
+      "chosen_mean_logprob": -4.257142857142857,
+      "rejected_mean_logprob": -4.46,
+      "margin": 0.20285714285714285,
+      "chosen_tokens": 35,
+      "rejected_tokens": 25
+    },
+    {
+      "index": 394,
+      "case_id": 394,
+      "topic": "container safety",
+      "chosen_mean_logprob": -3.1875,
+      "rejected_mean_logprob": -4.958333333333333,
+      "margin": 1.770833333333333,
+      "chosen_tokens": 32,
+      "rejected_tokens": 24
+    },
+    {
+      "index": 395,
+      "case_id": 395,
+      "topic": "framework comparison",
+      "chosen_mean_logprob": -4.424242424242424,
+      "rejected_mean_logprob": -4.894736842105263,
+      "margin": 0.47049441786283897,
+      "chosen_tokens": 33,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 396,
+      "case_id": 396,
+      "topic": "adapter export",
+      "chosen_mean_logprob": -2.8472222222222223,
+      "rejected_mean_logprob": -5.1,
+      "margin": 2.2527777777777773,
+      "chosen_tokens": 36,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 397,
+      "case_id": 397,
+      "topic": "experiment logging",
+      "chosen_mean_logprob": -3.9705882352941178,
+      "rejected_mean_logprob": -5.428571428571429,
+      "margin": 1.457983193277311,
+      "chosen_tokens": 34,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 398,
+      "case_id": 398,
+      "topic": "network limits",
+      "chosen_mean_logprob": -4.709677419354839,
+      "rejected_mean_logprob": -5.45,
+      "margin": 0.7403225806451612,
+      "chosen_tokens": 31,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 399,
+      "case_id": 399,
+      "topic": "effect evaluation",
+      "chosen_mean_logprob": -4.628571428571429,
+      "rejected_mean_logprob": -3.717391304347826,
+      "margin": -0.9111801242236028,
+      "chosen_tokens": 35,
+      "rejected_tokens": 23
+    },
+    {
+      "index": 400,
+      "case_id": 400,
+      "topic": "long DPO run readiness",
+      "chosen_mean_logprob": -4.325,
+      "rejected_mean_logprob": -4.428571428571429,
+      "margin": 0.10357142857142865,
+      "chosen_tokens": 40,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 401,
+      "case_id": 401,
+      "topic": "checkpoint policy",
+      "chosen_mean_logprob": -4.257142857142857,
+      "rejected_mean_logprob": -4.44,
+      "margin": 0.18285714285714327,
+      "chosen_tokens": 35,
+      "rejected_tokens": 25
+    },
+    {
+      "index": 402,
+      "case_id": 402,
+      "topic": "container safety",
+      "chosen_mean_logprob": -3.484375,
+      "rejected_mean_logprob": -4.854166666666667,
+      "margin": 1.369791666666667,
+      "chosen_tokens": 32,
+      "rejected_tokens": 24
+    },
+    {
+      "index": 403,
+      "case_id": 403,
+      "topic": "framework comparison",
+      "chosen_mean_logprob": -4.454545454545454,
+      "rejected_mean_logprob": -4.921052631578948,
+      "margin": 0.46650717703349365,
+      "chosen_tokens": 33,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 404,
+      "case_id": 404,
+      "topic": "adapter export",
+      "chosen_mean_logprob": -2.9444444444444446,
+      "rejected_mean_logprob": -5.075,
+      "margin": 2.1305555555555555,
+      "chosen_tokens": 36,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 405,
+      "case_id": 405,
+      "topic": "experiment logging",
+      "chosen_mean_logprob": -4.176470588235294,
+      "rejected_mean_logprob": -5.071428571428571,
+      "margin": 0.8949579831932768,
+      "chosen_tokens": 34,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 406,
+      "case_id": 406,
+      "topic": "network limits",
+      "chosen_mean_logprob": -4.935483870967742,
+      "rejected_mean_logprob": -5.6,
+      "margin": 0.6645161290322577,
+      "chosen_tokens": 31,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 407,
+      "case_id": 407,
+      "topic": "effect evaluation",
+      "chosen_mean_logprob": -4.6,
+      "rejected_mean_logprob": -3.5869565217391304,
+      "margin": -1.0130434782608693,
+      "chosen_tokens": 35,
+      "rejected_tokens": 23
+    },
+    {
+      "index": 408,
+      "case_id": 408,
+      "topic": "long DPO run readiness",
+      "chosen_mean_logprob": -4.525,
+      "rejected_mean_logprob": -4.404761904761905,
+      "margin": -0.12023809523809526,
+      "chosen_tokens": 40,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 409,
+      "case_id": 409,
+      "topic": "checkpoint policy",
+      "chosen_mean_logprob": -4.457142857142857,
+      "rejected_mean_logprob": -4.42,
+      "margin": -0.037142857142857366,
+      "chosen_tokens": 35,
+      "rejected_tokens": 25
+    },
+    {
+      "index": 410,
+      "case_id": 410,
+      "topic": "container safety",
+      "chosen_mean_logprob": -3.34375,
+      "rejected_mean_logprob": -4.958333333333333,
+      "margin": 1.614583333333333,
+      "chosen_tokens": 32,
+      "rejected_tokens": 24
+    },
+    {
+      "index": 411,
+      "case_id": 411,
+      "topic": "framework comparison",
+      "chosen_mean_logprob": -4.212121212121212,
+      "rejected_mean_logprob": -5.052631578947368,
+      "margin": 0.8405103668261562,
+      "chosen_tokens": 33,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 412,
+      "case_id": 412,
+      "topic": "adapter export",
+      "chosen_mean_logprob": -3.0,
+      "rejected_mean_logprob": -5.25,
+      "margin": 2.25,
+      "chosen_tokens": 36,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 413,
+      "case_id": 413,
+      "topic": "experiment logging",
+      "chosen_mean_logprob": -4.176470588235294,
+      "rejected_mean_logprob": -5.214285714285714,
+      "margin": 1.03781512605042,
+      "chosen_tokens": 34,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 414,
+      "case_id": 414,
+      "topic": "network limits",
+      "chosen_mean_logprob": -4.903225806451613,
+      "rejected_mean_logprob": -5.275,
+      "margin": 0.37177419354838737,
+      "chosen_tokens": 31,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 415,
+      "case_id": 415,
+      "topic": "effect evaluation",
+      "chosen_mean_logprob": -4.6,
+      "rejected_mean_logprob": -3.717391304347826,
+      "margin": -0.8826086956521735,
+      "chosen_tokens": 35,
+      "rejected_tokens": 23
+    },
+    {
+      "index": 416,
+      "case_id": 416,
+      "topic": "long DPO run readiness",
+      "chosen_mean_logprob": -4.375,
+      "rejected_mean_logprob": -4.357142857142857,
+      "margin": -0.017857142857143238,
+      "chosen_tokens": 40,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 417,
+      "case_id": 417,
+      "topic": "checkpoint policy",
+      "chosen_mean_logprob": -4.285714285714286,
+      "rejected_mean_logprob": -4.58,
+      "margin": 0.2942857142857145,
+      "chosen_tokens": 35,
+      "rejected_tokens": 25
+    },
+    {
+      "index": 418,
+      "case_id": 418,
+      "topic": "container safety",
+      "chosen_mean_logprob": -3.390625,
+      "rejected_mean_logprob": -5.104166666666667,
+      "margin": 1.713541666666667,
+      "chosen_tokens": 32,
+      "rejected_tokens": 24
+    },
+    {
+      "index": 419,
+      "case_id": 419,
+      "topic": "framework comparison",
+      "chosen_mean_logprob": -4.424242424242424,
+      "rejected_mean_logprob": -5.157894736842105,
+      "margin": 0.7336523125996814,
+      "chosen_tokens": 33,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 420,
+      "case_id": 420,
+      "topic": "adapter export",
+      "chosen_mean_logprob": -2.9027777777777777,
+      "rejected_mean_logprob": -5.15,
+      "margin": 2.2472222222222227,
+      "chosen_tokens": 36,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 421,
+      "case_id": 421,
+      "topic": "experiment logging",
+      "chosen_mean_logprob": -4.0,
+      "rejected_mean_logprob": -5.523809523809524,
+      "margin": 1.5238095238095237,
+      "chosen_tokens": 34,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 422,
+      "case_id": 422,
+      "topic": "network limits",
+      "chosen_mean_logprob": -4.838709677419355,
+      "rejected_mean_logprob": -5.3,
+      "margin": 0.46129032258064484,
+      "chosen_tokens": 31,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 423,
+      "case_id": 423,
+      "topic": "effect evaluation",
+      "chosen_mean_logprob": -4.542857142857143,
+      "rejected_mean_logprob": -3.5652173913043477,
+      "margin": -0.977639751552795,
+      "chosen_tokens": 35,
+      "rejected_tokens": 23
+    },
+    {
+      "index": 424,
+      "case_id": 424,
+      "topic": "long DPO run readiness",
+      "chosen_mean_logprob": -4.4,
+      "rejected_mean_logprob": -4.571428571428571,
+      "margin": 0.17142857142857082,
+      "chosen_tokens": 40,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 425,
+      "case_id": 425,
+      "topic": "checkpoint policy",
+      "chosen_mean_logprob": -4.3428571428571425,
+      "rejected_mean_logprob": -4.48,
+      "margin": 0.1371428571428579,
+      "chosen_tokens": 35,
+      "rejected_tokens": 25
+    },
+    {
+      "index": 426,
+      "case_id": 426,
+      "topic": "container safety",
+      "chosen_mean_logprob": -3.390625,
+      "rejected_mean_logprob": -4.854166666666667,
+      "margin": 1.463541666666667,
+      "chosen_tokens": 32,
+      "rejected_tokens": 24
+    },
+    {
+      "index": 427,
+      "case_id": 427,
+      "topic": "framework comparison",
+      "chosen_mean_logprob": -4.303030303030303,
+      "rejected_mean_logprob": -4.921052631578948,
+      "margin": 0.618022328548645,
+      "chosen_tokens": 33,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 428,
+      "case_id": 428,
+      "topic": "adapter export",
+      "chosen_mean_logprob": -2.9722222222222223,
+      "rejected_mean_logprob": -5.05,
+      "margin": 2.0777777777777775,
+      "chosen_tokens": 36,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 429,
+      "case_id": 429,
+      "topic": "experiment logging",
+      "chosen_mean_logprob": -4.029411764705882,
+      "rejected_mean_logprob": -5.0476190476190474,
+      "margin": 1.0182072829131652,
+      "chosen_tokens": 34,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 430,
+      "case_id": 430,
+      "topic": "network limits",
+      "chosen_mean_logprob": -4.838709677419355,
+      "rejected_mean_logprob": -5.75,
+      "margin": 0.911290322580645,
+      "chosen_tokens": 31,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 431,
+      "case_id": 431,
+      "topic": "effect evaluation",
+      "chosen_mean_logprob": -4.6,
+      "rejected_mean_logprob": -3.5869565217391304,
+      "margin": -1.0130434782608693,
+      "chosen_tokens": 35,
+      "rejected_tokens": 23
+    },
+    {
+      "index": 432,
+      "case_id": 432,
+      "topic": "long DPO run readiness",
+      "chosen_mean_logprob": -4.5,
+      "rejected_mean_logprob": -4.428571428571429,
+      "margin": -0.07142857142857117,
+      "chosen_tokens": 40,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 433,
+      "case_id": 433,
+      "topic": "checkpoint policy",
+      "chosen_mean_logprob": -4.142857142857143,
+      "rejected_mean_logprob": -4.22,
+      "margin": 0.07714285714285651,
+      "chosen_tokens": 35,
+      "rejected_tokens": 25
+    },
+    {
+      "index": 434,
+      "case_id": 434,
+      "topic": "container safety",
+      "chosen_mean_logprob": -3.46875,
+      "rejected_mean_logprob": -5.020833333333333,
+      "margin": 1.552083333333333,
+      "chosen_tokens": 32,
+      "rejected_tokens": 24
+    },
+    {
+      "index": 435,
+      "case_id": 435,
+      "topic": "framework comparison",
+      "chosen_mean_logprob": -4.303030303030303,
+      "rejected_mean_logprob": -5.157894736842105,
+      "margin": 0.8548644338118025,
+      "chosen_tokens": 33,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 436,
+      "case_id": 436,
+      "topic": "adapter export",
+      "chosen_mean_logprob": -3.0694444444444446,
+      "rejected_mean_logprob": -5.225,
+      "margin": 2.155555555555555,
+      "chosen_tokens": 36,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 437,
+      "case_id": 437,
+      "topic": "experiment logging",
+      "chosen_mean_logprob": -4.205882352941177,
+      "rejected_mean_logprob": -5.5476190476190474,
+      "margin": 1.3417366946778708,
+      "chosen_tokens": 34,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 438,
+      "case_id": 438,
+      "topic": "network limits",
+      "chosen_mean_logprob": -5.032258064516129,
+      "rejected_mean_logprob": -5.275,
+      "margin": 0.24274193548387135,
+      "chosen_tokens": 31,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 439,
+      "case_id": 439,
+      "topic": "effect evaluation",
+      "chosen_mean_logprob": -4.542857142857143,
+      "rejected_mean_logprob": -3.739130434782609,
+      "margin": -0.8037267080745338,
+      "chosen_tokens": 35,
+      "rejected_tokens": 23
+    },
+    {
+      "index": 440,
+      "case_id": 440,
+      "topic": "long DPO run readiness",
+      "chosen_mean_logprob": -4.35,
+      "rejected_mean_logprob": -4.428571428571429,
+      "margin": 0.07857142857142918,
+      "chosen_tokens": 40,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 441,
+      "case_id": 441,
+      "topic": "checkpoint policy",
+      "chosen_mean_logprob": -4.2,
+      "rejected_mean_logprob": -4.44,
+      "margin": 0.2400000000000002,
+      "chosen_tokens": 35,
+      "rejected_tokens": 25
+    },
+    {
+      "index": 442,
+      "case_id": 442,
+      "topic": "container safety",
+      "chosen_mean_logprob": -3.15625,
+      "rejected_mean_logprob": -5.083333333333333,
+      "margin": 1.927083333333333,
+      "chosen_tokens": 32,
+      "rejected_tokens": 24
+    },
+    {
+      "index": 443,
+      "case_id": 443,
+      "topic": "framework comparison",
+      "chosen_mean_logprob": -4.212121212121212,
+      "rejected_mean_logprob": -5.0,
+      "margin": 0.7878787878787881,
+      "chosen_tokens": 33,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 444,
+      "case_id": 444,
+      "topic": "adapter export",
+      "chosen_mean_logprob": -2.8055555555555554,
+      "rejected_mean_logprob": -5.225,
+      "margin": 2.4194444444444443,
+      "chosen_tokens": 36,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 445,
+      "case_id": 445,
+      "topic": "experiment logging",
+      "chosen_mean_logprob": -3.911764705882353,
+      "rejected_mean_logprob": -5.261904761904762,
+      "margin": 1.350140056022409,
+      "chosen_tokens": 34,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 446,
+      "case_id": 446,
+      "topic": "network limits",
+      "chosen_mean_logprob": -4.838709677419355,
+      "rejected_mean_logprob": -5.325,
+      "margin": 0.4862903225806452,
+      "chosen_tokens": 31,
+      "rejected_tokens": 20
+    },
+    {
+      "index": 447,
+      "case_id": 447,
+      "topic": "effect evaluation",
+      "chosen_mean_logprob": -4.6,
+      "rejected_mean_logprob": -3.869565217391304,
+      "margin": -0.7304347826086954,
+      "chosen_tokens": 35,
+      "rejected_tokens": 23
+    }
+  ]
+}

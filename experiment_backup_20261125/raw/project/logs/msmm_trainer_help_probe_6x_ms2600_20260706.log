@@ -1,0 +1,622 @@
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/transformer/multi_token_prediction.py:60: UserWarning: Apex is not installed. Falling back to Torch Norm
+  warnings.warn('Apex is not installed. Falling back to Torch Norm')
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/models/gpt/gpt_layer_specs.py:65: UserWarning: Apex is not installed. Falling back to Torch Norm
+  warnings.warn('Apex is not installed. Falling back to Torch Norm')
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/models/retro/encoder_spec.py:47: UserWarning: Apex is not installed. Falling back to Torch Norm
+  warnings.warn(f'Apex is not installed. Falling back to Torch Norm')
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/models/retro/decoder_spec.py:39: UserWarning: Apex is not installed. Falling back to Torch Norm
+  warnings.warn(f'Apex is not installed. Falling back to Torch Norm')
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/training/utils.py:20: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier and multi_tensor_l2norm
+  warnings.warn(
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/optimizer/__init__.py:18: UserWarning: Transformer Engine and Apex are not installed. Falling back to Torch optimizers.
+  warnings.warn(
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/optimizer/optimizer.py:28: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier and multi_tensor_scale
+  warnings.warn(
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/optimizer/clip_grads.py:29: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier, multi_tensor_l2norm, and multi_tensor_scale
+  warnings.warn(
+INFO:torch_npu.env:get env ASCEND_HOME_PATH = /usr/local/Ascend/cann-9.0.0
+/opt/conda/lib/python3.11/site-packages/torch_npu/contrib/transfer_to_npu.py:362: ImportWarning: 
+    *************************************************************************************************************
+    The torch.Tensor.cuda and torch.nn.Module.cuda are replaced with torch.Tensor.npu and torch.nn.Module.npu now..
+    The torch.cuda.DoubleTensor is replaced with torch.npu.FloatTensor cause the double type is not supported now..
+    The backend in torch.distributed.init_process_group set to hccl now..
+    The torch.cuda.* and torch.cuda.amp.* are replaced with torch.npu.* and torch.npu.amp.* now..
+    The device parameters have been replaced with npu in the function below:
+    torch.logspace, torch.randint, torch.hann_window, torch.rand, torch.full_like, torch.ones_like, torch.rand_like, torch.randperm, torch.arange, torch.frombuffer, torch.normal, torch._empty_per_channel_affine_quantized, torch.empty_strided, torch.empty_like, torch.scalar_tensor, torch.tril_indices, torch.bartlett_window, torch.ones, torch.sparse_coo_tensor, torch.randn, torch.kaiser_window, torch.tensor, torch.triu_indices, torch.as_tensor, torch.zeros, torch.randint_like, torch.full, torch.eye, torch._sparse_csr_tensor_unsafe, torch.empty, torch._sparse_coo_tensor_unsafe, torch.blackman_window, torch.zeros_like, torch.range, torch.sparse_csr_tensor, torch.randn_like, torch.from_file, torch._cudnn_init_dropout_state, torch._empty_affine_quantized, torch.linspace, torch.hamming_window, torch.empty_quantized, torch._pin_memory, torch.load, torch.set_default_device, torch.get_device_module, torch.sparse_compressed_tensor, torch.Tensor.new_empty, torch.Tensor.new_empty_strided, torch.Tensor.new_full, torch.Tensor.new_ones, torch.Tensor.new_tensor, torch.Tensor.new_zeros, torch.Tensor.to, torch.Tensor.pin_memory, torch.nn.Module.to, torch.nn.Module.to_empty
+    *************************************************************************************************************
+    
+  warnings.warn(msg, ImportWarning)
+/opt/conda/lib/python3.11/site-packages/torch_npu/contrib/transfer_to_npu.py:291: RuntimeWarning: torch.jit.script and torch.jit.script_method will be disabled by transfer_to_npu, which currently does not support them, if you need to enable them, please do not use transfer_to_npu.
+  warnings.warn(msg, RuntimeWarning)
+INFO:torch_npu.env:get env ASCEND_RT_VISIBLE_DEVICES = 2,3,4,5,6,7
+[Rank 0 | Local Rank 0] 2026-07-06 07:50:37,084 INFO [mindspeed.megatron_adaptor:33] => start to patch features in megatron adaptor.
+usage: trainer.py [-h]
+                  [--optimizer-selection {fused_adamw,fused_torch_adamw,fused_ema_adamw}]
+                  [--optimization-level {0,1,2}] [--use-fused-rmsnorm]
+                  [--use-fused-swiglu] [--no-use-gmm-fp8]
+                  [--te-comparison-with-cpu] [--te-comparison-with-bf16]
+                  [--te-gmm-mode {performance,compatible}]
+                  [--fp8-reuse-quantized-weight]
+                  [--context-parallel-algo {megatron_cp_algo,hybrid_cp_algo,hybrid_adaptive_cp_algo,kvallgather_cp_algo,ulysses_cp_algo,adaptive_cp_algo}]
+                  [--cp-window-size CP_WINDOW_SIZE]
+                  [--attention-mask-type {causal,general}]
+                  [--use-cp-send-recv-overlap]
+                  [--use-fused-ring-attention-update] [--megatron-cp-in-bnsd]
+                  [--ulysses-degree-in-cp ULYSSES_DEGREE_IN_CP]
+                  [--context-parallel-kv-cache-policy {full,half}]
+                  [--context-parallel-cache-interval CONTEXT_PARALLEL_CACHE_INTERVAL]
+                  [--use-ulysses-allgather-kv] [--attention-mask-on-cpu]
+                  [--adaptive-cp-without-coarse]
+                  [--adaptive-cp-dynamic-attn-mask]
+                  [--adaptive-cp-only-reschedule]
+                  [--adaptive-cp-manually-set-mask-list]
+                  [--async-log-allreduce] [--use-fused-rotary-pos-emb]
+                  [--use-fused-moe-token-permute-and-unpermute]
+                  [--npu-deterministic] [--op-cal-tflops]
+                  [--profile-level {level0,level1,level2}]
+                  [--profile-with-cpu] [--profile-with-stack]
+                  [--profile-with-memory] [--profile-record-shapes]
+                  [--profile-save-path PROFILE_SAVE_PATH] [--npu-datadump]
+                  [--recompute-activation-function]
+                  [--recompute-activation-function-num-layers RECOMPUTE_ACTIVATION_FUNCTION_NUM_LAYERS]
+                  [--recompute-norm]
+                  [--recompute-norm-num-layers RECOMPUTE_NORM_NUM_LAYERS]
+                  [--enable-recompute-layers-per-pp-rank] [--unaligned-linear]
+                  [--use-ascend-mc2] [--use-ascend-coc] [--coc-mode COC_MODE]
+                  [--coc-parallel-num COC_PARALLEL_NUM] [--coc-fused-kernel]
+                  [--tp-2d] [--tp-x TP_X] [--tp-y TP_Y]
+                  [--enable-overlap-ag-with-matmul]
+                  [--enable-overlap-matmul-with-rs]
+                  [--enable-backward-overlap-ag-with-matmul]
+                  [--recompute-in-bubble] [--recompute-in-advance]
+                  [--noop-layers NOOP_LAYERS] [--variable-seq-lengths]
+                  [--use-multiparameter-pipeline-model-parallel]
+                  [--optimize-send-recv-comm]
+                  [--pipeline-num-transformer-layers PIPELINE_NUM_TRANSFORMER_LAYERS]
+                  [--schedules-method {dualpipev}] [--dualpipev-dw-detach]
+                  [--gemm-gradient-accumulation-fusion] [--moe-tp-extend-ep]
+                  [--moe-permutation-async-comm]
+                  [--n-shared-experts N_SHARED_EXPERTS]
+                  [--moe-allgather-overlap-comm] [--moe-alltoall-overlap-comm]
+                  [--moe-zero-memory {disable,level0,level1}]
+                  [--moe-zero-memory-num-layers MOE_ZERO_MEMORY_NUM_LAYERS]
+                  [--moe-fb-overlap] [--moe-unperm2-mem-optim-swap]
+                  [--balanced-moe-experts]
+                  [--balanced-moe-hot-expert-num BALANCED_MOE_HOT_EXPERT_NUM]
+                  [--trans-hot-expert-group-num TRANS_HOT_EXPERT_GROUP_NUM]
+                  [--enable-expert-placement]
+                  [--expert-placement-freq EXPERT_PLACEMENT_FREQ]
+                  [--enable-fine-grained-expert-placement]
+                  [--print-expert-load]
+                  [--fine-grained-expert-placement-thre FINE_GRAINED_EXPERT_PLACEMENT_THRE]
+                  [--moe-alltoall-mc2] [--fix-router]
+                  [--hccl-group-buffer HCCL_GROUP_BUFFER]
+                  [--hccl-group-buffer-adaptive]
+                  [--hccl-ep-group-buffer-adaptive-factor HCCL_EP_GROUP_BUFFER_ADAPTIVE_FACTOR]
+                  [--ema-decay EMA_DECAY]
+                  [--virtual-optimizer VIRTUAL_OPTIMIZER [VIRTUAL_OPTIMIZER ...]]
+                  [--quant-states {fp8,hif8,mxfp8}] [--quant-grads]
+                  [--dist-train]
+                  [--tokenizer-name-or-path TOKENIZER_NAME_OR_PATH]
+                  [--tokenizer-not-use-fast]
+                  [--param-and-grad-buffer-pad PARAM_AND_GRAD_BUFFER_PAD]
+                  [--layerzero] [--layerzero-config LAYERZERO_CONFIG]
+                  [--fsdp2-config-path FSDP2_CONFIG_PATH]
+                  [--reset-bucket-group-order] [--reuse-fp32-param]
+                  [--smart-swap] [--swap-attention]
+                  [--swap-modules SWAP_MODULES]
+                  [--compress-dense {disable,level0,level1}]
+                  [--compress-activation COMPRESS_ACTIVATION]
+                  [--compress-optimizer] [--disable-gloo-group]
+                  [--hccl-slice-size HCCL_SLICE_SIZE] [--swap-optimizer]
+                  [--swap-optimizer-times SWAP_OPTIMIZER_TIMES]
+                  [--pre-tockens PRE_TOCKENS] [--next-tockens NEXT_TOCKENS]
+                  [--sparse-mode {0,1,2,3,4,5,6,7,8}] [--use-fusion-attn-v2]
+                  [--square-alibi-mask] [--fill-neg-inf]
+                  [--alibi-fusion-attn-type ALIBI_FUSION_ATTN_TYPE]
+                  [--alibi-diagonal-opposite]
+                  [--fix-sub-seq-length FIX_SUB_SEQ_LENGTH]
+                  [--multi-head-latent-attention]
+                  [--qk-rope-head-dim QK_ROPE_HEAD_DIM]
+                  [--qk-nope-head-dim QK_NOPE_HEAD_DIM]
+                  [--experimental-attention-variant {dsa}] [--use-dsa-absorb]
+                  [--use-fused-lightning-indexer]
+                  [--use-fused-sparse-flash-attention]
+                  [--use-fused-lightning-indexer-kl-loss]
+                  [--ai-framework AI_FRAMEWORK] [--auto-settings]
+                  [--auto-settings-work-dir AUTO_SETTINGS_WORK_DIR]
+                  [--auto-settings-ranks AUTO_SETTINGS_RANKS]
+                  [--auto-settings-log-level AUTO_SETTINGS_LOG_LEVEL]
+                  [--target-nnodes TARGET_NNODES] [--nnodes NNODES]
+                  [--nproc-per-node NPROC_PER_NODE] [--node-rank NODE_RANK]
+                  [--auto-settings-type AUTO_SETTINGS_TYPE]
+                  [--prof-file PROF_FILE] [--master-addr MASTER_ADDR]
+                  [--master-port MASTER_PORT] [--automated-pipeline]
+                  [--automated-pipeline-perf]
+                  [--recompute-module-list RECOMPUTE_MODULE_LIST]
+                  [--jit-compile] [--aiqos] [--aiqos-mode AIQOS_MODE]
+                  [--aiqos-schedule AIQOS_SCHEDULE] [--aiqos-enable-roce]
+                  [--qat-scheme QAT_SCHEME]
+
+MindSpeed Arguments
+
+options:
+  -h, --help            show this help message and exit
+
+requirements_basic:
+  --optimizer-selection {fused_adamw,fused_torch_adamw,fused_ema_adamw}
+                        Select from the former fused AdamW optimizer and Torch
+                        fused AdamW optimizer
+  --optimization-level {0,1,2}
+                        0: The minimum patch set for megatron to adapt to
+                        NPU,1: Affinity optimization (fusion operator, etc.),
+                        2: Advanced acceleration algorithm
+
+megatron_basic:
+  --use-fused-rmsnorm   Use fused rmsnorm.
+  --use-fused-swiglu    Use fused swiglu.
+
+transformer_engine_basic:
+  --no-use-gmm-fp8      not use GMM with scaling recipe.
+  --te-comparison-with-cpu
+                        Compare the cast and quantmatmul of te on cpu and npu
+                        online.
+  --te-comparison-with-bf16
+                        Compare the cast and quantmatmul of te with bf16
+                        online.
+  --te-gmm-mode {performance,compatible}
+                        Select the TE-GMM execution mode. "performance":
+                        Enables high-performance optimizations. "compatible":
+                        Default. Ensures compatibility with native TE
+                        behavior.
+  --fp8-reuse-quantized-weight
+                        Reuse quantized FP8 weight tensors within one
+                        optimizer step.
+
+context_parallel_size:
+  --context-parallel-algo {megatron_cp_algo,hybrid_cp_algo,hybrid_adaptive_cp_algo,kvallgather_cp_algo,ulysses_cp_algo,adaptive_cp_algo}
+                        context parallel algorithm
+  --cp-window-size CP_WINDOW_SIZE
+  --attention-mask-type {causal,general}
+                        context parallel attention mask type
+  --use-cp-send-recv-overlap
+                        use this flag to enable cp send-recv-overlap.
+  --use-fused-ring-attention-update
+                        Use fused ring attention update.
+  --megatron-cp-in-bnsd
+                        Megatron CP in bnsd.
+
+context_parallel_size:
+  --ulysses-degree-in-cp ULYSSES_DEGREE_IN_CP
+
+context_parallel_kv_cache_policy:
+  --context-parallel-kv-cache-policy {full,half}
+                        Selectivity cache K, V in process of cp.Default is
+                        None, means not used cache K, V.If para is full, cache
+                        all K, V.If para is half, cache only K
+  --context-parallel-cache-interval CONTEXT_PARALLEL_CACHE_INTERVAL
+                        Set the interval of cache layers in cp.Default is 0,
+                        means cache K, V in all layers.
+  --use-ulysses-allgather-kv
+                        use this flag to enable allgather kv + repeat all2all
+                        q in ulysses cp.
+
+context_parallel_size:
+  --attention-mask-on-cpu
+                        store full attention mask on CPU instead of NPU
+  --adaptive-cp-without-coarse
+                        does not coarse the attention mask in adaptive_cp
+                        feature, only recommended when fullsequence length is
+                        less than 8K and dynamic attention mask is not
+                        feasible
+  --adaptive-cp-dynamic-attn-mask
+                        if the attention mask is dynamic across batches
+  --adaptive-cp-only-reschedule
+                        not apply remapping but only rescheduling process in
+                        adaptive-cp feature
+  --adaptive-cp-manually-set-mask-list
+                        manually set pre-cooked attention mask list
+
+overlap_p2p_comm_or_async_log_allreduce_:
+  --async-log-allreduce
+                        Transform the AllReduce operation used for
+                        transmitting log information into an asynchronous
+                        operation to reduce communication overhead. This is
+                        useful in cross-DataCenter (DC) training.
+
+fusion:
+  --use-fused-rotary-pos-emb
+                        Use fused rotary-pos-emb.
+
+fusion:
+  --use-fused-moe-token-permute-and-unpermute
+                        Use fused moe permute and unpermute.
+
+npu_deterministic:
+  --npu-deterministic   enable deterministic computing for npu.
+
+op_cal_tflops:
+  --op-cal-tflops       use for cal mfu and hfu
+
+profile:
+  --profile-level {level0,level1,level2}
+                        Profile level default level0.
+  --profile-with-cpu    Profile with cpu info.
+  --profile-with-stack  Profile with stack info.
+  --profile-with-memory
+                        Profile with memory info.
+  --profile-record-shapes
+                        Profile record shape info.
+  --profile-save-path PROFILE_SAVE_PATH
+                        Profile save path.
+
+npu_datadump:
+  --npu-datadump        enable npu data dump with mstt.
+
+recompute_activation_function:
+  --recompute-activation-function
+                        Recompute the activation function in MLP layers.
+  --recompute-activation-function-num-layers RECOMPUTE_ACTIVATION_FUNCTION_NUM_LAYERS
+                        Can be used together with "--recompute-method block."
+                        and "--recompute-num-layers".
+
+recompute_norm:
+  --recompute-norm      Recompute norm in Transformer Layers
+  --recompute-norm-num-layers RECOMPUTE_NORM_NUM_LAYERS
+                        Recompute norm num layers, can be used together with
+                        activation function recompute.
+
+enable_recompute_layers_per_pp_rank:
+  --enable-recompute-layers-per-pp-rank
+                        If enabled, --recompute-num-layers will mean the
+                        number of layers recomputed in each pp rank. Otherwise
+                        it means the number of layers recomputed in each vpp
+                        rank.
+
+unaligned_linear:
+  --unaligned-linear    Replace ColumnParallelLinear/RowParallelLinear with Un
+                        alignedColumnParallelLinearAdaptor/UnalignedRowParalle
+                        lLinearAdaptor.
+
+use_ascend_mc2:
+  --use-ascend-mc2      Use ascend mc2
+
+use_ascend_coc:
+  --use-ascend-coc      Use ascend coc
+  --coc-mode COC_MODE   coc-mode: 0=original, 1=rewrite, 2=coc default
+  --coc-parallel-num COC_PARALLEL_NUM
+                        coc parallel num
+  --coc-fused-kernel    use coc fused kernel
+
+tp_2d:
+  --tp-2d               use use-2d-tp to replace megatron-style tensor
+                        parallel
+  --tp-x TP_X           the fist dim tensor parallel size for Linear
+  --tp-y TP_Y           the second dim tensor parallel size for Linear
+  --enable-overlap-ag-with-matmul
+                        use enable-overlap-ag-with-matmul to overlap all-
+                        gather with matmul
+  --enable-overlap-matmul-with-rs
+                        use enable-overlap-matmul-with-rs to overlap matmul
+                        with reduce-scatter
+  --enable-backward-overlap-ag-with-matmul
+                        use enable-backward-overlap-ag-with-matmul to overlap
+                        all-gather with matmul in backward
+
+recompute_in_bubble:
+  --recompute-in-bubble
+                        use bubble to do recompute to reduce memory.
+
+recompute_in_advance:
+  --recompute-in-advance
+                        recompute early to reduce bubble and improve training.
+
+noop_layers:
+  --noop-layers NOOP_LAYERS
+                        Specify the noop layers.
+
+variable_seq_lengths:
+  --variable-seq-lengths
+                        Supports variable sequence lengths across
+                        batches/microbatches. Set this if the data loader
+                        supports variable sequence length generation across
+                        batches/microbatches. Because of the additional
+                        communication overhead incurred during pipeline
+                        parallelism,it should not be set if the sequence
+                        length is constant during training. if sequence length
+                        is constant during training.
+
+use_multiparameter_pipeline_model_parallel:
+  --use-multiparameter-pipeline-model-parallel
+                        can transfer multi parameters from stage to stage in
+                        pipeline model parallel
+
+optimize_send_recv_comm:
+  --optimize-send-recv-comm
+                        optimize send_recv communication in pipeline without
+                        interleaving.
+
+pipeline_num_transformer_layers:
+  --pipeline-num-transformer-layers PIPELINE_NUM_TRANSFORMER_LAYERS
+                        Set pipeline nums for transformer layers.
+
+schedules_method:
+  --schedules-method {dualpipev}
+  --dualpipev-dw-detach
+                        detach dw in cooldown to reduce bubble
+
+moe_grouped_gemm:
+  --gemm-gradient-accumulation-fusion
+                        Use gradient-accumulation-fusion in gemm.
+
+moe_tp_extend_ep:
+  --moe-tp-extend-ep    use tp group to extend experts parallelisminstead of
+                        sharding weight tensor of experts in tp group
+  --moe-permutation-async-comm
+                        overlap moe permutation 3 all gather communications
+
+n_shared_experts:
+  --n-shared-experts N_SHARED_EXPERTS
+                        DEPRECATED. use --moe-shared-expert-intermediate-size
+                        replace
+
+moe_allgather_overlap_comm:
+  --moe-allgather-overlap-comm
+                        Use async communication&swap to overlap compute in
+                        allgather.
+
+moe_alltoall_overlap_comm:
+  --moe-alltoall-overlap-comm
+                        Use async communication&swap to overlap compute in
+                        alltoall or alltoall_seq. In alltoall dispatcher, if
+                        with share_expert, will open `--moe-shared-expert-
+                        overlap` automatically.
+
+moe_zero_memory:
+  --moe-zero-memory {disable,level0,level1}
+                        Set level for saving activation memory in moe layer.
+  --moe-zero-memory-num-layers MOE_ZERO_MEMORY_NUM_LAYERS
+                        the number of layers using moe-zero-memory level1in
+                        each pp stage.
+
+moe_fb_overlap:
+  --moe-fb-overlap
+  --moe-unperm2-mem-optim-swap
+
+balanced_moe_experts:
+  --balanced-moe-experts
+                        Enable balanced MoE Experts Balance workload across
+                        EPs by duplicating experts.
+  --balanced-moe-hot-expert-num BALANCED_MOE_HOT_EXPERT_NUM
+                        The number of duplicated hot experts to balance MoE
+                        workloads.
+  --trans-hot-expert-group-num TRANS_HOT_EXPERT_GROUP_NUM
+                        trans hot expert group num
+
+enable_expert_placement:
+  --enable-expert-placement
+                        balance the experts load within ep group.
+  --expert-placement-freq EXPERT_PLACEMENT_FREQ
+                        define the fix frequency of expert placement
+  --enable-fine-grained-expert-placement
+                        balance the experts load within ep group.
+  --print-expert-load   print tokens of each expert in each layer of each
+                        stage in dp 0
+  --fine-grained-expert-placement-thre FINE_GRAINED_EXPERT_PLACEMENT_THRE
+                        define the fix frequency of expert placement
+
+moe_alltoall_mc2:
+  --moe-alltoall-mc2    [expert] Use MC2 fused kernal for moe layer when
+                        dispatcher is alltoall_seq and alltoall. if with
+                        share_expert, will open `--moe-shared-expert-overlap`
+                        automatically for now.
+
+fix_router:
+  --fix-router          Enable .
+
+hccl_group_buffer:
+  --hccl-group-buffer HCCL_GROUP_BUFFER
+                        the hccl buffer for group
+
+hccl_group_buffer_adaptive:
+  --hccl-group-buffer-adaptive
+                        the hccl buffer for group adaptively
+  --hccl-ep-group-buffer-adaptive-factor HCCL_EP_GROUP_BUFFER_ADAPTIVE_FACTOR
+                        the ep group buffer factor
+
+optimizer_selection:
+  --ema-decay EMA_DECAY
+                        Set ema_decay of fused_ema_adamw optimizer.
+
+virtual_optimizer:
+  --virtual-optimizer VIRTUAL_OPTIMIZER [VIRTUAL_OPTIMIZER ...]
+                        User vritual memory to swap Optimizer. Pass a list of
+                        'all' or values, e.g. 'all' or '1', '2'
+
+low_precision_optimizer:
+  --quant-states {fp8,hif8,mxfp8}
+                        Select quantization format for optimizer states
+                        (default: disabled).
+  --quant-grads         Enable gradient quantization; dtype inferred from
+                        main_grads or defaults to fp16.
+
+dist_train:
+  --dist-train          Enable dist-train feature.
+
+tokenizer_type:
+  --tokenizer-name-or-path TOKENIZER_NAME_OR_PATH
+                        Name or path of the huggingface tokenizer.
+  --tokenizer-not-use-fast
+                        HuggingFace tokenizer not use the fast version.
+
+param_and_grad_buffer_pad:
+  --param-and-grad-buffer-pad PARAM_AND_GRAD_BUFFER_PAD
+                        Use this argument to ensure that all buckets start at
+                        a memory address that is needed-byte. Set 512 for
+                        Ascend
+
+layerzero:
+  --layerzero           Use this flag to enable layerzero, including the
+                        segmentation of the parameters, gradients, and
+                        optimizers of the row-parallel and column-parallel
+                        models, as well as the overlap optimization of the
+                        gradient reduce sactter and weight all gather.
+  --layerzero-config LAYERZERO_CONFIG
+                        Use this yaml file to config layerzero behaviours
+
+use_torch_fsdp2:
+  --fsdp2-config-path FSDP2_CONFIG_PATH
+
+reset_bucket_group_order:
+  --reset-bucket-group-order
+                        If true, forward compute with right overlap param all-
+                        gather order.
+
+reuse_fp32_param:
+  --reuse-fp32-param    The distributed training optimizer frees up param
+                        copies of FP32 to save memory.
+
+smart_swap:
+  --smart-swap          Enable the smart swap feature.
+
+swap_attention:
+  --swap-attention      switch to open swap-attention feature.The default is
+                        False.
+  --swap-modules SWAP_MODULES
+                        Swap modules for model. Can be used together with "--
+                        swap-attention."
+
+compress_dense:
+  --compress-dense {disable,level0,level1}
+                        Compress activation in dense layer.
+
+compress_activation:
+  --compress-activation COMPRESS_ACTIVATION
+                        Compress activation in each layer.
+
+compress_optimizer:
+  --compress-optimizer  Compress optimizer states.
+
+disable_gloo_group:
+  --disable-gloo-group  Replace the communication method of the DP group in
+                        the distributed optimizer from gloo to hccl.
+  --hccl-slice-size HCCL_SLICE_SIZE
+                        data slice size on each dp rank in distributed
+                        optimizer
+
+swap_optimizer:
+  --swap-optimizer      swap optimizer to cpu
+  --swap-optimizer-times SWAP_OPTIMIZER_TIMES
+                        Each swap will be moved (len(shard_fp32_from_float16)
+                        // swap_optimizer_times) elements
+
+fusion attention:
+  --pre-tockens PRE_TOCKENS
+                        pre-tockens is used by Flash attention
+  --next-tockens NEXT_TOCKENS
+                        next-tockens is used by Flash attention
+  --sparse-mode {0,1,2,3,4,5,6,7,8}
+                        mask type for fusion attention 0: defaultMask 1:
+                        allMask 2: leftUpCausal 3: rightDownCausal 4: band 5:
+                        prefix compressed 6: prefix no uncompressed 7: varlen
+                        - rightDownCausal 8: varlen - leftUpCausal
+
+fusion attention v2:
+  --use-fusion-attn-v2  enalbe fusion attention v2
+
+alibi:
+  --square-alibi-mask   attention mask of alibi is squared
+  --fill-neg-inf        fill alibi with negative inf
+  --alibi-fusion-attn-type ALIBI_FUSION_ATTN_TYPE
+                        alibi pse type, support for 0,2
+  --alibi-diagonal-opposite
+                        make alibi diagonal opposite
+
+reset_attention_mask:
+  --fix-sub-seq-length FIX_SUB_SEQ_LENGTH
+                        Sub-sequence length to process. - If > 0: Specifies
+                        fixed sub-sequence length. Each sub-sequence will have
+                        this length, except the last one which will take the
+                        remaining tokens. - If <= 0 or > seq_length: sub-
+                        sequences maintain their original lengths.
+
+multi head latent attention:
+  --multi-head-latent-attention
+                        Use Multi-head Latent Attention(MLA)
+  --qk-rope-head-dim QK_ROPE_HEAD_DIM
+                        The qk head dim for rope
+  --qk-nope-head-dim QK_NOPE_HEAD_DIM
+                        The qk head dim for only self-attn
+
+experimental-attention-variant:
+  --experimental-attention-variant {dsa}
+                        Experimental attention variant (e.g., dsa for DeepSeek
+                        Sparse Attention).
+  --use-dsa-absorb      Enable matrix absorption in DSA.
+  --use-fused-lightning-indexer
+                        Enable fused lightning indexer in DSA.
+  --use-fused-sparse-flash-attention
+                        Enable sparse flashattention in DSA.
+  --use-fused-lightning-indexer-kl-loss
+                        Enable sparse lightning indexer kl loss in DSA.
+
+mindspore_patch:
+  --ai-framework AI_FRAMEWORK
+                        support pytorch and mindspore
+
+auto_settings:
+  --auto-settings       Enable auto settings.
+  --auto-settings-work-dir AUTO_SETTINGS_WORK_DIR
+                        Auto setting's working directory. By default current
+                        directory.
+  --auto-settings-ranks AUTO_SETTINGS_RANKS
+                        The world size (# of ranks) for auto settings to
+                        search in.
+  --auto-settings-log-level AUTO_SETTINGS_LOG_LEVEL
+                        The world size (# of ranks) for auto settings to
+                        search in.
+  --target-nnodes TARGET_NNODES
+                        Target search nnodes for auto_settings.
+  --nnodes NNODES       Number of nodes, or the range of nodes in form
+                        <minimum_nodes>:<maximum_nodes>.Will be passed into
+                        torchrun.
+  --nproc-per-node NPROC_PER_NODE
+                        Number of workers per node; supported values: [auto,
+                        cpu, gpu, int].Will be passed into torchrun.
+  --node-rank NODE_RANK
+                        Rank of the node for multi-node distributed
+                        training.Will be passed into torchrun.
+  --auto-settings-type AUTO_SETTINGS_TYPE
+                        You should select one of [mixed, white, black].
+  --prof-file PROF_FILE
+  --master-addr MASTER_ADDR
+                        Address of the master node (rank 0) that only used for
+                        static rendezvous. It should be either the IP address
+                        or the hostname of rank 0. For single node multi-proc
+                        training the --master-addr can simply be 127.0.0.1;
+                        IPv6 should have the pattern `[0:0:0:0:0:0:0:1]`.Will
+                        be passed into torchrun.
+  --master-port MASTER_PORT
+                        Port on the master node (rank 0) to be used for
+                        communication during distributed training. It is only
+                        used for static rendezvous.Will be passed into
+                        torchrun.
+  --automated-pipeline  To enable automated pipeline memory saving process
+  --automated-pipeline-perf
+                        To enable automated pipeline performance acceleration
+                        process
+  --recompute-module-list RECOMPUTE_MODULE_LIST
+                        To store the recompute policy of automated pipeline
+  --jit-compile         Setting jit compile mode to True
+
+aiqos:
+  --aiqos               use ai qos feature
+  --aiqos-mode AIQOS_MODE
+                        ai qos mode
+  --aiqos-schedule AIQOS_SCHEDULE
+                        ai qos schedule
+  --aiqos-enable-roce   ai qos roce enable
+
+qat_quant_engine:
+  --qat-scheme QAT_SCHEME
+                        Quantization method to use

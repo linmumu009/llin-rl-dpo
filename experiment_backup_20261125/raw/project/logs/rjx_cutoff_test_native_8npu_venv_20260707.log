@@ -1,0 +1,255 @@
+<frozen runpy>:128: RuntimeWarning: 'torch.distributed.run' found in sys.modules after import of package 'torch.distributed', but prior to execution of 'torch.distributed.run'; this may result in unpredictable behaviour
+
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+[INFO] Starting configuration loading...
+[INFO] Loaded configuration file: /workspace/llin-rl-dpo/configs/rjx_cutoff_test_native.yaml
+[INFO] Automatically registered YAML field: data.dataset_param.attr.tools (type: <class 'str'>, value: tools)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.model_name_or_path (type: <class 'str'>, value: /models/Qwen3.6-27B)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.use_fast_tokenizer (type: <class 'bool'>, value: True)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.split_special_tokens (type: <class 'bool'>, value: False)
+[INFO] Automatically registered YAML field: model.gdn_implementation (type: <class 'str'>, value: triton)
+[INFO] Automatically registered YAML field: model.causal_conv1d_implementation (type: <class 'str'>, value: eager)
+[INFO] Automatically registered YAML field: features.recompute (type: <class 'bool'>, value: True)
+[ERROR] Configuration loading failed: 1 validation error for Arguments
+data.dataset_param.attr.formatting
+  Input should be 'alpaca', 'sharegpt' or 'multimodal_tool' [type=literal_error, input_value='openai', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/literal_error
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 110, in load_and_parse
+    config_obj = self.config_class(**merged_config)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/arguments/base_args.py", line 54, in __init__
+    super().__init__(**data)
+  File "/opt/conda/lib/python3.11/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for Arguments
+data.dataset_param.attr.formatting
+  Input should be 'alpaca', 'sharegpt' or 'multimodal_tool' [type=literal_error, input_value='openai', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/literal_error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 354, in <module>
+    arguments = ConfigManager(config_class=Arguments).load_and_parse()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 126, in load_and_parse
+    raise ConfigValidationError(f"Configuration loading failed") from e
+mindspeed_mm.config.exception.ConfigValidationError: Configuration loading failed
+[ERROR] 2026-07-07-02:49:55 (PID:258936, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 110, in load_and_parse
+    config_obj = self.config_class(**merged_config)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/arguments/base_args.py", line 54, in __init__
+    super().__init__(**data)
+  File "/opt/conda/lib/python3.11/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for Arguments
+data.dataset_param.attr.formatting
+  Input should be 'alpaca', 'sharegpt' or 'multimodal_tool' [type=literal_error, input_value='openai', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/literal_error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 354, in <module>
+    arguments = ConfigManager(config_class=Arguments).load_and_parse()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 126, in load_and_parse
+    raise ConfigValidationError(f"Configuration loading failed") from e
+mindspeed_mm.config.exception.ConfigValidationError: Configuration loading failed
+[ERROR] 2026-07-07-02:49:55 (PID:258938, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 110, in load_and_parse
+    config_obj = self.config_class(**merged_config)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/arguments/base_args.py", line 54, in __init__
+    super().__init__(**data)
+  File "/opt/conda/lib/python3.11/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for Arguments
+data.dataset_param.attr.formatting
+  Input should be 'alpaca', 'sharegpt' or 'multimodal_tool' [type=literal_error, input_value='openai', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/literal_error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 354, in <module>
+    arguments = ConfigManager(config_class=Arguments).load_and_parse()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 126, in load_and_parse
+    raise ConfigValidationError(f"Configuration loading failed") from e
+mindspeed_mm.config.exception.ConfigValidationError: Configuration loading failed
+[ERROR] 2026-07-07-02:49:55 (PID:258942, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 110, in load_and_parse
+    config_obj = self.config_class(**merged_config)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/arguments/base_args.py", line 54, in __init__
+    super().__init__(**data)
+  File "/opt/conda/lib/python3.11/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for Arguments
+data.dataset_param.attr.formatting
+  Input should be 'alpaca', 'sharegpt' or 'multimodal_tool' [type=literal_error, input_value='openai', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/literal_error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 354, in <module>
+    arguments = ConfigManager(config_class=Arguments).load_and_parse()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 126, in load_and_parse
+    raise ConfigValidationError(f"Configuration loading failed") from e
+mindspeed_mm.config.exception.ConfigValidationError: Configuration loading failed
+[ERROR] 2026-07-07-02:49:55 (PID:258939, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 110, in load_and_parse
+    config_obj = self.config_class(**merged_config)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/arguments/base_args.py", line 54, in __init__
+    super().__init__(**data)
+  File "/opt/conda/lib/python3.11/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for Arguments
+data.dataset_param.attr.formatting
+  Input should be 'alpaca', 'sharegpt' or 'multimodal_tool' [type=literal_error, input_value='openai', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/literal_error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 354, in <module>
+    arguments = ConfigManager(config_class=Arguments).load_and_parse()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 126, in load_and_parse
+    raise ConfigValidationError(f"Configuration loading failed") from e
+mindspeed_mm.config.exception.ConfigValidationError: Configuration loading failed
+[ERROR] 2026-07-07-02:49:55 (PID:258943, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 110, in load_and_parse
+    config_obj = self.config_class(**merged_config)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/arguments/base_args.py", line 54, in __init__
+    super().__init__(**data)
+  File "/opt/conda/lib/python3.11/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for Arguments
+data.dataset_param.attr.formatting
+  Input should be 'alpaca', 'sharegpt' or 'multimodal_tool' [type=literal_error, input_value='openai', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/literal_error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 354, in <module>
+    arguments = ConfigManager(config_class=Arguments).load_and_parse()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 126, in load_and_parse
+    raise ConfigValidationError(f"Configuration loading failed") from e
+mindspeed_mm.config.exception.ConfigValidationError: Configuration loading failed
+[ERROR] 2026-07-07-02:49:55 (PID:258940, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 110, in load_and_parse
+    config_obj = self.config_class(**merged_config)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/arguments/base_args.py", line 54, in __init__
+    super().__init__(**data)
+  File "/opt/conda/lib/python3.11/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for Arguments
+data.dataset_param.attr.formatting
+  Input should be 'alpaca', 'sharegpt' or 'multimodal_tool' [type=literal_error, input_value='openai', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/literal_error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 354, in <module>
+    arguments = ConfigManager(config_class=Arguments).load_and_parse()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 126, in load_and_parse
+    raise ConfigValidationError(f"Configuration loading failed") from e
+mindspeed_mm.config.exception.ConfigValidationError: Configuration loading failed
+[ERROR] 2026-07-07-02:49:56 (PID:258941, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 110, in load_and_parse
+    config_obj = self.config_class(**merged_config)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/arguments/base_args.py", line 54, in __init__
+    super().__init__(**data)
+  File "/opt/conda/lib/python3.11/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for Arguments
+data.dataset_param.attr.formatting
+  Input should be 'alpaca', 'sharegpt' or 'multimodal_tool' [type=literal_error, input_value='openai', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/literal_error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 354, in <module>
+    arguments = ConfigManager(config_class=Arguments).load_and_parse()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/config/config_manager.py", line 126, in load_and_parse
+    raise ConfigValidationError(f"Configuration loading failed") from e
+mindspeed_mm.config.exception.ConfigValidationError: Configuration loading failed
+[ERROR] 2026-07-07-02:49:56 (PID:258937, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+W0707 02:49:56.664000 258856 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 258937 closing signal SIGTERM
+W0707 02:49:56.664000 258856 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 258938 closing signal SIGTERM
+W0707 02:49:56.664000 258856 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 258939 closing signal SIGTERM
+W0707 02:49:56.664000 258856 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 258940 closing signal SIGTERM
+W0707 02:49:56.665000 258856 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 258941 closing signal SIGTERM
+W0707 02:49:56.665000 258856 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 258942 closing signal SIGTERM
+W0707 02:49:56.665000 258856 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 258943 closing signal SIGTERM
+E0707 02:49:57.030000 258856 site-packages/torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 0 (pid: 258936) of binary: /workspace/llin-rl-dpo/.venvs/msmm-qwen36/bin/python
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 896, in <module>
+    main()
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 892, in main
+    run(args)
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 883, in run
+    elastic_launch(
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 270, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+mindspeed_mm/fsdp/train/trainer.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-07-07_02:49:56
+  host      : 269f1583621d
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 258936)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+[ERROR] 2026-07-07-02:49:57 (PID:258856, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception

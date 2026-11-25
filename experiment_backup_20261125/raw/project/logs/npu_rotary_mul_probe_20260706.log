@@ -1,0 +1,9 @@
+ENV torch=2.7.1+cpu torch_npu=2.7.1.post4 npu_count=8 time_utc=2026-07-06T06:53:36.949647+00:00
+TEST seq=2048 heads=1 dim=128 dtype=torch.bfloat16
+OK seq=2048 grad_norm=509.323212
+TEST seq=4096 heads=1 dim=128 dtype=torch.bfloat16
+OK seq=4096 grad_norm=722.164307
+TEST seq=8192 heads=1 dim=128 dtype=torch.bfloat16
+OK seq=8192 grad_norm=1022.893677
+TEST seq=16384 heads=1 dim=128 dtype=torch.bfloat16
+OK seq=16384 grad_norm=1447.479492

@@ -20,6 +20,10 @@
 - 训练效果指标。
 - 每个版本和上一个版本的区别。
 
+## 实验数据离线备份
+
+2026-11-25 已将当前项目的必要实验数据备份至 [experiment_backup_20261125](experiment_backup_20261125/README.md)，包含 994 个文件（约 104.6 MiB），均通过 SHA-256 校验。模型与 adapter 权重、优化器状态和可再生缓存不在备份范围内。真实复现数据已获用户确认可公开，随备份保存。
+
 ## 当前服务器基线
 
 已确认的信息见 [reference/EXPERIMENT_LOG.md](reference/EXPERIMENT_LOG.md)。
@@ -66,6 +70,8 @@
 版本记录见 [CHANGELOG.md](CHANGELOG.md)。
 
 当前版本：
+
+- `v0.1.28`：完成服务器回收前的当前项目实验数据备份，含日志、指标、数据、复现脚本和配置；详见备份目录说明。
 
 - `v0.1.27`：按“当前环境、不改依赖”测试 ms-swift SFT。新增 `datasets/tiny_sft.jsonl` 和 `scripts/run_ms_swift_qwen36_sft_smoke.sh`，在 `llin-rl-dpo` 中确认现有依赖为 `torch_npu 2.7.1.post4`、`transformers 5.12.1`、`ms-swift 4.5.0.dev0`，8 卡可见。两次 SFT smoke 均未进入 optimizer step：默认运行和显式 `--use_logits_to_keep false --padding_free false --packing false --sequence_parallel_size 1` 运行都失败在 `Qwen3.5 linear attention padding free/sequence parallel requires flash-linear-attention`。结论：不改依赖时，当前 ms-swift DPO 可跑，但 ms-swift SFT 在 Qwen3.6/Qwen3_5 上不能跑通。
 - `v0.1.26`：在 `llin-rl-dpo` 上完成 ms-swift 长上下文 DPO 第二档实测：8 卡、`MAX_LENGTH=4096`、`PER_DEVICE_TRAIN_BATCH_SIZE=1`、`GRADIENT_ACCUMULATION_STEPS=2`、`TRUNCATION_STRATEGY=left`、10 step。结果 exit code `0`，训练完成；运行 `644.1705s`，`train_steps_per_second=0.016`，`train_samples_per_second=0.248`，峰值日志显存约 `60.16 GiB`。效果侧 reward margin 从 `0` 上升到第 10 step 的 `46.75`，reward accuracy 多数 step 为 `1.0`，但这是合成长上下文数据上的 10 step smoke，不代表真实业务效果。

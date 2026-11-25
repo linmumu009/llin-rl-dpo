@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/opt/conda/lib/python3.11/site-packages/torch_npu/dynamo/__init__.py", line 90, in __getattr__
+    raise AttributeError(f"Try to get {self._pkg_name}'s attr `{name}` before {self._pkg_name} is initialized."
+AttributeError: Try to get torchair's attr `__file__` before torchair is initialized.
+[ERROR] 2026-07-06-07:18:17 (PID:2646, Device:-1, RankID:-1) ERR00005 PTA internal error. Did you mean: '__le__'?

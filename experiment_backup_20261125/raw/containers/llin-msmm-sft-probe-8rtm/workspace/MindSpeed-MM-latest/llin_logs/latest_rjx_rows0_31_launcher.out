@@ -1,0 +1,631 @@
+<frozen runpy>:128: RuntimeWarning: 'torch.distributed.run' found in sys.modules after import of package 'torch.distributed', but prior to execution of 'torch.distributed.run'; this may result in unpredictable behaviour
+
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+DrvMngGetConsoleLogLevel failed. (ret=4)
+DrvMngGetConsoleLogLevel failed. (ret=4)
+DrvMngGetConsoleLogLevel failed. (ret=4)
+DrvMngGetConsoleLogLevel failed. (ret=4)
+DrvMngGetConsoleLogLevel failed. (ret=4)
+DrvMngGetConsoleLogLevel failed. (ret=4)
+DrvMngGetConsoleLogLevel failed. (ret=4)
+DrvMngGetConsoleLogLevel failed. (ret=4)
+/opt/conda/lib/python3.11/site-packages/torch_npu/npu/__init__.py:405: UserWarning: Can't get ascend_hal device count
+  warnings.warn("Can't get ascend_hal device count")
+/opt/conda/lib/python3.11/site-packages/torch_npu/npu/__init__.py:405: UserWarning: Can't get ascend_hal device count
+  warnings.warn("Can't get ascend_hal device count")
+[INFO] Starting configuration loading...
+[INFO] Loaded configuration file: llin_configs/rjx_rows0_31_cutoff4096_2step.yaml
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.model_name_or_path (type: <class 'str'>, value: /models/Qwen3.6-27B)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.use_fast_tokenizer (type: <class 'bool'>, value: True)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.split_special_tokens (type: <class 'bool'>, value: False)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.image_max_pixels (type: <class 'int'>, value: 262144)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.image_min_pixels (type: <class 'int'>, value: 1024)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.video_max_pixels (type: <class 'int'>, value: 16384)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.video_min_pixels (type: <class 'int'>, value: 0)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.video_fps (type: <class 'float'>, value: 2.0)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.video_maxlen (type: <class 'int'>, value: 64)
+[INFO] Automatically registered YAML field: model.gdn_implementation (type: <class 'str'>, value: triton)
+[INFO] Automatically registered YAML field: model.causal_conv1d_implementation (type: <class 'str'>, value: eager)
+[INFO] Automatically registered YAML field: features.recompute (type: <class 'bool'>, value: True)
+============================================================
+BaseArguments Configuration Manager Summary
+============================================================
+
+Configuration class: Arguments
+Configuration file: llin_configs/rjx_rows0_31_cutoff4096_2step.yaml
+Allow YAML extensions: True
+Allow CLI override: True
+Strict CLI validation: True
+Allow registering YAML fields: True
+
+Defined field count: 204
+Dynamic field count: 12
+Total field count: 216
+
+
+============ Configuration Details ============
+parallel:
+  data_parallel_size: 8
+  fully_shard_parallel_size: 8
+  fsdp_plan:
+    ignored_modules: []
+    apply_modules: ['model.language_model', 'model.language_model.embed_tokens', 'model.language_model.layers.{*}', 'lm_head']
+    param_dtype: bf16
+    reduce_dtype: fp32
+    output_dtype: None
+    cast_forward_inputs: True
+    reshard_after_forward: True
+    num_to_forward_prefetch: 0
+    num_to_backward_prefetch: 0
+    pregather: False
+    hook_modules: None
+    cpu_offload: False
+  tensor_parallel_size: 1
+  tp_plan:
+    colwise_parallel: []
+    rowwise_parallel: []
+    sequence_parallel: []
+  ring_attention_size: 1
+  ulysses_parallel_size: 1
+  expert_parallel_size: 1
+  expert_fully_shard_parallel_size: 8
+  ep_plan:
+    apply_modules: []
+    use_npu_fused_ops: True
+    dispatcher: alltoall
+    apply_efsdp_modules: []
+  recompute: False
+  recompute_plan:
+    apply_modules: []
+    use_reentrant: False
+  local_rank: 0
+  global_rank: 0
+  world_size: 8
+model:
+  model_id: qwen3_5
+  model_name_or_path: /models/Qwen3.6-27B
+  trust_remote_code: True
+  attn_implementation: flash_attention_2
+  freeze: []
+  mtp_num_layers: 0
+  mtp_loss_scaling_factor: 0.1
+  gdn_implementation: triton
+  causal_conv1d_implementation: eager
+data:
+  dataset_param:
+    dataset_type: huggingface
+    basic_parameters:
+      cache_dir: /workspace/MindSpeed-MM-latest/llin_cache/rjx_rows0_31_cutoff4096_2step
+      template: qwen3_6
+      chat_template: None
+      enable_thinking: True
+      dataset_dir: /workspace/MindSpeed-MM-latest/data/llin_rjx
+      dataset: ['/workspace/MindSpeed-MM-latest/data/llin_rjx/rjx_openai_rows0_31.jsonl']
+      cutoff_len: 4096
+      train_on_prompt: False
+      mask_history: False
+      streaming: False
+      overwrite_cache: True
+      preprocessing_batch_size: 1000
+      preprocessing_num_workers: 4
+      max_samples: None
+      tool_format: None
+      val_dataset: None
+      val_max_samples: None
+      val_rate: None
+      packing: None
+      neat_packing: False
+      preprocess_on_fly: False
+      async_preprocess: False
+      async_preprocess_buffer_size: None
+      stage: sft
+    preprocess_parameters:
+      model_name_or_path: /models/Qwen3.6-27B
+      use_fast_tokenizer: True
+      split_special_tokens: False
+      image_resolution: 512
+      video_resolution: 128
+      image_max_pixels: 262144
+      image_min_pixels: 1024
+      video_max_pixels: 16384
+      video_min_pixels: 0
+      video_fps: 2.0
+      video_maxlen: 64
+      image_do_pan_and_scan: False
+      crop_to_patches: False
+      use_audio_in_video: False
+      audio_sampling_rate: 16000
+      trust_remote_code: False
+    attr:
+      ranking: False
+      system: None
+      images: None
+      videos: None
+      audios: None
+      prompt: None
+      query: None
+      response: None
+      history: None
+      messages: messages
+      tools: tools
+      role_tag: role
+      content_tag: content
+      user_tag: user
+      assistant_tag: assistant
+      observation_tag: tool
+      function_tag: function_call
+      system_tag: system
+      chosen: None
+      rejected: None
+      formatting: openai
+  val_dataset_param: None
+  dataloader_param:
+    dataloader_mode: sampler
+    sampler_type: BaseRandomBatchSampler
+    shuffle: False
+    drop_last: True
+    pin_memory: True
+    collate_param:
+      collator_id: None
+      model_name: qwen3vl
+      ignore_pad_token_for_loss: True
+      pad_to_multiple_of: 8
+    num_workers: 4
+    enable_preload: False
+training:
+  profile:
+    enable: False
+    start_step: 1
+    end_step: 2
+    save_path: ./profiling
+    record_shapes: True
+    with_memory: True
+    with_stack: True
+    ranks: [0]
+    _train_steps: -1
+    local_rank: 0
+    global_rank: 0
+    world_size: 8
+    profile_this_rank: False
+  lora:
+    enable: False
+    rank: 8
+    alpha: 16
+    target_modules: ['q_proj', 'k_proj', 'v_proj']
+    dropout: 0.0
+    init_lora_weights: True
+    pretrained_lora_path: None
+    lora_target_modules_support: None
+  lr: 1e-05
+  lr_min: 0.0
+  lr_start: 0.0
+  weight_decay: 0.0
+  no_decay_modules: []
+  no_decay_params: []
+  optimizer: adamw
+  matched_adamw_rms: 0.2
+  muon_momentum: 0.95
+  ns_steps: 5
+  adam_fused: True
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_eps: 1e-08
+  clip_grad: 0.0
+  clip_grad_foreach: True
+  micro_batch_size: 2
+  gradient_accumulation_steps: 1
+  lr_warmup_ratio: 0.1
+  lr_decay_style: cosine
+  lr_decay_ratio: 1.0
+  enable_full_determinism: False
+  ckpt_manager: dcp
+  save_async: False
+  save_ckpt_dtype: None
+  load_checkpoint_path: None
+  save_steps: 0
+  seed: 42
+  max_steps: None
+  init_model_with_meta_device: True
+  train_iters: 2
+  train_epochs: None
+  load: /workspace/llin-rl-dpo/checkpoints/msmm-qwen36-27b-dcp
+  load_format: auto
+  load_strict: False
+  load_rank0_and_broadcast: False
+  no_load_optim: True
+  no_load_rng: True
+  save: /workspace/MindSpeed-MM-latest/llin_outputs/rjx_rows0_31_cutoff4096_2step
+  no_save_optim: True
+  no_save_rng: True
+  log_interval: 1
+  save_interval: 1000
+  val_interval: 0
+  val_micro_batch_size: None
+  use_deter_comp: False
+  allow_hf32: None
+  plugin: ['mindspeed_mm/fsdp/models/qwen3_5', 'mindspeed_mm/fsdp/data/datasets/huggingface']
+  lr_scaling_plan: None
+  quantization_plan: QuantizeConfig(recipe_name=None, apply_modules=[], ignored_modules=[], quant_converters=[], extra_args={}, enable_fsdp_low_precision_all_gather=True, fsdp_low_precision_all_gather_mode='on-demand')
+  _train_steps: -1
+  local_rank: 0
+  global_rank: 0
+  world_size: 8
+  global_batch_size: 16
+tools:
+  profile:
+    enable: False
+    profile_type: static
+    ranks: [0]
+    static_param:
+      level: level1
+      with_stack: False
+      with_memory: False
+      record_shapes: False
+      with_cpu: True
+      save_path: ./profiling
+      start_step: 10
+      end_step: 11
+      data_simplification: False
+      aic_metrics_type: PipeUtilization
+      analyse_flag: True
+  memory_profile:
+    enable: False
+    start_step: 1
+    end_step: 2
+    save_path: ./memory_snapshot
+    dump_ranks: [0]
+    stacks: all
+    max_entries: None
+    mem_info: False
+features:
+  recompute_plan:
+    apply_modules: ['model.language_model.layers.{*}']
+    use_reentrant: False
+  loss_cfg:
+    loss_type: default
+    router_aux_loss_coef: 0.0
+    router_aux_loss_offload: False
+  enable_chunk_loss: True
+  enable_dynamic_chunk_loss: False
+  chunkloss_plan:
+    apply_module: lm_head
+    chunk_size: 256
+    total_chunk_size: 4096
+  enable_activation_offload: True
+  activation_offload_plan:
+    apply_modules: ['model.language_model.layers.{*}']
+  enable_chunk_mbs: False
+  chunkmbs_plan:
+    apply_modules: None
+    chunk_mbs: 1
+    batch_dim: 0
+    chunk_arg_indexs: [0]
+    chunk_kwarg_names: []
+  enable_ep_balance: False
+  ep_balance_plan:
+    max_dup_experts_num: 2
+  recompute: True
+data.dataset_param.preprocess_parameters.model_name_or_path: /models/Qwen3.6-27B
+data.dataset_param.preprocess_parameters.use_fast_tokenizer: True
+data.dataset_param.preprocess_parameters.split_special_tokens: False
+data.dataset_param.preprocess_parameters.image_max_pixels: 262144
+data.dataset_param.preprocess_parameters.image_min_pixels: 1024
+data.dataset_param.preprocess_parameters.video_max_pixels: 16384
+data.dataset_param.preprocess_parameters.video_min_pixels: 0
+data.dataset_param.preprocess_parameters.video_fps: 2.0
+data.dataset_param.preprocess_parameters.video_maxlen: 64
+
+
+============ Dynamic Fields ============
+ data.dataset_param.preprocess_parameters.image_max_pixels
+ data.dataset_param.preprocess_parameters.image_min_pixels
+ data.dataset_param.preprocess_parameters.model_name_or_path
+ data.dataset_param.preprocess_parameters.split_special_tokens
+ data.dataset_param.preprocess_parameters.use_fast_tokenizer
+ data.dataset_param.preprocess_parameters.video_fps
+ data.dataset_param.preprocess_parameters.video_max_pixels
+ data.dataset_param.preprocess_parameters.video_maxlen
+ data.dataset_param.preprocess_parameters.video_min_pixels
+ features.recompute
+ model.causal_conv1d_implementation
+ model.gdn_implementation
+============================================================
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 150, in initialize
+    torch.accelerator.set_device_index(local_rank)
+  File "/opt/conda/lib/python3.11/site-packages/torch/accelerator/__init__.py", line 117, in set_device_index
+    torch._C._accelerator_setDeviceIndex(device_index)
+  File "/opt/conda/lib/python3.11/site-packages/torch_npu/npu/__init__.py", line 276, in _lazy_init
+    torch_npu._C._npu_init()
+RuntimeError: Initialize:../torch_npu/csrc/core/npu/sys_ctrl/npu_sys_ctrl.cpp:165 NPU function error: aclInit, error code is 507899
+[ERROR] 2026-07-07-06:26:44 (PID:18107, Device:0, RankID:6) ERR00100 PTA call acl api failed
+[Error]: An internal error occurs in the Driver module. 
+        Rectify the fault based on the error information in the ascend log.
+[PID: 18107] 2026-07-07-06:26:41.726.584 Resource_Busy(EL0005): The resources are busy.
+        Possible Cause: 1. The resources have been occupied. 2. The device is being reset. 3. Software is not ready.
+        Solution: 1. Close applications not in use. 2. Wait for a while and try again.
+        TraceBack (most recent call last):
+        rtGetDeviceCount execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        get device count failed, runtime result = 507899.[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        Get device cnt failed, retCode=0x7020010[FUNC:CheckDeviceIdIsValid][FILE:api_error.cc][LINE:4791]
+        drv devId is invalid, drv devId=0, retCode=0x7020010[FUNC:SetDefaultDeviceId][FILE:api_error.cc][LINE:5436]
+        rtSetDefaultDeviceId execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        set default device id failed, ret:507899[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        [Process][DefaultDevice]process HandleDefaultDevice failed[FUNC:ReportInnerError][FILE:log_inner.cpp][LINE:132]
+        chipType=0 does not support get device msg feature.[FUNC:GetDevMsg][FILE:api_impl.cc][LINE:6181]
+        The argument is invalid.Reason: rtGetDevMsg execution failed, the feature is not supported.
+
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 150, in initialize
+    torch.accelerator.set_device_index(local_rank)
+  File "/opt/conda/lib/python3.11/site-packages/torch/accelerator/__init__.py", line 117, in set_device_index
+    torch._C._accelerator_setDeviceIndex(device_index)
+  File "/opt/conda/lib/python3.11/site-packages/torch_npu/npu/__init__.py", line 276, in _lazy_init
+    torch_npu._C._npu_init()
+RuntimeError: Initialize:../torch_npu/csrc/core/npu/sys_ctrl/npu_sys_ctrl.cpp:165 NPU function error: aclInit, error code is 507899
+[ERROR] 2026-07-07-06:26:44 (PID:18104, Device:0, RankID:3) ERR00100 PTA call acl api failed
+[Error]: An internal error occurs in the Driver module. 
+        Rectify the fault based on the error information in the ascend log.
+[PID: 18104] 2026-07-07-06:26:41.725.012 Resource_Busy(EL0005): The resources are busy.
+        Possible Cause: 1. The resources have been occupied. 2. The device is being reset. 3. Software is not ready.
+        Solution: 1. Close applications not in use. 2. Wait for a while and try again.
+        TraceBack (most recent call last):
+        rtGetDeviceCount execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        get device count failed, runtime result = 507899.[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        Get device cnt failed, retCode=0x7020010[FUNC:CheckDeviceIdIsValid][FILE:api_error.cc][LINE:4791]
+        drv devId is invalid, drv devId=0, retCode=0x7020010[FUNC:SetDefaultDeviceId][FILE:api_error.cc][LINE:5436]
+        rtSetDefaultDeviceId execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        set default device id failed, ret:507899[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        [Process][DefaultDevice]process HandleDefaultDevice failed[FUNC:ReportInnerError][FILE:log_inner.cpp][LINE:132]
+        chipType=0 does not support get device msg feature.[FUNC:GetDevMsg][FILE:api_impl.cc][LINE:6181]
+        The argument is invalid.Reason: rtGetDevMsg execution failed, the feature is not supported.
+
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 150, in initialize
+    torch.accelerator.set_device_index(local_rank)
+  File "/opt/conda/lib/python3.11/site-packages/torch/accelerator/__init__.py", line 117, in set_device_index
+    torch._C._accelerator_setDeviceIndex(device_index)
+  File "/opt/conda/lib/python3.11/site-packages/torch_npu/npu/__init__.py", line 276, in _lazy_init
+    torch_npu._C._npu_init()
+RuntimeError: Initialize:../torch_npu/csrc/core/npu/sys_ctrl/npu_sys_ctrl.cpp:165 NPU function error: aclInit, error code is 507899
+[ERROR] 2026-07-07-06:26:44 (PID:18105, Device:0, RankID:4) ERR00100 PTA call acl api failed
+[Error]: An internal error occurs in the Driver module. 
+        Rectify the fault based on the error information in the ascend log.
+[PID: 18105] 2026-07-07-06:26:41.761.067 Resource_Busy(EL0005): The resources are busy.
+        Possible Cause: 1. The resources have been occupied. 2. The device is being reset. 3. Software is not ready.
+        Solution: 1. Close applications not in use. 2. Wait for a while and try again.
+        TraceBack (most recent call last):
+        rtGetDeviceCount execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        get device count failed, runtime result = 507899.[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        Get device cnt failed, retCode=0x7020010[FUNC:CheckDeviceIdIsValid][FILE:api_error.cc][LINE:4791]
+        drv devId is invalid, drv devId=0, retCode=0x7020010[FUNC:SetDefaultDeviceId][FILE:api_error.cc][LINE:5436]
+        rtSetDefaultDeviceId execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        set default device id failed, ret:507899[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        [Process][DefaultDevice]process HandleDefaultDevice failed[FUNC:ReportInnerError][FILE:log_inner.cpp][LINE:132]
+        chipType=0 does not support get device msg feature.[FUNC:GetDevMsg][FILE:api_impl.cc][LINE:6181]
+        The argument is invalid.Reason: rtGetDevMsg execution failed, the feature is not supported.
+
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 150, in initialize
+    torch.accelerator.set_device_index(local_rank)
+  File "/opt/conda/lib/python3.11/site-packages/torch/accelerator/__init__.py", line 117, in set_device_index
+    torch._C._accelerator_setDeviceIndex(device_index)
+  File "/opt/conda/lib/python3.11/site-packages/torch_npu/npu/__init__.py", line 276, in _lazy_init
+    torch_npu._C._npu_init()
+RuntimeError: Initialize:../torch_npu/csrc/core/npu/sys_ctrl/npu_sys_ctrl.cpp:165 NPU function error: aclInit, error code is 507899
+[ERROR] 2026-07-07-06:26:44 (PID:18101, Device:0, RankID:0) ERR00100 PTA call acl api failed
+[Error]: An internal error occurs in the Driver module. 
+        Rectify the fault based on the error information in the ascend log.
+[PID: 18101] 2026-07-07-06:26:41.760.637 Resource_Busy(EL0005): The resources are busy.
+        Possible Cause: 1. The resources have been occupied. 2. The device is being reset. 3. Software is not ready.
+        Solution: 1. Close applications not in use. 2. Wait for a while and try again.
+        TraceBack (most recent call last):
+        rtGetDeviceCount execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        get device count failed, runtime result = 507899.[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        Get device cnt failed, retCode=0x7020010[FUNC:CheckDeviceIdIsValid][FILE:api_error.cc][LINE:4791]
+        drv devId is invalid, drv devId=0, retCode=0x7020010[FUNC:SetDefaultDeviceId][FILE:api_error.cc][LINE:5436]
+        rtSetDefaultDeviceId execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        set default device id failed, ret:507899[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        [Process][DefaultDevice]process HandleDefaultDevice failed[FUNC:ReportInnerError][FILE:log_inner.cpp][LINE:132]
+        chipType=0 does not support get device msg feature.[FUNC:GetDevMsg][FILE:api_impl.cc][LINE:6181]
+        The argument is invalid.Reason: rtGetDevMsg execution failed, the feature is not supported.
+
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 150, in initialize
+    torch.accelerator.set_device_index(local_rank)
+  File "/opt/conda/lib/python3.11/site-packages/torch/accelerator/__init__.py", line 117, in set_device_index
+    torch._C._accelerator_setDeviceIndex(device_index)
+  File "/opt/conda/lib/python3.11/site-packages/torch_npu/npu/__init__.py", line 276, in _lazy_init
+    torch_npu._C._npu_init()
+RuntimeError: Initialize:../torch_npu/csrc/core/npu/sys_ctrl/npu_sys_ctrl.cpp:165 NPU function error: aclInit, error code is 507899
+[ERROR] 2026-07-07-06:26:44 (PID:18106, Device:0, RankID:5) ERR00100 PTA call acl api failed
+[Error]: An internal error occurs in the Driver module. 
+        Rectify the fault based on the error information in the ascend log.
+[PID: 18106] 2026-07-07-06:26:41.862.593 Resource_Busy(EL0005): The resources are busy.
+        Possible Cause: 1. The resources have been occupied. 2. The device is being reset. 3. Software is not ready.
+        Solution: 1. Close applications not in use. 2. Wait for a while and try again.
+        TraceBack (most recent call last):
+        rtGetDeviceCount execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        get device count failed, runtime result = 507899.[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        Get device cnt failed, retCode=0x7020010[FUNC:CheckDeviceIdIsValid][FILE:api_error.cc][LINE:4791]
+        drv devId is invalid, drv devId=0, retCode=0x7020010[FUNC:SetDefaultDeviceId][FILE:api_error.cc][LINE:5436]
+        rtSetDefaultDeviceId execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        set default device id failed, ret:507899[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        [Process][DefaultDevice]process HandleDefaultDevice failed[FUNC:ReportInnerError][FILE:log_inner.cpp][LINE:132]
+        chipType=0 does not support get device msg feature.[FUNC:GetDevMsg][FILE:api_impl.cc][LINE:6181]
+        The argument is invalid.Reason: rtGetDevMsg execution failed, the feature is not supported.
+
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+Traceback (most recent call last):
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 150, in initialize
+    torch.accelerator.set_device_index(local_rank)
+  File "/opt/conda/lib/python3.11/site-packages/torch/accelerator/__init__.py", line 117, in set_device_index
+    torch._C._accelerator_setDeviceIndex(device_index)
+  File "/opt/conda/lib/python3.11/site-packages/torch_npu/npu/__init__.py", line 276, in _lazy_init
+    trainer = Trainer(args=arguments)
+      torch_npu._C._npu_init()
+            ^^RuntimeError^: Initialize:../torch_npu/csrc/core/npu/sys_ctrl/npu_sys_ctrl.cpp:165 NPU function error: aclInit, error code is 507899
+[ERROR] 2026-07-07-06:26:44 (PID:18103, Device:0, RankID:2) ERR00100 PTA call acl api failed
+[Error]: An internal error occurs in the Driver module. 
+        Rectify the fault based on the error information in the ascend log.
+[PID: 18103] 2026-07-07-06:26:41.979.384 Resource_Busy(EL0005): The resources are busy.
+        Possible Cause: 1. The resources have been occupied. 2. The device is being reset. 3. Software is not ready.
+        Solution: 1. Close applications not in use. 2. Wait for a while and try again.
+        TraceBack (most recent call last):
+        rtGetDeviceCount execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        get device count failed, runtime result = 507899.[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        Get device cnt failed, retCode=0x7020010[FUNC:CheckDeviceIdIsValid][FILE:api_error.cc][LINE:4791]
+        drv devId is invalid, drv devId=0, retCode=0x7020010[FUNC:SetDefaultDeviceId][FILE:api_error.cc][LINE:5436]
+        rtSetDefaultDeviceId execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        set default device id failed, ret:507899[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        [Process][DefaultDevice]process HandleDefaultDevice failed[FUNC:ReportInnerError][FILE:log_inner.cpp][LINE:132]
+        chipType=0 does not support get device msg feature.[FUNC:GetDevMsg][FILE:api_impl.cc][LINE:6181]
+        The argument is invalid.Reason: rtGetDevMsg execution failed, the feature is not supported.
+^
+^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 150, in initialize
+    torch.accelerator.set_device_index(local_rank)
+  File "/opt/conda/lib/python3.11/site-packages/torch/accelerator/__init__.py", line 117, in set_device_index
+    torch._C._accelerator_setDeviceIndex(device_index)
+  File "/opt/conda/lib/python3.11/site-packages/torch_npu/npu/__init__.py", line 276, in _lazy_init
+    torch_npu._C._npu_init()
+RuntimeError: Initialize:../torch_npu/csrc/core/npu/sys_ctrl/npu_sys_ctrl.cpp:165 NPU function error: aclInit, error code is 507899
+[ERROR] 2026-07-07-06:26:44 (PID:18108, Device:0, RankID:7) ERR00100 PTA call acl api failed
+[Error]: An internal error occurs in the Driver module. 
+        Rectify the fault based on the error information in the ascend log.
+[PID: 18108] 2026-07-07-06:26:41.978.885 Resource_Busy(EL0005): The resources are busy.
+        Possible Cause: 1. The resources have been occupied. 2. The device is being reset. 3. Software is not ready.
+        Solution: 1. Close applications not in use. 2. Wait for a while and try again.
+        TraceBack (most recent call last):
+        rtGetDeviceCount execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        get device count failed, runtime result = 507899.[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        Get device cnt failed, retCode=0x7020010[FUNC:CheckDeviceIdIsValid][FILE:api_error.cc][LINE:4791]
+        drv devId is invalid, drv devId=0, retCode=0x7020010[FUNC:SetDefaultDeviceId][FILE:api_error.cc][LINE:5436]
+        rtSetDefaultDeviceId execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        set default device id failed, ret:507899[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        [Process][DefaultDevice]process HandleDefaultDevice failed[FUNC:ReportInnerError][FILE:log_inner.cpp][LINE:132]
+        chipType=0 does not support get device msg feature.[FUNC:GetDevMsg][FILE:api_impl.cc][LINE:6181]
+        The argument is invalid.Reason: rtGetDevMsg execution failed, the feature is not supported.
+
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 150, in initialize
+    torch.accelerator.set_device_index(local_rank)
+  File "/opt/conda/lib/python3.11/site-packages/torch/accelerator/__init__.py", line 117, in set_device_index
+    torch._C._accelerator_setDeviceIndex(device_index)
+  File "/opt/conda/lib/python3.11/site-packages/torch_npu/npu/__init__.py", line 276, in _lazy_init
+    torch_npu._C._npu_init()
+RuntimeError: Initialize:../torch_npu/csrc/core/npu/sys_ctrl/npu_sys_ctrl.cpp:165 NPU function error: aclInit, error code is 507899
+[ERROR] 2026-07-07-06:26:44 (PID:18102, Device:0, RankID:1) ERR00100 PTA call acl api failed
+[Error]: An internal error occurs in the Driver module. 
+        Rectify the fault based on the error information in the ascend log.
+[PID: 18102] 2026-07-07-06:26:42.001.976 Resource_Busy(EL0005): The resources are busy.
+        Possible Cause: 1. The resources have been occupied. 2. The device is being reset. 3. Software is not ready.
+        Solution: 1. Close applications not in use. 2. Wait for a while and try again.
+        TraceBack (most recent call last):
+        rtGetDeviceCount execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        get device count failed, runtime result = 507899.[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        Get device cnt failed, retCode=0x7020010[FUNC:CheckDeviceIdIsValid][FILE:api_error.cc][LINE:4791]
+        drv devId is invalid, drv devId=0, retCode=0x7020010[FUNC:SetDefaultDeviceId][FILE:api_error.cc][LINE:5436]
+        rtSetDefaultDeviceId execution failed, reason=driver error:internal error[FUNC:FuncErrorReason][FILE:error_message_manage.cc][LINE:65]
+        set default device id failed, ret:507899[FUNC:ReportCallError][FILE:log_inner.cpp][LINE:148]
+        [Process][DefaultDevice]process HandleDefaultDevice failed[FUNC:ReportInnerError][FILE:log_inner.cpp][LINE:132]
+        chipType=0 does not support get device msg feature.[FUNC:GetDevMsg][FILE:api_impl.cc][LINE:6181]
+        The argument is invalid.Reason: rtGetDevMsg execution failed, the feature is not supported.
+
+W0707 06:26:46.558000 18034 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 18101 closing signal SIGTERM
+W0707 06:26:46.559000 18034 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 18102 closing signal SIGTERM
+W0707 06:26:46.560000 18034 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 18104 closing signal SIGTERM
+W0707 06:26:46.560000 18034 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 18106 closing signal SIGTERM
+W0707 06:26:46.560000 18034 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 18107 closing signal SIGTERM
+W0707 06:26:46.560000 18034 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 18108 closing signal SIGTERM
+E0707 06:26:46.713000 18034 site-packages/torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 2 (pid: 18103) of binary: /workspace/msmm-latest-probe-venv/bin/python
+DrvMngGetConsoleLogLevel failed. (ret=4)
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 896, in <module>
+    main()
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 892, in main
+    run(args)
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 883, in run
+    elastic_launch(
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 270, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+mindspeed_mm/fsdp/train/trainer.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-07-07_06:26:46
+  host      : 478041c6b898
+  rank      : 4 (local_rank: 4)
+  exitcode  : 1 (pid: 18105)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-07-07_06:26:46
+  host      : 478041c6b898
+  rank      : 2 (local_rank: 2)
+  exitcode  : 1 (pid: 18103)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+[ERROR] 2026-07-07-06:26:46 (PID:18034, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception

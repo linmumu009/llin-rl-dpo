@@ -1,0 +1,724 @@
+W0706 08:32:58.221000 22255 site-packages/torch/distributed/run.py:766] 
+W0706 08:32:58.221000 22255 site-packages/torch/distributed/run.py:766] *****************************************
+W0706 08:32:58.221000 22255 site-packages/torch/distributed/run.py:766] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0706 08:32:58.221000 22255 site-packages/torch/distributed/run.py:766] *****************************************
+[INFO] Starting configuration loading...
+[INFO] Loaded configuration file: /workspace/llin-rl-dpo/configs/msmm_qwen36_sft_cutoff2048_1step.yaml
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.model_name_or_path (type: <class 'str'>, value: /models/Qwen3.6-27B)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.use_fast_tokenizer (type: <class 'bool'>, value: True)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.split_special_tokens (type: <class 'bool'>, value: False)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.image_max_pixels (type: <class 'int'>, value: 262144)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.image_min_pixels (type: <class 'int'>, value: 1024)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.video_max_pixels (type: <class 'int'>, value: 16384)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.video_min_pixels (type: <class 'int'>, value: 0)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.video_fps (type: <class 'float'>, value: 2.0)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.video_maxlen (type: <class 'int'>, value: 64)
+[INFO] Automatically registered YAML field: model.gdn_implementation (type: <class 'str'>, value: triton)
+[INFO] Automatically registered YAML field: model.causal_conv1d_implementation (type: <class 'str'>, value: eager)
+[INFO] Automatically registered YAML field: features.recompute (type: <class 'bool'>, value: True)
+============================================================
+BaseArguments Configuration Manager Summary
+============================================================
+
+Configuration class: Arguments
+Configuration file: /workspace/llin-rl-dpo/configs/msmm_qwen36_sft_cutoff2048_1step.yaml
+Allow YAML extensions: True
+Allow CLI override: True
+Strict CLI validation: True
+Allow registering YAML fields: True
+
+Defined field count: 196
+Dynamic field count: 12
+Total field count: 208
+
+
+============ Configuration Details ============
+parallel:
+  data_parallel_size: 4
+  fully_shard_parallel_size: 4
+  fsdp_plan:
+    ignored_modules: []
+    apply_modules: ['model.visual', 'model.visual.blocks.{*}', 'model.language_model', 'model.language_model.embed_tokens', 'model.language_model.layers.{*}', 'lm_head']
+    param_dtype: bf16
+    reduce_dtype: fp32
+    output_dtype: None
+    cast_forward_inputs: True
+    reshard_after_forward: True
+    num_to_forward_prefetch: 0
+    num_to_backward_prefetch: 0
+    pregather: False
+    hook_modules: None
+    cpu_offload: False
+  tensor_parallel_size: 1
+  tp_plan:
+    colwise_parallel: []
+    rowwise_parallel: []
+    sequence_parallel: []
+  ring_attention_size: 1
+  ulysses_parallel_size: 1
+  expert_parallel_size: 1
+  expert_fully_shard_parallel_size: 4
+  ep_plan:
+    apply_modules: []
+    use_npu_fused_ops: True
+    dispatcher: alltoall
+    apply_efsdp_modules: []
+  recompute: False
+  recompute_plan:
+    apply_modules: []
+    use_reentrant: False
+  local_rank: 0
+  global_rank: 0
+  world_size: 4
+model:
+  model_id: qwen3_5
+  model_name_or_path: /models/Qwen3.6-27B
+  trust_remote_code: True
+  attn_implementation: flash_attention_2
+  freeze: ['model.visual']
+  mtp_num_layers: 0
+  mtp_loss_scaling_factor: 0.1
+  gdn_implementation: triton
+  causal_conv1d_implementation: eager
+data:
+  dataset_param:
+    dataset_type: huggingface
+    basic_parameters:
+      cache_dir: /workspace/llin-rl-dpo/cache/msmm_sft_cutoff2048
+      template: qwen3_vl_nothink
+      chat_template: None
+      enable_thinking: False
+      dataset_dir: /workspace/llin-rl-dpo/datasets
+      dataset: ['/workspace/llin-rl-dpo/datasets/msmm_sft_probe_long.jsonl']
+      cutoff_len: 2048
+      train_on_prompt: False
+      mask_history: False
+      streaming: False
+      overwrite_cache: True
+      preprocessing_batch_size: 4
+      preprocessing_num_workers: 1
+      max_samples: 8
+      tool_format: None
+      val_dataset: None
+      val_max_samples: None
+      val_rate: None
+      packing: None
+      neat_packing: False
+      preprocess_on_fly: False
+      async_preprocess: False
+      async_preprocess_buffer_size: None
+      stage: sft
+    preprocess_parameters:
+      model_name_or_path: /models/Qwen3.6-27B
+      use_fast_tokenizer: True
+      split_special_tokens: False
+      image_resolution: 512
+      video_resolution: 128
+      image_max_pixels: 262144
+      image_min_pixels: 1024
+      video_max_pixels: 16384
+      video_min_pixels: 0
+      video_fps: 2.0
+      video_maxlen: 64
+      image_do_pan_and_scan: False
+      crop_to_patches: False
+      use_audio_in_video: False
+      audio_sampling_rate: 16000
+      trust_remote_code: False
+    attr:
+      ranking: False
+      system: None
+      images: images
+      videos: None
+      audios: None
+      prompt: None
+      query: None
+      response: None
+      history: None
+      messages: messages
+      role_tag: role
+      content_tag: content
+      user_tag: user
+      assistant_tag: assistant
+      observation_tag: observation
+      function_tag: function_call
+      system_tag: system
+      chosen: None
+      rejected: None
+      formatting: sharegpt
+  dataloader_param:
+    dataloader_mode: sampler
+    sampler_type: BaseRandomBatchSampler
+    shuffle: False
+    drop_last: True
+    pin_memory: True
+    collate_param:
+      model_name: qwen3vl
+      ignore_pad_token_for_loss: True
+      pad_to_multiple_of: 8
+    num_workers: 0
+    enable_preload: False
+training:
+  profile:
+    enable: False
+    start_step: 1
+    end_step: 2
+    save_path: ./profiling
+    record_shapes: True
+    with_memory: True
+    with_stack: True
+    ranks: [0]
+    _train_steps: -1
+    local_rank: 0
+    global_rank: 0
+    world_size: 4
+    profile_this_rank: False
+  lora:
+    enable: False
+    rank: 8
+    alpha: 16
+    target_modules: ['q_proj', 'k_proj', 'v_proj']
+    dropout: 0.0
+    init_lora_weights: True
+    pretrained_lora_path: None
+    lora_target_modules_support: None
+  lr: 1e-05
+  lr_min: 0.0
+  lr_start: 0.0
+  weight_decay: 0.0
+  no_decay_modules: []
+  no_decay_params: []
+  optimizer: adamw
+  matched_adamw_rms: 0.2
+  muon_momentum: 0.95
+  ns_steps: 5
+  adam_fused: True
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_eps: 1e-08
+  clip_grad: 0.0
+  clip_grad_foreach: True
+  micro_batch_size: 1
+  gradient_accumulation_steps: 1
+  lr_warmup_ratio: 0.1
+  lr_decay_style: cosine
+  lr_decay_ratio: 1.0
+  enable_full_determinism: False
+  ckpt_manager: dcp
+  save_async: False
+  load_checkpoint_path: None
+  save_steps: 0
+  seed: 42
+  max_steps: None
+  init_model_with_meta_device: True
+  train_iters: 1
+  train_epochs: None
+  load: /workspace/llin-rl-dpo/checkpoints/msmm-qwen36-27b-dcp
+  load_format: auto
+  load_strict: False
+  load_rank0_and_broadcast: False
+  no_load_optim: True
+  no_load_rng: True
+  save: /workspace/llin-rl-dpo/outputs/msmm-qwen36-sft-cutoff2048-1step
+  no_save_optim: True
+  no_save_rng: True
+  log_interval: 1
+  save_interval: 10000
+  use_deter_comp: False
+  allow_hf32: None
+  plugin: ['mindspeed_mm/fsdp/models/qwen3_5', 'mindspeed_mm/fsdp/data/datasets/huggingface']
+  lr_scaling_plan: None
+  quantization_plan: QuantizeConfig(recipe_name=None, apply_modules=[], ignored_modules=[], quant_converters=[], extra_args={}, enable_fsdp_low_precision_all_gather=True, fsdp_low_precision_all_gather_mode='on-demand')
+  _train_steps: -1
+  local_rank: 0
+  global_rank: 0
+  world_size: 4
+  global_batch_size: 4
+tools:
+  profile:
+    enable: False
+    profile_type: static
+    ranks: [0]
+    static_param:
+      level: level1
+      with_stack: False
+      with_memory: False
+      record_shapes: False
+      with_cpu: False
+      save_path: ./profiling
+      start_step: 10
+      end_step: 11
+      data_simplification: False
+      aic_metrics_type: PipeUtilization
+      analyse_flag: True
+  memory_profile:
+    enable: False
+    start_step: 1
+    end_step: 2
+    save_path: ./memory_snapshot
+    dump_ranks: [0]
+    stacks: all
+    max_entries: None
+    mem_info: False
+features:
+  recompute_plan:
+    apply_modules: ['model.visual.blocks.{*}', 'model.language_model.layers.{*}']
+    use_reentrant: False
+  loss_cfg:
+    loss_type: default
+    router_aux_loss_coef: 0.0
+    router_aux_loss_offload: False
+  enable_chunk_loss: True
+  enable_dynamic_chunk_loss: False
+  chunkloss_plan:
+    apply_module: lm_head
+    chunk_size: 1024
+    total_chunk_size: 4096
+  enable_activation_offload: False
+  activation_offload_plan:
+    apply_modules: None
+  enable_chunk_mbs: False
+  chunkmbs_plan:
+    apply_modules: None
+    chunk_mbs: 1
+    batch_dim: 0
+    chunk_arg_indexs: [0]
+    chunk_kwarg_names: []
+  recompute: True
+data.dataset_param.preprocess_parameters.model_name_or_path: /models/Qwen3.6-27B
+data.dataset_param.preprocess_parameters.use_fast_tokenizer: True
+data.dataset_param.preprocess_parameters.split_special_tokens: False
+data.dataset_param.preprocess_parameters.image_max_pixels: 262144
+data.dataset_param.preprocess_parameters.image_min_pixels: 1024
+data.dataset_param.preprocess_parameters.video_max_pixels: 16384
+data.dataset_param.preprocess_parameters.video_min_pixels: 0
+data.dataset_param.preprocess_parameters.video_fps: 2.0
+data.dataset_param.preprocess_parameters.video_maxlen: 64
+
+
+============ Dynamic Fields ============
+ data.dataset_param.preprocess_parameters.image_max_pixels
+ data.dataset_param.preprocess_parameters.image_min_pixels
+ data.dataset_param.preprocess_parameters.model_name_or_path
+ data.dataset_param.preprocess_parameters.split_special_tokens
+ data.dataset_param.preprocess_parameters.use_fast_tokenizer
+ data.dataset_param.preprocess_parameters.video_fps
+ data.dataset_param.preprocess_parameters.video_max_pixels
+ data.dataset_param.preprocess_parameters.video_maxlen
+ data.dataset_param.preprocess_parameters.video_min_pixels
+ features.recompute
+ model.causal_conv1d_implementation
+ model.gdn_implementation
+============================================================
+[Rank 1 | Local Rank 1] 2026-07-06 08:33:07,151 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 1 | Local Rank 1] 2026-07-06 08:33:07,152 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 1 | Local Rank 1] 2026-07-06 08:33:07,349 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 1 | Local Rank 1] 2026-07-06 08:33:07,349 INFO [torch_npu.env:15] => get env MASTER_PORT = 29616
+[Rank 1 | Local Rank 1] 2026-07-06 08:33:07,349 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+Successfully imported: mindspeed_mm.fsdp.models.qwen3_5
+[Rank 1 | Local Rank 1] 2026-07-06 08:33:07,540 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:327] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 3 | Local Rank 3] 2026-07-06 08:33:07,555 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 3 | Local Rank 3] 2026-07-06 08:33:07,556 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 2 | Local Rank 2] 2026-07-06 08:33:07,603 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 2 | Local Rank 2] 2026-07-06 08:33:07,604 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+Successfully imported: mindspeed_mm.fsdp.data.datasets.huggingface
+[Rank 3 | Local Rank 3] 2026-07-06 08:33:07,739 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 3 | Local Rank 3] 2026-07-06 08:33:07,739 INFO [torch_npu.env:15] => get env MASTER_PORT = 29616
+[Rank 3 | Local Rank 3] 2026-07-06 08:33:07,739 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[Rank 2 | Local Rank 2] 2026-07-06 08:33:07,802 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 2 | Local Rank 2] 2026-07-06 08:33:07,802 INFO [torch_npu.env:15] => get env MASTER_PORT = 29616
+[Rank 2 | Local Rank 2] 2026-07-06 08:33:07,802 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:07,855 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:07,856 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 3 | Local Rank 3] 2026-07-06 08:33:07,932 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:327] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 2 | Local Rank 2] 2026-07-06 08:33:08,022 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:327] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,054 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,054 INFO [torch_npu.env:15] => get env MASTER_PORT = 29616
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,054 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,065 INFO [mindspeed_mm.fsdp.distributed.parallel_state:87] => Parallel state initialized:
+ [dp] = True | Group size: 4 | device mesh:DeviceMesh('npu', [0, 1, 2, 3], mesh_dim_names=('dp',)) 
+[cp] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('cp',)) 
+[ulysses] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('ulysses',)) 
+[ring] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('ring',)) 
+[tp] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('tp',)) 
+[edp] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('edp',)) 
+[efsdp] = True | Group size: 4 | device mesh:DeviceMesh('npu', [0, 1, 2, 3], mesh_dim_names=('efsdp',)) 
+[ep] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('ep',)) 
+[fsdp] = True | Group size: 4 | device mesh:DeviceMesh('npu', [0, 1, 2, 3], mesh_dim_names=('dp_shard_cp',)) 
+
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,065 INFO [mindspeed_mm.fsdp.models.modelhub:48] => > Loading AutoConfig from /models/Qwen3.6-27B...
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,067 INFO [mindspeed_mm.fsdp.models.modelhub:48] => Building transformers model from configuration...
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,251 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,251 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:327] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,253 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,255 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,258 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,260 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,262 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,265 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,267 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,268 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,271 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,273 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,275 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,278 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,279 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,281 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,284 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,286 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,287 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,295 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,296 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,298 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,301 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,303 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,304 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,307 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,309 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,311 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,314 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,316 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,317 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,320 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,322 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,323 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,326 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,328 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,330 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,333 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,334 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,336 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,339 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,341 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,342 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,345 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,347 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,348 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,351 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,353 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,356 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,594 INFO [mindspeed_mm.fsdp.models.modelhub:48] => freezing module model.visual...
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.0
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.1
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.2
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.3
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.4
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.5
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.6
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.7
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.8
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.9
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.10
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.11
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.12
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.13
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.14
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.15
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.16
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,635 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.17
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.18
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.19
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.20
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.21
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.22
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.23
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.24
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.25
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.visual.blocks.26
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.0
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.1
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.2
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.3
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.4
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.5
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.6
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.7
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.8
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.9
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.10
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.11
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.12
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.13
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.14
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.15
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.16
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.17
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.18
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.19
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.20
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.21
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.22
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.23
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.24
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.25
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.26
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.27
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.28
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,636 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.29
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.30
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.31
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.32
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.33
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.34
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.35
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.36
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.37
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.38
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.39
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.40
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.41
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.42
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.43
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.44
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.45
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.46
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.47
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.48
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.49
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.50
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.51
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.52
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.53
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.54
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.55
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.56
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.57
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.58
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.59
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.60
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.61
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.62
+[Rank 0 | Local Rank 0] 2026-07-06 08:33:08,637 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.63
+[rank:0]:[22320] [2026-07-06 08:33:10:396] torch_npu.memory: [ERROR] [22320] NPU out of memory. Tried to allocate 86.00 MiB (NPU 0; 61.27 GiB total capacity; 14.56 GiB already allocated; 14.56 GiB current active; 59.34 MiB free; 14.59 GiB reserved in total by PyTorch).If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 355, in <module>
+[rank0]:     trainer = Trainer(args=arguments)
+[rank0]:               ^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 73, in __init__
+[rank0]:     self.model = self.get_model(model_provider)
+[rank0]:                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 190, in get_model
+[rank0]:     to_empty_if_needed(model, device=device)
+[rank0]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/utils/utils.py", line 51, in to_empty_if_needed
+[rank0]:     return model._apply(_replace_tensor, recurse=recurse)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_fully_shard/_fully_shard.py", line 513, in _apply
+[rank0]:     ret = super()._apply(*args, **kwargs)  # type: ignore[misc]
+[rank0]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank0]:     module._apply(fn)
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank0]:     module._apply(fn)
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_fully_shard/_fully_shard.py", line 513, in _apply
+[rank0]:     ret = super()._apply(*args, **kwargs)  # type: ignore[misc]
+[rank0]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank0]:     module._apply(fn)
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank0]:     module._apply(fn)
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_fully_shard/_fully_shard.py", line 513, in _apply
+[rank0]:     ret = super()._apply(*args, **kwargs)  # type: ignore[misc]
+[rank0]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank0]:     module._apply(fn)
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank0]:     module._apply(fn)
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 942, in _apply
+[rank0]:     param_applied = fn(param)
+[rank0]:                     ^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/utils/utils.py", line 45, in _replace_tensor
+[rank0]:     return torch.empty_like(t, device=device) if t.device != device else t
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/_compile.py", line 51, in inner
+[rank0]:     return disable_fn(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 838, in _fn
+[rank0]:     return fn(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/tensor/_api.py", line 344, in __torch_dispatch__
+[rank0]:     return DTensor._op_dispatcher.dispatch(
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/tensor/_dispatch.py", line 217, in dispatch
+[rank0]:     local_results = op_call(*local_tensor_args, **op_info.local_kwargs)
+[rank0]:                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/_ops.py", line 756, in __call__
+[rank0]:     return self._op(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/_prims_common/wrappers.py", line 308, in _fn
+[rank0]:     result = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/torch/_refs/__init__.py", line 4999, in empty_like
+[rank0]:     return torch.empty_permuted(
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]: torch.OutOfMemoryError: NPU out of memory. Tried to allocate 86.00 MiB (NPU 0; 61.27 GiB total capacity; 14.56 GiB already allocated; 14.56 GiB current active; 59.34 MiB free; 14.59 GiB reserved in total by PyTorch).If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.
+[ERROR] 2026-07-06-08:33:11 (PID:22320, Device:0, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[rank:1]:[22321] [2026-07-06 08:33:11:175] torch_npu.memory: [ERROR] [22321] NPU out of memory. Tried to allocate 86.00 MiB (NPU 1; 61.28 GiB total capacity; 13.94 GiB already allocated; 13.94 GiB current active; 85.88 MiB free; 13.96 GiB reserved in total by PyTorch).If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 355, in <module>
+[rank1]:     trainer = Trainer(args=arguments)
+[rank1]:               ^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 73, in __init__
+[rank1]:     self.model = self.get_model(model_provider)
+[rank1]:                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 190, in get_model
+[rank1]:     to_empty_if_needed(model, device=device)
+[rank1]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/utils/utils.py", line 51, in to_empty_if_needed
+[rank1]:     return model._apply(_replace_tensor, recurse=recurse)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_fully_shard/_fully_shard.py", line 513, in _apply
+[rank1]:     ret = super()._apply(*args, **kwargs)  # type: ignore[misc]
+[rank1]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank1]:     module._apply(fn)
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank1]:     module._apply(fn)
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_fully_shard/_fully_shard.py", line 513, in _apply
+[rank1]:     ret = super()._apply(*args, **kwargs)  # type: ignore[misc]
+[rank1]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank1]:     module._apply(fn)
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank1]:     module._apply(fn)
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_fully_shard/_fully_shard.py", line 513, in _apply
+[rank1]:     ret = super()._apply(*args, **kwargs)  # type: ignore[misc]
+[rank1]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank1]:     module._apply(fn)
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank1]:     module._apply(fn)
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 942, in _apply
+[rank1]:     param_applied = fn(param)
+[rank1]:                     ^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/utils/utils.py", line 45, in _replace_tensor
+[rank1]:     return torch.empty_like(t, device=device) if t.device != device else t
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/_compile.py", line 51, in inner
+[rank1]:     return disable_fn(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 838, in _fn
+[rank1]:     return fn(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/tensor/_api.py", line 344, in __torch_dispatch__
+[rank1]:     return DTensor._op_dispatcher.dispatch(
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/tensor/_dispatch.py", line 217, in dispatch
+[rank1]:     local_results = op_call(*local_tensor_args, **op_info.local_kwargs)
+[rank1]:                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/_ops.py", line 756, in __call__
+[rank1]:     return self._op(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/_prims_common/wrappers.py", line 308, in _fn
+[rank1]:     result = fn(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/torch/_refs/__init__.py", line 4999, in empty_like
+[rank1]:     return torch.empty_permuted(
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]: torch.OutOfMemoryError: NPU out of memory. Tried to allocate 86.00 MiB (NPU 1; 61.28 GiB total capacity; 13.94 GiB already allocated; 13.94 GiB current active; 85.88 MiB free; 13.96 GiB reserved in total by PyTorch).If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.
+[ERROR] 2026-07-06-08:33:12 (PID:22321, Device:1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[rank:2]:[22322] [2026-07-06 08:33:14:552] torch_npu.memory: [ERROR] [22322] NPU out of memory. Tried to allocate 86.00 MiB (NPU 2; 61.27 GiB total capacity; 18.46 GiB already allocated; 18.46 GiB current active; 61.40 MiB free; 18.48 GiB reserved in total by PyTorch).If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 355, in <module>
+[rank2]:     trainer = Trainer(args=arguments)
+[rank2]:               ^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 73, in __init__
+[rank2]:     self.model = self.get_model(model_provider)
+[rank2]:                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 190, in get_model
+[rank2]:     to_empty_if_needed(model, device=device)
+[rank2]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/utils/utils.py", line 51, in to_empty_if_needed
+[rank2]:     return model._apply(_replace_tensor, recurse=recurse)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_fully_shard/_fully_shard.py", line 513, in _apply
+[rank2]:     ret = super()._apply(*args, **kwargs)  # type: ignore[misc]
+[rank2]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank2]:     module._apply(fn)
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank2]:     module._apply(fn)
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_fully_shard/_fully_shard.py", line 513, in _apply
+[rank2]:     ret = super()._apply(*args, **kwargs)  # type: ignore[misc]
+[rank2]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank2]:     module._apply(fn)
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank2]:     module._apply(fn)
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_fully_shard/_fully_shard.py", line 513, in _apply
+[rank2]:     ret = super()._apply(*args, **kwargs)  # type: ignore[misc]
+[rank2]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank2]:     module._apply(fn)
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 915, in _apply
+[rank2]:     module._apply(fn)
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 942, in _apply
+[rank2]:     param_applied = fn(param)
+[rank2]:                     ^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/utils/utils.py", line 45, in _replace_tensor
+[rank2]:     return torch.empty_like(t, device=device) if t.device != device else t
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/_compile.py", line 51, in inner
+[rank2]:     return disable_fn(*args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 838, in _fn
+[rank2]:     return fn(*args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/tensor/_api.py", line 344, in __torch_dispatch__
+[rank2]:     return DTensor._op_dispatcher.dispatch(
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/tensor/_dispatch.py", line 217, in dispatch
+[rank2]:     local_results = op_call(*local_tensor_args, **op_info.local_kwargs)
+[rank2]:                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/_ops.py", line 756, in __call__
+[rank2]:     return self._op(*args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/_prims_common/wrappers.py", line 308, in _fn
+[rank2]:     result = fn(*args, **kwargs)
+[rank2]:              ^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/torch/_refs/__init__.py", line 4999, in empty_like
+[rank2]:     return torch.empty_permuted(
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank2]: torch.OutOfMemoryError: NPU out of memory. Tried to allocate 86.00 MiB (NPU 2; 61.27 GiB total capacity; 18.46 GiB already allocated; 18.46 GiB current active; 61.40 MiB free; 18.48 GiB reserved in total by PyTorch).If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.
+W0706 08:33:15.051000 22255 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 22321 closing signal SIGTERM
+W0706 08:33:15.051000 22255 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 22322 closing signal SIGTERM
+W0706 08:33:15.051000 22255 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 22323 closing signal SIGTERM
+E0706 08:33:16.093000 22255 site-packages/torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 0 (pid: 22320) of binary: /opt/conda/bin/python3.11
+Traceback (most recent call last):
+  File "/opt/conda/bin/torchrun", line 6, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 892, in main
+    run(args)
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 883, in run
+    elastic_launch(
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 270, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+mindspeed_mm/fsdp/train/trainer.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-07-06_08:33:15
+  host      : 7bcf46746544
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 22320)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

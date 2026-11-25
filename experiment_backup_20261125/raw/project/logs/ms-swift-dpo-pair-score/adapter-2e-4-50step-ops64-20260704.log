@@ -1,0 +1,19 @@
+[INFO:swift] Patched torch_npu getenv to read from current os.environ.
+[INFO:swift] Patched Qwen3.5 chunk_gated_delta_rule to embedded MindSpeed implementation: transformers.models.qwen3_5.modeling_qwen3_5, transformers.models.qwen3_5_moe.modeling_qwen3_5_moe.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[WARNING:swift] Please install the package: `pip install "decord" -U`.
+[INFO:swift] Setting max_ratio: 200. You can adjust this hyperparameter through the environment variable: `MAX_RATIO`.
+[INFO:swift] Setting frame_factor: 2. You can adjust this hyperparameter through the environment variable: `FRAME_FACTOR`.
+[INFO:swift] Setting fps: 2.0. You can adjust this hyperparameter through the environment variable: `FPS`.
+[INFO:swift] Setting fps_min_frames: 4. You can adjust this hyperparameter through the environment variable: `FPS_MIN_FRAMES`.
+[INFO:swift] Setting fps_max_frames: 768. You can adjust this hyperparameter through the environment variable: `FPS_MAX_FRAMES`.
+[INFO:swift] Setting image_max_token_num: 16384. You can adjust this hyperparameter through the environment variable: `IMAGE_MAX_TOKEN_NUM`.
+[INFO:swift] Setting image_min_token_num: 4. You can adjust this hyperparameter through the environment variable: `IMAGE_MIN_TOKEN_NUM`.
+[INFO:swift] Setting spatial_merge_size: 2. You can adjust this hyperparameter through the environment variable: `SPATIAL_MERGE_SIZE`.
+[INFO:swift] Setting video_max_token_num: 768. You can adjust this hyperparameter through the environment variable: `VIDEO_MAX_TOKEN_NUM`.
+[INFO:swift] Setting video_min_token_num: 128. You can adjust this hyperparameter through the environment variable: `VIDEO_MIN_TOKEN_NUM`.
+[INFO:swift] model_kwargs: {'device_map': 'auto', 'dtype': torch.bfloat16}
+Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:   0%|          | 2/1184 [00:00<04:07,  4.78it/s]Loading weights:  12%|█▏        | 147/1184 [00:00<00:02, 368.34it/s]Loading weights:  19%|█▉        | 229/1184 [00:00<00:02, 416.87it/s]Loading weights:  25%|██▌       | 297/1184 [00:00<00:02, 374.22it/s]Loading weights:  30%|██▉       | 351/1184 [00:01<00:02, 402.30it/s]Loading weights:  34%|███▍      | 403/1184 [00:01<00:01, 405.76it/s]Loading weights:  38%|███▊      | 452/1184 [00:01<00:01, 422.76it/s]Loading weights:  44%|████▍     | 519/1184 [00:01<00:01, 481.78it/s]Loading weights:  49%|████▊     | 576/1184 [00:01<00:01, 503.87it/s]Loading weights:  53%|█████▎    | 631/1184 [00:01<00:01, 464.85it/s]Loading weights:  59%|█████▉    | 702/1184 [00:01<00:00, 522.94it/s]Loading weights:  65%|██████▍   | 769/1184 [00:01<00:00, 551.65it/s]Loading weights:  71%|███████   | 836/1184 [00:01<00:00, 583.37it/s]Loading weights:  99%|█████████▉| 1177/1184 [00:02<00:00, 1350.17it/s]Loading weights: 100%|██████████| 1184/1184 [00:02<00:00, 589.95it/s] 
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+{"count": 64, "mean_chosen_logprob": -2.7798760497677195, "mean_margin": 6.955093507277064, "mean_rejected_logprob": -9.734969557044781, "win_rate": 1.0}

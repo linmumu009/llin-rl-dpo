@@ -1,0 +1,56 @@
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/transformer/multi_token_prediction.py:60: UserWarning: Apex is not installed. Falling back to Torch Norm
+  warnings.warn('Apex is not installed. Falling back to Torch Norm')
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/models/gpt/gpt_layer_specs.py:65: UserWarning: Apex is not installed. Falling back to Torch Norm
+  warnings.warn('Apex is not installed. Falling back to Torch Norm')
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/models/retro/encoder_spec.py:47: UserWarning: Apex is not installed. Falling back to Torch Norm
+  warnings.warn(f'Apex is not installed. Falling back to Torch Norm')
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/models/retro/decoder_spec.py:39: UserWarning: Apex is not installed. Falling back to Torch Norm
+  warnings.warn(f'Apex is not installed. Falling back to Torch Norm')
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/training/utils.py:20: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier and multi_tensor_l2norm
+  warnings.warn(
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/optimizer/__init__.py:18: UserWarning: Transformer Engine and Apex are not installed. Falling back to Torch optimizers.
+  warnings.warn(
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/optimizer/optimizer.py:28: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier and multi_tensor_scale
+  warnings.warn(
+/workspace/llin-rl-dpo/reference/MindSpeed-LLM/megatron/core/optimizer/clip_grads.py:29: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier, multi_tensor_l2norm, and multi_tensor_scale
+  warnings.warn(
+/opt/conda/lib/python3.11/site-packages/torch_npu/contrib/transfer_to_npu.py:362: ImportWarning: 
+    *************************************************************************************************************
+    The torch.Tensor.cuda and torch.nn.Module.cuda are replaced with torch.Tensor.npu and torch.nn.Module.npu now..
+    The torch.cuda.DoubleTensor is replaced with torch.npu.FloatTensor cause the double type is not supported now..
+    The backend in torch.distributed.init_process_group set to hccl now..
+    The torch.cuda.* and torch.cuda.amp.* are replaced with torch.npu.* and torch.npu.amp.* now..
+    The device parameters have been replaced with npu in the function below:
+    torch.logspace, torch.randint, torch.hann_window, torch.rand, torch.full_like, torch.ones_like, torch.rand_like, torch.randperm, torch.arange, torch.frombuffer, torch.normal, torch._empty_per_channel_affine_quantized, torch.empty_strided, torch.empty_like, torch.scalar_tensor, torch.tril_indices, torch.bartlett_window, torch.ones, torch.sparse_coo_tensor, torch.randn, torch.kaiser_window, torch.tensor, torch.triu_indices, torch.as_tensor, torch.zeros, torch.randint_like, torch.full, torch.eye, torch._sparse_csr_tensor_unsafe, torch.empty, torch._sparse_coo_tensor_unsafe, torch.blackman_window, torch.zeros_like, torch.range, torch.sparse_csr_tensor, torch.randn_like, torch.from_file, torch._cudnn_init_dropout_state, torch._empty_affine_quantized, torch.linspace, torch.hamming_window, torch.empty_quantized, torch._pin_memory, torch.load, torch.set_default_device, torch.get_device_module, torch.sparse_compressed_tensor, torch.Tensor.new_empty, torch.Tensor.new_empty_strided, torch.Tensor.new_full, torch.Tensor.new_ones, torch.Tensor.new_tensor, torch.Tensor.new_zeros, torch.Tensor.to, torch.Tensor.pin_memory, torch.nn.Module.to, torch.nn.Module.to_empty
+    *************************************************************************************************************
+    
+  warnings.warn(msg, ImportWarning)
+/opt/conda/lib/python3.11/site-packages/torch_npu/contrib/transfer_to_npu.py:291: RuntimeWarning: torch.jit.script and torch.jit.script_method will be disabled by transfer_to_npu, which currently does not support them, if you need to enable them, please do not use transfer_to_npu.
+  warnings.warn(msg, RuntimeWarning)
+INFO:torch_npu.env:get env ASCEND_RT_VISIBLE_DEVICES = 2,3,4,5,6,7
+[Rank 0 | Local Rank 0] 2026-07-06 07:50:36,409 INFO [mindspeed.megatron_adaptor:33] => start to patch features in megatron adaptor.
+Using /root/.cache/torch_extensions/py311_cpu as PyTorch extensions root...
+[Rank 0 | Local Rank 0] 2026-07-06 07:50:36,899 INFO [mindspeed.features_manager.ckpt_acceleration.ckpt_acceleration:15] => ckpt acceleration is_need_apply patches enterckpt_acceleration: False
+/workspace/llin-rl-dpo/reference/MindSpeed-26.0.0_core_r0.12.1/mindspeed/core/tensor_parallel/tp_2d/layernorm_2d.py:88: FutureWarning: `torch_npu.npu.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='npu')` instead.
+  @custom_fwd
+/workspace/llin-rl-dpo/reference/MindSpeed-26.0.0_core_r0.12.1/mindspeed/core/tensor_parallel/tp_2d/layernorm_2d.py:147: FutureWarning: `torch_npu.npu.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='npu')` instead.
+  @custom_bwd
+/workspace/llin-rl-dpo/reference/MindSpeed-26.0.0_core_r0.12.1/mindspeed/core/tensor_parallel/tp_2d/rms_norm_2d.py:66: FutureWarning: `torch_npu.npu.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='npu')` instead.
+  @custom_fwd
+/workspace/llin-rl-dpo/reference/MindSpeed-26.0.0_core_r0.12.1/mindspeed/core/tensor_parallel/tp_2d/rms_norm_2d.py:87: FutureWarning: `torch_npu.npu.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='npu')` instead.
+  @custom_bwd
+[Rank 0 | Local Rank 0] 2026-07-06 07:50:37,932 INFO [mindspeed.features_manager.ckpt_acceleration.ckpt_acceleration:15] => ckpt acceleration is_need_apply patches enterckpt_acceleration: False
+[ERROR] `cache_position` is part of Qwen3_5TextModel.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5Model.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5ForCausalLM.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+ENV torch=2.7.1+cpu torch_npu=2.7.1.post4 npu_count=4 time_utc=2026-07-06T07:50:38.477818+00:00
+TEST seq=2048 q_heads=24 kv_heads=4 dim=256 dtype=torch.bfloat16
+/opt/conda/lib/python3.11/site-packages/torch_npu/contrib/transfer_to_npu.py:183: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  return fn(*args, **kwargs)
+OK seq=2048 q_grad_norm=3528.250977 k_grad_norm=1440.402466
+TEST seq=4096 q_heads=24 kv_heads=4 dim=256 dtype=torch.bfloat16
+OK seq=4096 q_grad_norm=5003.768066 k_grad_norm=2042.779663
+TEST seq=8192 q_heads=24 kv_heads=4 dim=256 dtype=torch.bfloat16
+OK seq=8192 q_grad_norm=7084.661133 k_grad_norm=2892.300781
+TEST seq=16384 q_heads=24 kv_heads=4 dim=256 dtype=torch.bfloat16
+OK seq=16384 q_grad_norm=10027.813477 k_grad_norm=4093.837402

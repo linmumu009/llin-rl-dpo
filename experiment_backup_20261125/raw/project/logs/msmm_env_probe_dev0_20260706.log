@@ -1,0 +1,16 @@
+python=3.11.14
+IMPORT torch ok version=2.7.1+cpu file=/opt/conda/lib/python3.11/site-packages/torch/__init__.py
+IMPORT torch_npu ok version=2.7.1.post4 file=/opt/conda/lib/python3.11/site-packages/torch_npu/__init__.py
+IMPORT mindspeed_mm failed ModuleNotFoundError: No module named 'einops'
+IMPORT mindspeed ok version=None file=/workspace/llin-rl-dpo/reference/MindSpeed/mindspeed/__init__.py
+IMPORT megatron ok version=None file=None
+npu_count=0
+model_type=qwen3_5
+architectures=['Qwen3_5ForConditionalGeneration']
+text_layers=64
+text_heads=24
+text_kv_heads=4
+which_torchrun=/opt/conda/bin/torchrun
+which_pretrain_gpt.py=None
+which_pretrain_vlm.py=None
+DrvMngGetConsoleLogLevel failed. (ret=4)

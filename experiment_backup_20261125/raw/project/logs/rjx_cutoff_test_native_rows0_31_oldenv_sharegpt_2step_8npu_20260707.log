@@ -1,0 +1,743 @@
+<frozen runpy>:128: RuntimeWarning: 'torch.distributed.run' found in sys.modules after import of package 'torch.distributed', but prior to execution of 'torch.distributed.run'; this may result in unpredictable behaviour
+
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+[INFO] Starting configuration loading...
+[INFO] Loaded configuration file: /workspace/llin-rl-dpo/configs/rjx_cutoff_test_native_rows0_31_oldenv_sharegpt_2step.yaml
+[INFO] Automatically registered YAML field: data.dataset_param.attr.tools (type: None, value: None)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.model_name_or_path (type: <class 'str'>, value: /models/Qwen3.6-27B)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.use_fast_tokenizer (type: <class 'bool'>, value: True)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.split_special_tokens (type: <class 'bool'>, value: False)
+[INFO] Automatically registered YAML field: model.gdn_implementation (type: <class 'str'>, value: triton)
+[INFO] Automatically registered YAML field: model.causal_conv1d_implementation (type: <class 'str'>, value: eager)
+[INFO] Automatically registered YAML field: features.recompute (type: <class 'bool'>, value: True)
+============================================================
+BaseArguments Configuration Manager Summary
+============================================================
+
+Configuration class: Arguments
+Configuration file: /workspace/llin-rl-dpo/configs/rjx_cutoff_test_native_rows0_31_oldenv_sharegpt_2step.yaml
+Allow YAML extensions: True
+Allow CLI override: True
+Strict CLI validation: True
+Allow registering YAML fields: True
+
+Defined field count: 196
+Dynamic field count: 7
+Total field count: 203
+
+
+============ Configuration Details ============
+parallel:
+  data_parallel_size: 8
+  fully_shard_parallel_size: 8
+  fsdp_plan:
+    ignored_modules: []
+    apply_modules: ['model.language_model', 'model.language_model.embed_tokens', 'model.language_model.layers.{*}', 'lm_head']
+    param_dtype: bf16
+    reduce_dtype: fp32
+    output_dtype: None
+    cast_forward_inputs: True
+    reshard_after_forward: True
+    num_to_forward_prefetch: 0
+    num_to_backward_prefetch: 0
+    pregather: False
+    hook_modules: None
+    cpu_offload: False
+  tensor_parallel_size: 1
+  tp_plan:
+    colwise_parallel: []
+    rowwise_parallel: []
+    sequence_parallel: []
+  ring_attention_size: 1
+  ulysses_parallel_size: 1
+  expert_parallel_size: 1
+  expert_fully_shard_parallel_size: 8
+  ep_plan:
+    apply_modules: []
+    use_npu_fused_ops: True
+    dispatcher: alltoall
+    apply_efsdp_modules: []
+  recompute: False
+  recompute_plan:
+    apply_modules: []
+    use_reentrant: False
+  local_rank: 0
+  global_rank: 0
+  world_size: 8
+model:
+  model_id: qwen3_5
+  model_name_or_path: /models/Qwen3.6-27B
+  trust_remote_code: True
+  attn_implementation: flash_attention_2
+  freeze: []
+  mtp_num_layers: 0
+  mtp_loss_scaling_factor: 0.1
+  gdn_implementation: triton
+  causal_conv1d_implementation: eager
+data:
+  dataset_param:
+    dataset_type: huggingface
+    basic_parameters:
+      cache_dir: /workspace/llin-rl-dpo/cache/rjx_cutoff_test_native_rows0_31_oldenv_sharegpt_2step
+      template: qwen3_6
+      chat_template: None
+      enable_thinking: True
+      dataset_dir: /workspace/llin-rl-dpo/datasets/rjx
+      dataset: ['/workspace/llin-rl-dpo/datasets/rjx/20260702_openai_rows0_31_sharegpt.jsonl']
+      cutoff_len: 4096
+      train_on_prompt: False
+      mask_history: False
+      streaming: False
+      overwrite_cache: False
+      preprocessing_batch_size: 1000
+      preprocessing_num_workers: 16
+      max_samples: None
+      tool_format: None
+      val_dataset: None
+      val_max_samples: None
+      val_rate: None
+      packing: None
+      neat_packing: False
+      preprocess_on_fly: False
+      async_preprocess: False
+      async_preprocess_buffer_size: None
+      stage: sft
+    preprocess_parameters:
+      model_name_or_path: /models/Qwen3.6-27B
+      use_fast_tokenizer: True
+      split_special_tokens: False
+      image_resolution: 512
+      video_resolution: 128
+      image_max_pixels: 589824
+      image_min_pixels: 1024
+      video_max_pixels: 65536
+      video_min_pixels: 256
+      video_fps: 2.0
+      video_maxlen: 128
+      image_do_pan_and_scan: False
+      crop_to_patches: False
+      use_audio_in_video: False
+      audio_sampling_rate: 16000
+      trust_remote_code: False
+    attr:
+      ranking: False
+      system: None
+      images: None
+      videos: None
+      audios: None
+      prompt: None
+      query: None
+      response: None
+      history: None
+      messages: conversations
+      role_tag: from
+      content_tag: value
+      user_tag: human
+      assistant_tag: gpt
+      observation_tag: observation
+      function_tag: function_call
+      system_tag: system
+      chosen: None
+      rejected: None
+      formatting: sharegpt
+      tools: None
+  dataloader_param:
+    dataloader_mode: sampler
+    sampler_type: BaseRandomBatchSampler
+    shuffle: False
+    drop_last: True
+    pin_memory: True
+    collate_param:
+      model_name: qwen3vl
+      ignore_pad_token_for_loss: True
+      pad_to_multiple_of: 8
+    num_workers: 8
+    enable_preload: False
+training:
+  profile:
+    enable: False
+    start_step: 1
+    end_step: 2
+    save_path: ./profiling
+    record_shapes: True
+    with_memory: True
+    with_stack: True
+    ranks: [0]
+    _train_steps: -1
+    local_rank: 0
+    global_rank: 0
+    world_size: 8
+    profile_this_rank: False
+  lora:
+    enable: False
+    rank: 8
+    alpha: 16
+    target_modules: ['q_proj', 'k_proj', 'v_proj']
+    dropout: 0.0
+    init_lora_weights: True
+    pretrained_lora_path: None
+    lora_target_modules_support: None
+  lr: 1e-05
+  lr_min: 0.0
+  lr_start: 0.0
+  weight_decay: 0.0
+  no_decay_modules: []
+  no_decay_params: []
+  optimizer: adamw
+  matched_adamw_rms: 0.2
+  muon_momentum: 0.95
+  ns_steps: 5
+  adam_fused: True
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_eps: 1e-08
+  clip_grad: 0.0
+  clip_grad_foreach: True
+  micro_batch_size: 2
+  gradient_accumulation_steps: 1
+  lr_warmup_ratio: 0.1
+  lr_decay_style: cosine
+  lr_decay_ratio: 1.0
+  enable_full_determinism: False
+  ckpt_manager: dcp
+  save_async: False
+  load_checkpoint_path: None
+  save_steps: 0
+  seed: 42
+  max_steps: None
+  init_model_with_meta_device: True
+  train_iters: 2
+  train_epochs: None
+  load: /workspace/llin-rl-dpo/checkpoints/msmm-qwen36-27b-dcp
+  load_format: auto
+  load_strict: False
+  load_rank0_and_broadcast: False
+  no_load_optim: True
+  no_load_rng: True
+  save: /workspace/llin-rl-dpo/outputs/rjx-cutoff-test-native-rows0-31-oldenv-sharegpt-2step
+  no_save_optim: True
+  no_save_rng: True
+  log_interval: 1
+  save_interval: 1000
+  use_deter_comp: False
+  allow_hf32: None
+  plugin: ['mindspeed_mm/fsdp/models/qwen3_5', 'mindspeed_mm/fsdp/data/datasets/huggingface']
+  lr_scaling_plan: None
+  quantization_plan: QuantizeConfig(recipe_name=None, apply_modules=[], ignored_modules=[], quant_converters=[], extra_args={}, enable_fsdp_low_precision_all_gather=True, fsdp_low_precision_all_gather_mode='on-demand')
+  _train_steps: -1
+  local_rank: 0
+  global_rank: 0
+  world_size: 8
+  global_batch_size: 16
+tools:
+  profile:
+    enable: False
+    profile_type: static
+    ranks: [0]
+    static_param:
+      level: level1
+      with_stack: False
+      with_memory: False
+      record_shapes: False
+      with_cpu: True
+      save_path: ./profiling
+      start_step: 10
+      end_step: 11
+      data_simplification: False
+      aic_metrics_type: PipeUtilization
+      analyse_flag: True
+  memory_profile:
+    enable: False
+    start_step: 1
+    end_step: 2
+    save_path: ./memory_snapshot
+    dump_ranks: [0]
+    stacks: all
+    max_entries: None
+    mem_info: False
+features:
+  recompute_plan:
+    apply_modules: ['model.language_model.layers.{*}']
+    use_reentrant: False
+  loss_cfg:
+    loss_type: default
+    router_aux_loss_coef: 0.0
+    router_aux_loss_offload: False
+  enable_chunk_loss: True
+  enable_dynamic_chunk_loss: False
+  chunkloss_plan:
+    apply_module: lm_head
+    chunk_size: 256
+    total_chunk_size: 4096
+  enable_activation_offload: True
+  activation_offload_plan:
+    apply_modules: ['model.language_model.layers.{*}']
+  enable_chunk_mbs: False
+  chunkmbs_plan:
+    apply_modules: None
+    chunk_mbs: 1
+    batch_dim: 0
+    chunk_arg_indexs: [0]
+    chunk_kwarg_names: []
+  recompute: True
+data.dataset_param.preprocess_parameters.model_name_or_path: /models/Qwen3.6-27B
+data.dataset_param.preprocess_parameters.use_fast_tokenizer: True
+data.dataset_param.preprocess_parameters.split_special_tokens: False
+
+
+============ Dynamic Fields ============
+ data.dataset_param.attr.tools
+ data.dataset_param.preprocess_parameters.model_name_or_path
+ data.dataset_param.preprocess_parameters.split_special_tokens
+ data.dataset_param.preprocess_parameters.use_fast_tokenizer
+ features.recompute
+ model.causal_conv1d_implementation
+ model.gdn_implementation
+============================================================
+Successfully imported: mindspeed_mm.fsdp.models.qwen3_5
+Successfully imported: mindspeed_mm.fsdp.data.datasets.huggingface
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:56,691 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:56,692 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 2 | Local Rank 2] 2026-07-07 04:53:56,727 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 2 | Local Rank 2] 2026-07-07 04:53:56,728 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,108 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,108 INFO [torch_npu.env:15] => get env MASTER_PORT = 29641
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,108 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,121 INFO [mindspeed_mm.fsdp.distributed.parallel_state:87] => Parallel state initialized:
+ [dp] = True | Group size: 8 | device mesh:DeviceMesh('npu', [0, 1, 2, 3, 4, 5, 6, 7], mesh_dim_names=('dp',)) 
+[cp] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('cp',)) 
+[ulysses] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('ulysses',)) 
+[ring] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('ring',)) 
+[tp] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('tp',)) 
+[edp] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('edp',)) 
+[efsdp] = True | Group size: 8 | device mesh:DeviceMesh('npu', [0, 1, 2, 3, 4, 5, 6, 7], mesh_dim_names=('efsdp',)) 
+[ep] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('ep',)) 
+[fsdp] = True | Group size: 8 | device mesh:DeviceMesh('npu', [0, 1, 2, 3, 4, 5, 6, 7], mesh_dim_names=('dp_shard_cp',)) 
+
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,121 INFO [mindspeed_mm.fsdp.models.modelhub:48] => > Loading AutoConfig from /models/Qwen3.6-27B...
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,123 INFO [mindspeed_mm.fsdp.models.modelhub:48] => Building transformers model from configuration...
+[Rank 7 | Local Rank 7] 2026-07-07 04:53:57,151 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 7 | Local Rank 7] 2026-07-07 04:53:57,153 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 2 | Local Rank 2] 2026-07-07 04:53:57,240 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 2 | Local Rank 2] 2026-07-07 04:53:57,240 INFO [torch_npu.env:15] => get env MASTER_PORT = 29641
+[Rank 2 | Local Rank 2] 2026-07-07 04:53:57,240 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,308 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,308 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:327] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,310 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,311 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,314 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,316 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,317 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,320 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,322 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,323 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 5 | Local Rank 5] 2026-07-07 04:53:57,325 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,326 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 5 | Local Rank 5] 2026-07-07 04:53:57,326 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,327 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,329 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,332 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,333 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,335 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,338 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,340 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,341 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,344 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,346 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,348 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,351 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,352 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,354 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,357 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,359 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,361 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,364 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,366 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 3 | Local Rank 3] 2026-07-07 04:53:57,366 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 3 | Local Rank 3] 2026-07-07 04:53:57,367 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,367 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,370 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,372 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,374 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,377 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,379 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,381 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,383 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,385 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,387 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,390 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,391 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,393 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,395 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,397 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,399 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,401 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,403 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,405 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 2 | Local Rank 2] 2026-07-07 04:53:57,447 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:327] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,654 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.0
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,654 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.1
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,654 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.2
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,654 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.3
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,654 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.4
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,654 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.5
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,654 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.6
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.7
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.8
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.9
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.10
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.11
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.12
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.13
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.14
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.15
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.16
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.17
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.18
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.19
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.20
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.21
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.22
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.23
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.24
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.25
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.26
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.27
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.28
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.29
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.30
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.31
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.32
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.33
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.34
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.35
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.36
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.37
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.38
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.39
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.40
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.41
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.42
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.43
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.44
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.45
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.46
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,655 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.47
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.48
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.49
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.50
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.51
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.52
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.53
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.54
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.55
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.56
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.57
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.58
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.59
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.60
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.61
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.62
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.63
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.0, offload idx: 0, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.1, offload idx: 1, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.2, offload idx: 2, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.3, offload idx: 3, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.4, offload idx: 4, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.5, offload idx: 5, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.6, offload idx: 6, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.7, offload idx: 7, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.8, offload idx: 8, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.9, offload idx: 9, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.10, offload idx: 10, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.11, offload idx: 11, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.12, offload idx: 12, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.13, offload idx: 13, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.14, offload idx: 14, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.15, offload idx: 15, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.16, offload idx: 16, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.17, offload idx: 17, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.18, offload idx: 18, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.19, offload idx: 19, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,656 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.20, offload idx: 20, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.21, offload idx: 21, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.22, offload idx: 22, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.23, offload idx: 23, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.24, offload idx: 24, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.25, offload idx: 25, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.26, offload idx: 26, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.27, offload idx: 27, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.28, offload idx: 28, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.29, offload idx: 29, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.30, offload idx: 30, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.31, offload idx: 31, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.32, offload idx: 32, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.33, offload idx: 33, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.34, offload idx: 34, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.35, offload idx: 35, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.36, offload idx: 36, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.37, offload idx: 37, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.38, offload idx: 38, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.39, offload idx: 39, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.40, offload idx: 40, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.41, offload idx: 41, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.42, offload idx: 42, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.43, offload idx: 43, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.44, offload idx: 44, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.45, offload idx: 45, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.46, offload idx: 46, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.47, offload idx: 47, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.48, offload idx: 48, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.49, offload idx: 49, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.50, offload idx: 50, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.51, offload idx: 51, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.52, offload idx: 52, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.53, offload idx: 53, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.54, offload idx: 54, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.55, offload idx: 55, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.56, offload idx: 56, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.57, offload idx: 57, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,657 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.58, offload idx: 58, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,658 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.59, offload idx: 59, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,658 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.60, offload idx: 60, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,658 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.61, offload idx: 61, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,658 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.62, offload idx: 62, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:57,658 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.63, offload idx: 63, offload_layers_num: 64
+[Rank 5 | Local Rank 5] 2026-07-07 04:53:57,730 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 5 | Local Rank 5] 2026-07-07 04:53:57,730 INFO [torch_npu.env:15] => get env MASTER_PORT = 29641
+[Rank 5 | Local Rank 5] 2026-07-07 04:53:57,731 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[Rank 1 | Local Rank 1] 2026-07-07 04:53:57,745 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 1 | Local Rank 1] 2026-07-07 04:53:57,746 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 3 | Local Rank 3] 2026-07-07 04:53:57,796 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 3 | Local Rank 3] 2026-07-07 04:53:57,796 INFO [torch_npu.env:15] => get env MASTER_PORT = 29641
+[Rank 3 | Local Rank 3] 2026-07-07 04:53:57,796 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[Rank 4 | Local Rank 4] 2026-07-07 04:53:57,897 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 4 | Local Rank 4] 2026-07-07 04:53:57,898 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 5 | Local Rank 5] 2026-07-07 04:53:57,925 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:327] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 7 | Local Rank 7] 2026-07-07 04:53:57,995 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 7 | Local Rank 7] 2026-07-07 04:53:57,995 INFO [torch_npu.env:15] => get env MASTER_PORT = 29641
+[Rank 7 | Local Rank 7] 2026-07-07 04:53:57,995 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[Rank 3 | Local Rank 3] 2026-07-07 04:53:58,006 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:327] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 6 | Local Rank 6] 2026-07-07 04:53:58,009 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 6 | Local Rank 6] 2026-07-07 04:53:58,011 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 1 | Local Rank 1] 2026-07-07 04:53:58,160 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 1 | Local Rank 1] 2026-07-07 04:53:58,160 INFO [torch_npu.env:15] => get env MASTER_PORT = 29641
+[Rank 1 | Local Rank 1] 2026-07-07 04:53:58,160 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[Rank 7 | Local Rank 7] 2026-07-07 04:53:58,198 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:327] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 1 | Local Rank 1] 2026-07-07 04:53:58,353 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:327] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 4 | Local Rank 4] 2026-07-07 04:53:58,383 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 4 | Local Rank 4] 2026-07-07 04:53:58,383 INFO [torch_npu.env:15] => get env MASTER_PORT = 29641
+[Rank 4 | Local Rank 4] 2026-07-07 04:53:58,383 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[Rank 4 | Local Rank 4] 2026-07-07 04:53:58,594 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:327] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 6 | Local Rank 6] 2026-07-07 04:53:58,894 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 6 | Local Rank 6] 2026-07-07 04:53:58,894 INFO [torch_npu.env:15] => get env MASTER_PORT = 29641
+[Rank 6 | Local Rank 6] 2026-07-07 04:53:58,894 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[Rank 6 | Local Rank 6] 2026-07-07 04:53:59,088 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:327] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 0 | Local Rank 0] 2026-07-07 04:53:59,190 INFO [__main__:48] => Prepare data
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 355, in <module>
+[rank0]:     trainer = Trainer(args=arguments)
+[rank0]:               ^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 75, in __init__
+[rank0]:     self.train_dataloader = self.get_dataloader() if dataloader_provider is None else dataloader_provider(args)
+[rank0]:                             ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 319, in get_dataloader
+[rank0]:     datasets = build_mm_dataset(data_config.dataset_param)
+[rank0]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/__init__.py", line 27, in build_mm_dataset
+[rank0]:     return dataset_cls_or_func(
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/datasets/huggingface/qwen2vl_dataset.py", line 203, in get_qwen2vl_dataset
+[rank0]:     template = get_template_and_fix_tokenizer(tokenizer, data_args.template)
+[rank0]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/template.py", line 604, in get_template_and_fix_tokenizer
+[rank0]:     raise ValueError(
+[rank0]: ValueError: Template None does not exist.
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 355, in <module>
+[rank2]:     trainer = Trainer(args=arguments)
+[rank2]:               ^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 75, in __init__
+[rank2]:     self.train_dataloader = self.get_dataloader() if dataloader_provider is None else dataloader_provider(args)
+[rank2]:                             ^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 319, in get_dataloader
+[rank2]:     datasets = build_mm_dataset(data_config.dataset_param)
+[rank2]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/__init__.py", line 27, in build_mm_dataset
+[rank2]:     return dataset_cls_or_func(
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/datasets/huggingface/qwen2vl_dataset.py", line 203, in get_qwen2vl_dataset
+[rank2]:     template = get_template_and_fix_tokenizer(tokenizer, data_args.template)
+[rank2]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/template.py", line 604, in get_template_and_fix_tokenizer
+[rank2]:     raise ValueError(
+[rank2]: ValueError: Template None does not exist.
+[rank5]: Traceback (most recent call last):
+[rank5]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 355, in <module>
+[rank5]:     trainer = Trainer(args=arguments)
+[rank5]:               ^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 75, in __init__
+[rank5]:     self.train_dataloader = self.get_dataloader() if dataloader_provider is None else dataloader_provider(args)
+[rank5]:                             ^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 319, in get_dataloader
+[rank5]:     datasets = build_mm_dataset(data_config.dataset_param)
+[rank5]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/__init__.py", line 27, in build_mm_dataset
+[rank5]:     return dataset_cls_or_func(
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/datasets/huggingface/qwen2vl_dataset.py", line 203, in get_qwen2vl_dataset
+[rank5]:     template = get_template_and_fix_tokenizer(tokenizer, data_args.template)
+[rank5]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/template.py", line 604, in get_template_and_fix_tokenizer
+[rank5]:     raise ValueError(
+[rank5]: ValueError: Template None does not exist.
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 355, in <module>
+[rank3]:     trainer = Trainer(args=arguments)
+[rank3]:               ^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 75, in __init__
+[rank3]:     self.train_dataloader = self.get_dataloader() if dataloader_provider is None else dataloader_provider(args)
+[rank3]:                             ^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 319, in get_dataloader
+[rank3]:     datasets = build_mm_dataset(data_config.dataset_param)
+[rank3]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/__init__.py", line 27, in build_mm_dataset
+[rank3]:     return dataset_cls_or_func(
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/datasets/huggingface/qwen2vl_dataset.py", line 203, in get_qwen2vl_dataset
+[rank3]:     template = get_template_and_fix_tokenizer(tokenizer, data_args.template)
+[rank3]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/template.py", line 604, in get_template_and_fix_tokenizer
+[rank3]:     raise ValueError(
+[rank3]: ValueError: Template None does not exist.
+[rank7]: Traceback (most recent call last):
+[rank7]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 355, in <module>
+[rank7]:     trainer = Trainer(args=arguments)
+[rank7]:               ^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 75, in __init__
+[rank7]:     self.train_dataloader = self.get_dataloader() if dataloader_provider is None else dataloader_provider(args)
+[rank7]:                             ^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 319, in get_dataloader
+[rank7]:     datasets = build_mm_dataset(data_config.dataset_param)
+[rank7]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/__init__.py", line 27, in build_mm_dataset
+[rank7]:     return dataset_cls_or_func(
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/datasets/huggingface/qwen2vl_dataset.py", line 203, in get_qwen2vl_dataset
+[rank7]:     template = get_template_and_fix_tokenizer(tokenizer, data_args.template)
+[rank7]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/template.py", line 604, in get_template_and_fix_tokenizer
+[rank7]:     raise ValueError(
+[rank7]: ValueError: Template None does not exist.
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 355, in <module>
+[rank1]:     trainer = Trainer(args=arguments)
+[rank1]:               ^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 75, in __init__
+[rank1]:     self.train_dataloader = self.get_dataloader() if dataloader_provider is None else dataloader_provider(args)
+[rank1]:                             ^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 319, in get_dataloader
+[rank1]:     datasets = build_mm_dataset(data_config.dataset_param)
+[rank1]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/__init__.py", line 27, in build_mm_dataset
+[rank1]:     return dataset_cls_or_func(
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/datasets/huggingface/qwen2vl_dataset.py", line 203, in get_qwen2vl_dataset
+[rank1]:     template = get_template_and_fix_tokenizer(tokenizer, data_args.template)
+[rank1]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/template.py", line 604, in get_template_and_fix_tokenizer
+[rank1]:     raise ValueError(
+[rank1]: ValueError: Template None does not exist.
+[ERROR] 2026-07-07-04:54:04 (PID:304557, Device:2, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-07-04:54:04 (PID:304560, Device:5, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-07-04:54:04 (PID:304555, Device:0, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[rank4]: Traceback (most recent call last):
+[rank4]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 355, in <module>
+[rank4]:     trainer = Trainer(args=arguments)
+[rank4]:               ^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 75, in __init__
+[rank4]:     self.train_dataloader = self.get_dataloader() if dataloader_provider is None else dataloader_provider(args)
+[rank4]:                             ^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 319, in get_dataloader
+[rank4]:     datasets = build_mm_dataset(data_config.dataset_param)
+[rank4]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/__init__.py", line 27, in build_mm_dataset
+[rank4]:     return dataset_cls_or_func(
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/datasets/huggingface/qwen2vl_dataset.py", line 203, in get_qwen2vl_dataset
+[rank4]:     template = get_template_and_fix_tokenizer(tokenizer, data_args.template)
+[rank4]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/template.py", line 604, in get_template_and_fix_tokenizer
+[rank4]:     raise ValueError(
+[rank4]: ValueError: Template None does not exist.
+[ERROR] 2026-07-07-04:54:04 (PID:304562, Device:7, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[rank6]: Traceback (most recent call last):
+[rank6]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 355, in <module>
+[rank6]:     trainer = Trainer(args=arguments)
+[rank6]:               ^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 75, in __init__
+[rank6]:     self.train_dataloader = self.get_dataloader() if dataloader_provider is None else dataloader_provider(args)
+[rank6]:                             ^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 319, in get_dataloader
+[rank6]:     datasets = build_mm_dataset(data_config.dataset_param)
+[rank6]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/__init__.py", line 27, in build_mm_dataset
+[rank6]:     return dataset_cls_or_func(
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/datasets/huggingface/qwen2vl_dataset.py", line 203, in get_qwen2vl_dataset
+[rank6]:     template = get_template_and_fix_tokenizer(tokenizer, data_args.template)
+[rank6]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/data/data_utils/func_utils/template.py", line 604, in get_template_and_fix_tokenizer
+[rank6]:     raise ValueError(
+[rank6]: ValueError: Template None does not exist.
+[ERROR] 2026-07-07-04:54:05 (PID:304558, Device:3, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-07-04:54:05 (PID:304559, Device:4, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-07-04:54:05 (PID:304556, Device:1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-07-04:54:05 (PID:304561, Device:6, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+W0707 04:54:08.925000 304475 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 304555 closing signal SIGTERM
+W0707 04:54:08.925000 304475 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 304556 closing signal SIGTERM
+W0707 04:54:08.925000 304475 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 304558 closing signal SIGTERM
+W0707 04:54:08.926000 304475 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 304559 closing signal SIGTERM
+W0707 04:54:08.926000 304475 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 304560 closing signal SIGTERM
+W0707 04:54:08.926000 304475 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 304561 closing signal SIGTERM
+W0707 04:54:08.928000 304475 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 304562 closing signal SIGTERM
+E0707 04:54:09.174000 304475 site-packages/torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 2 (pid: 304557) of binary: /workspace/llin-rl-dpo/.venvs/msmm-qwen36/bin/python
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 896, in <module>
+    main()
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 892, in main
+    run(args)
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 883, in run
+    elastic_launch(
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 270, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+mindspeed_mm/fsdp/train/trainer.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-07-07_04:54:08
+  host      : 269f1583621d
+  rank      : 2 (local_rank: 2)
+  exitcode  : 1 (pid: 304557)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+[ERROR] 2026-07-07-04:54:09 (PID:304475, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception

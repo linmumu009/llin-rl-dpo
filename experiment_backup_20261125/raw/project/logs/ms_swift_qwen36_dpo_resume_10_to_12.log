@@ -1,0 +1,1848 @@
+run sh: `/opt/conda/bin/python3.11 -m torch.distributed.run --nproc_per_node 8 --master_port 29623 /workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py --rlhf_type dpo --model /models/Qwen3.6-27B --model_type qwen3_5 --dataset /workspace/llin-rl-dpo/datasets/synthetic_dpo_256.jsonl --split_dataset_ratio 0 --dataset_num_proc 1 --dataloader_num_workers 0 --torch_dtype bfloat16 --tuner_type lora --target_modules all-linear --lora_rank 8 --lora_alpha 32 --lora_dropout 0 --max_length 512 --per_device_train_batch_size 1 --gradient_accumulation_steps 1 --learning_rate 1e-4 --num_train_epochs 1 --max_steps 12 --logging_steps 1 --save_strategy no --save_steps 500 --eval_strategy no --output_dir /workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-resume-10-to-12 --check_model false --fsdp fsdp2 --resume_from_checkpoint /workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-checkpoint-20step/v0-20260703-124743/checkpoint-10`
+
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[INFO:swift] Successfully registered `/workspace/llin-rl-dpo/reference/ms-swift/swift/dataset/data/dataset_info.json`.
+[INFO:swift] Patched torch_npu getenv to read from current os.environ.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[INFO:swift] Patched Qwen3.5 chunk_gated_delta_rule to embedded MindSpeed implementation: transformers.models.qwen3_5.modeling_qwen3_5, transformers.models.qwen3_5_moe.modeling_qwen3_5_moe.
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[INFO:swift] rank: 0, local_rank: 0, world_size: 8, local_world_size: 8
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[WARNING:swift] Please install the package: `pip install "decord" -U`.
+[INFO:swift] Setting args.lazy_tokenize: True
+[WARNING:swift] Both gradient_checkpointing and fsdp_config.activation_checkpointing are enabled. For FSDP2, it is recommended to use only activation_checkpointing in fsdp_config. Disabling gradient_checkpointing automatically.
+[INFO:swift] Using FSDP2: fsdp=full_shard auto_wrap, fsdp_config={'fsdp_version': 2, 'reshard_after_forward': True, 'auto_wrap_policy': 'TRANSFORMER_BASED_WRAP', 'cpu_ram_efficient_loading': True, 'state_dict_type': 'SHARDED_STATE_DICT', 'activation_checkpointing': True}
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+[INFO:swift] output_dir: /workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-resume-10-to-12/v0-20260703-125433
+[INFO:swift] args: RLHFArguments(
+acc_strategy=token,
+accelerator_config={'dispatch_batches': False},
+adalora_beta1=0.85,
+adalora_beta2=0.85,
+adalora_deltaT=1,
+adalora_init_r=12,
+adalora_orth_reg_weight=0.5,
+adalora_target_r=8,
+adalora_tfinal=0,
+adalora_tinit=0,
+adam_beta1=0.9,
+adam_beta2=0.95,
+adam_epsilon=1e-08,
+adapter_act=gelu,
+adapter_length=128,
+adapters=[],
+add_non_thinking_prefix=True,
+add_version=True,
+advantage_estimator=grpo,
+agent_template=None,
+aligner_lr=None,
+async_generate=False,
+attn_impl=None,
+auto_find_batch_size=False,
+average_tokens_across_devices=True,
+batch_eval_metrics=False,
+beta=0.1,
+bf16=True,
+bf16_full_eval=False,
+bnb_4bit_compute_dtype=torch.bfloat16,
+bnb_4bit_quant_storage=None,
+bnb_4bit_quant_type=nf4,
+bnb_4bit_use_double_quant=True,
+boft_block_num=0,
+boft_block_size=4,
+boft_dropout=0.0,
+boft_n_butterfly_factor=1,
+cached_dataset=[],
+cached_val_dataset=[],
+callbacks=[],
+center_rewards_coefficient=None,
+check_model=False,
+chord_enable_phi_function=False,
+chord_mu_decay_steps=None,
+chord_mu_peak=None,
+chord_mu_valley=None,
+chord_mu_warmup_steps=None,
+chord_sft_dataset=[],
+chord_sft_per_device_train_batch_size=None,
+cliprange=0.2,
+cliprange_value=0.2,
+columns={},
+completion_length_limit_scope=per_round,
+cosine_max_len=None,
+cosine_max_len_value_correct=0.5,
+cosine_max_len_value_wrong=0.0,
+cosine_min_len_value_correct=1.0,
+cosine_min_len_value_wrong=-0.5,
+cpo_alpha=1.0,
+create_checkpoint_symlink=False,
+custom_dataset_info=[],
+custom_register_path=[],
+data_seed=42,
+dataloader_drop_last=False,
+dataloader_num_workers=0,
+dataloader_persistent_workers=False,
+dataloader_pin_memory=True,
+dataloader_prefetch_factor=None,
+dataset=['/workspace/llin-rl-dpo/datasets/synthetic_dpo_256.jsonl'],
+dataset_num_proc=1,
+dataset_shuffle=True,
+ddp_backend=None,
+ddp_broadcast_buffers=None,
+ddp_bucket_cap_mb=None,
+ddp_find_unused_parameters=None,
+ddp_static_graph=None,
+ddp_timeout=18000000,
+debug=None,
+deepspeed=None,
+deepspeed_autotp_size=None,
+delta=None,
+desirable_weight=1.0,
+device_groups=None,
+device_map=None,
+disable_auto_column_mapping=False,
+disable_ignore_empty_think=False,
+disable_tqdm=None,
+discopop_tau=0.05,
+do_eval=False,
+do_predict=False,
+do_train=False,
+download_mode=reuse_dataset_if_exists,
+ds3_gather_for_generation=True,
+dynamic_sample=False,
+early_stop_interval=None,
+enable_channel_loss=False,
+enable_dft_loss=False,
+enable_flattened_weight_sync=True,
+enable_jit_checkpoint=False,
+enable_npu_model_patch=True,
+enable_thinking=None,
+epsilon=0.2,
+epsilon_high=None,
+eval_accumulation_steps=None,
+eval_dataset=[],
+eval_dataset_args=None,
+eval_delay=0,
+eval_do_concat_batches=True,
+eval_generation_config=None,
+eval_limit=None,
+eval_metric=None,
+eval_on_start=False,
+eval_steps=None,
+eval_strategy=no,
+eval_use_evalscope=False,
+eval_use_gather_object=False,
+experts_impl=None,
+external_plugins=[],
+extra_eval_args=None,
+fipo_clip_high_only=True,
+fipo_clip_range=0.2,
+fipo_decay_rate=32.0,
+fipo_safety_threshold=4.0,
+fourier_n_frequency=2000,
+fourier_scaling=300.0,
+fp16=False,
+fp16_full_eval=False,
+freeze_aligner=True,
+freeze_llm=False,
+freeze_parameters=[],
+freeze_parameters_ratio=0.0,
+freeze_parameters_regex=None,
+freeze_vit=True,
+fsdp=full_shard auto_wrap,
+fsdp_config={'fsdp_version': 2, 'reshard_after_forward': True, 'auto_wrap_policy': 'TRANSFORMER_BASED_WRAP', 'cpu_ram_efficient_loading': True, 'state_dict_type': 'SHARDED_STATE_DICT', 'activation_checkpointing': True},
+full_determinism=False,
+galore_cos_threshold=0.4,
+galore_gamma_proj=2,
+galore_optim_per_parameter=False,
+galore_proj_bits=4,
+galore_proj_group_size=256,
+galore_proj_quant=False,
+galore_proj_type=std,
+galore_quantization=False,
+galore_queue_size=5,
+galore_rank=128,
+galore_scale=1.0,
+galore_target_modules=None,
+galore_update_proj_gap=50,
+galore_with_embedding=False,
+gamma=1.0,
+generation_batch_size=None,
+generation_config=None,
+generation_max_length=None,
+generation_num_beams=None,
+gkd_logits_topk=None,
+gradient_accumulation_steps=1,
+gradient_checkpointing=False,
+gradient_checkpointing_kwargs=None,
+greater_is_better=False,
+group_by_length=False,
+gym_env=None,
+hqq_axis=None,
+hub_always_push=False,
+hub_model_id=None,
+hub_private_repo=None,
+hub_revision=None,
+hub_strategy=every_save,
+hub_token=<HUB_TOKEN>,
+ignore_args_error=False,
+ignore_data_skip=False,
+importance_sampling_level=token,
+include_for_metrics=[],
+include_num_input_tokens_seen=False,
+init_strategy=None,
+init_weights=True,
+interleave_prob=None,
+is_binary_loss_scale=None,
+kl_coef=0.05,
+kl_in_reward=None,
+label_names=None,
+label_smoothing=0,
+label_smoothing_factor=0.0,
+lam=0.95,
+lazy_tokenize=True,
+ld_alpha=None,
+learning_rate=0.0001,
+length_column_name=length,
+liger_kernel_config=None,
+lisa_activated_layers=0,
+lisa_step_interval=20,
+llamapro_num_groups=None,
+llamapro_num_new_blocks=4,
+lmbda=0.5,
+load_args=False,
+load_best_model_at_end=False,
+load_data_args=False,
+load_from_cache_file=False,
+local_rank=0,
+local_repo_path=None,
+local_rollout_forward_batch_size=64,
+log_completions=False,
+log_entropy=False,
+log_level=passive,
+log_level_replica=warning,
+log_on_each_node=True,
+log_rollout_offpolicy_metrics=False,
+logging_dir=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-resume-10-to-12/v0-20260703-125433/runs,
+logging_first_step=True,
+logging_nan_inf_filter=True,
+logging_steps=1,
+logging_strategy=steps,
+logprobs=False,
+lora_alpha=32,
+lora_bias=none,
+lora_dropout=0.0,
+lora_dtype=None,
+lora_ga_batch_size=2,
+lora_ga_direction=ArB2r,
+lora_ga_iters=2,
+lora_ga_max_length=1024,
+lora_ga_scale=stable,
+lora_ga_stable_gamma=16,
+lora_rank=8,
+lorap_lr_ratio=None,
+loss_scale=last_round+ignore_empty_think,
+loss_type=sigmoid,
+loss_weights=None,
+lr_scheduler_kwargs=None,
+lr_scheduler_type=cosine,
+max_completion_length=512,
+max_epochs=None,
+max_grad_norm=1.0,
+max_length=512,
+max_memory={},
+max_model_len=None,
+max_new_tokens=512,
+max_pixels=None,
+max_resample_times=3,
+max_shard_size=5GB,
+max_steps=12,
+max_turns=None,
+metric_for_best_model=loss,
+missing_eos_penalty=None,
+model=/models/Qwen3.6-27B,
+model_author=None,
+model_kwargs={},
+model_name=None,
+model_revision=None,
+model_type=qwen3_5,
+modules_to_save=[],
+move_model_batches=None,
+mrl_dims=None,
+multi_turn_scheduler=None,
+neftune_noise_alpha=None,
+new_special_tokens=[],
+norm_bbox=None,
+num_beams=1,
+num_generations=8,
+num_generations_eval=None,
+num_iterations=1,
+num_labels=None,
+num_mini_batches=1,
+num_ppo_epochs=4,
+num_sample_generations=10,
+num_train_epochs=1.0,
+off_policy_sequence_mask_delta=None,
+offload_model=False,
+offload_optimizer=False,
+offload_teacher_model=False,
+optim=adamw_torch,
+optim_args=None,
+optim_target_modules=None,
+optimizer=None,
+output_dir=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-resume-10-to-12/v0-20260703-125433,
+overlong_filter=False,
+packing=False,
+packing_length=None,
+packing_num_proc=1,
+padding_free=False,
+padding_side=right,
+parallelism_config=None,
+per_device_eval_batch_size=1,
+per_device_train_batch_size=1,
+predict_with_generate=False,
+prediction_loss_only=False,
+preserve_thinking=None,
+problem_type=None,
+project=huggingface,
+push_to_hub=False,
+quant_bits=None,
+quant_method=None,
+ray_exp_name=None,
+real_tau=0.5,
+ref_adapters=[],
+ref_model=None,
+ref_model_mixup_alpha=0.6,
+ref_model_revision=None,
+ref_model_sync_steps=512,
+ref_model_type=None,
+reft_args=None,
+reft_intervention_type=LoreftIntervention,
+reft_layer_key=None,
+reft_layers=None,
+reft_rank=4,
+remove_unused_columns=True,
+repetition_max_penalty=-1.0,
+repetition_n_grams=3,
+repetition_penalty=1.0,
+report_to=['tensorboard'],
+response_length=512,
+response_prefix=None,
+restore_callback_states_from_checkpoint=False,
+resume_from_checkpoint=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-checkpoint-20step/v0-20260703-124743/checkpoint-10,
+resume_only_model=False,
+reward_adapters=[],
+reward_funcs=[],
+reward_model=None,
+reward_model_plugin=None,
+reward_model_revision=None,
+reward_model_type=None,
+reward_template=None,
+reward_weights=None,
+rlhf_type=dpo,
+rollout_importance_sampling_mode=None,
+rollout_importance_sampling_threshold=2.0,
+rope_scaling=None,
+router_aux_loss_coef=0.0,
+rpo_alpha=None,
+run_name=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-resume-10-to-12/v0-20260703-125433,
+safe_serialization=True,
+save_on_each_node=False,
+save_only_model=False,
+save_steps=500.0,
+save_strategy=no,
+save_total_limit=None,
+scale_rewards=None,
+seed=42,
+seq_kd=False,
+sequence_parallel_size=1,
+sft_alpha=0,
+shuffle_buffer_size=1000,
+simpo_gamma=1,
+skip_memory_metrics=True,
+sleep_level=0,
+soft_cache_length=None,
+soft_max_length=None,
+sortish_sampler=False,
+split_dataset_ratio=0.0,
+steps_per_generation=None,
+stop_words=[],
+stopping_strategy=first_exhausted,
+stream=False,
+streaming=False,
+strict=False,
+structured_outputs_regex=None,
+swanlab_email_language=zh,
+swanlab_exp_name=None,
+swanlab_mode=cloud,
+swanlab_notification_method=None,
+swanlab_project=ms-swift,
+swanlab_receiver_email=None,
+swanlab_secret=None,
+swanlab_sender_email=None,
+swanlab_smtp_port=None,
+swanlab_smtp_server=None,
+swanlab_token=<SWANLAB_TOKEN>,
+swanlab_webhook_url=None,
+swanlab_workspace=None,
+sync_ref_model=False,
+system=None,
+target_modules=['all-linear'],
+target_parameters=None,
+target_regex=None,
+task_type=causal_lm,
+tau_neg=1.05,
+tau_pos=1.0,
+teacher_adapters=[],
+teacher_deepspeed=None,
+teacher_kl_coef=1.0,
+teacher_model=None,
+teacher_model_revision=None,
+teacher_model_server=None,
+teacher_model_type=None,
+temperature=0.9,
+template=qwen3_5,
+template_backend=swift,
+tf32=None,
+top_entropy_quantile=1.0,
+top_k=-1,
+top_logprobs=None,
+top_p=1.0,
+torch_compile=False,
+torch_compile_backend=None,
+torch_compile_mode=None,
+torch_dtype=torch.bfloat16,
+torch_empty_cache_steps=None,
+trackio_bucket_id=None,
+trackio_space_id=None,
+trackio_static_space_id=None,
+train_dataloader_shuffle=True,
+train_sampling_strategy=random,
+trainable_parameters=[],
+trainable_parameters_regex=None,
+truncation_strategy=delete,
+tuner_backend=peft,
+tuner_type=lora,
+undesirable_weight=1.0,
+use_cache=False,
+use_chat_template=True,
+use_cpu=False,
+use_dora=False,
+use_flash_ckpt=False,
+use_galore=False,
+use_gym_env=None,
+use_hf=False,
+use_liger_kernel=False,
+use_logits_to_keep=None,
+use_ray=False,
+use_rslora=False,
+use_swift_lora=False,
+use_vllm=False,
+val_dataset=[],
+val_dataset_shuffle=False,
+vera_d_initial=0.1,
+vera_dropout=0.0,
+vera_projection_prng_key=0,
+vera_rank=256,
+vf_coef=0.1,
+vit_gradient_checkpointing=False,
+vit_lr=None,
+vllm_data_parallel_size=1,
+vllm_disable_cascade_attn=False,
+vllm_disable_custom_all_reduce=True,
+vllm_enable_expert_parallel=False,
+vllm_enable_lora=False,
+vllm_enable_prefix_caching=True,
+vllm_enforce_eager=False,
+vllm_engine_kwargs={},
+vllm_gpu_memory_utilization=0.9,
+vllm_limit_mm_per_prompt=None,
+vllm_max_lora_rank=16,
+vllm_max_model_len=None,
+vllm_max_num_seqs=None,
+vllm_mm_processor_cache_gb=None,
+vllm_mode=None,
+vllm_pipeline_parallel_size=1,
+vllm_quantization=None,
+vllm_reasoning_parser=None,
+vllm_server_base_url=None,
+vllm_server_group_port=None,
+vllm_server_host=None,
+vllm_server_pass_dataset=False,
+vllm_server_port=[8000],
+vllm_server_timeout=240.0,
+vllm_speculative_config=None,
+vllm_tensor_parallel_size=1,
+vllm_use_async_engine=None,
+wandb_log_unique_prompts=None,
+warmup_ratio=None,
+warmup_steps=0,
+weight_decay=0.1,
+whiten_rewards=False,
+zero_hpz_partition_size=None,
+)
+[INFO:swift] Global seed set to 42
+[WARNING:swift] Please install the package: `pip install "decord" -U`.
+[INFO:swift] Setting max_ratio: 200. You can adjust this hyperparameter through the environment variable: `MAX_RATIO`.
+[INFO:swift] Setting frame_factor: 2. You can adjust this hyperparameter through the environment variable: `FRAME_FACTOR`.
+[INFO:swift] Setting fps: 2.0. You can adjust this hyperparameter through the environment variable: `FPS`.
+[INFO:swift] Setting fps_min_frames: 4. You can adjust this hyperparameter through the environment variable: `FPS_MIN_FRAMES`.
+[INFO:swift] Setting fps_max_frames: 768. You can adjust this hyperparameter through the environment variable: `FPS_MAX_FRAMES`.
+[INFO:swift] Setting image_max_token_num: 16384. You can adjust this hyperparameter through the environment variable: `IMAGE_MAX_TOKEN_NUM`.
+[INFO:swift] Setting image_min_token_num: 4. You can adjust this hyperparameter through the environment variable: `IMAGE_MIN_TOKEN_NUM`.
+[INFO:swift] Setting spatial_merge_size: 2. You can adjust this hyperparameter through the environment variable: `SPATIAL_MERGE_SIZE`.
+[INFO:swift] Setting video_max_token_num: 768. You can adjust this hyperparameter through the environment variable: `VIDEO_MAX_TOKEN_NUM`.
+[INFO:swift] Setting video_min_token_num: 128. You can adjust this hyperparameter through the environment variable: `VIDEO_MIN_TOKEN_NUM`.
+[INFO:swift] model_kwargs: {'device_map': 'npu:0', 'dtype': torch.bfloat16}
+Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:   0%|          | 2/1184 [00:00<03:40,  5.37it/s]Loading weights:   9%|▊         | 101/1184 [00:00<00:03, 277.80it/s]Loading weights:  14%|█▎        | 160/1184 [00:00<00:03, 325.27it/s]Loading weights:  18%|█▊        | 211/1184 [00:00<00:02, 348.87it/s]Loading weights:  22%|██▏       | 258/1184 [00:00<00:02, 356.38it/s]Loading weights:  26%|██▌       | 302/1184 [00:01<00:02, 340.91it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:  29%|██▉       | 341/1184 [00:01<00:03, 250.33it/s]Loading weights:  32%|███▏      | 373/1184 [00:01<00:03, 223.09it/s]Loading weights:  34%|███▍      | 400/1184 [00:01<00:03, 221.97it/s]Loading weights:   0%|          | 2/1184 [00:00<05:08,  3.83it/s]Loading weights:  36%|███▌      | 426/1184 [00:01<00:03, 222.24it/s]Loading weights:  12%|█▏        | 147/1184 [00:00<00:03, 289.05it/s]Loading weights:  38%|███▊      | 452/1184 [00:01<00:03, 225.36it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:  18%|█▊        | 208/1184 [00:00<00:03, 313.25it/s]Loading weights:  40%|████      | 476/1184 [00:01<00:03, 211.77it/s]Loading weights:  22%|██▏       | 258/1184 [00:00<00:02, 343.24it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:  43%|████▎     | 504/1184 [00:02<00:03, 221.77it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:  45%|████▍     | 528/1184 [00:02<00:02, 223.79it/s]Loading weights:   0%|          | 1/1184 [00:00<02:19,  8.47it/s]Loading weights:  47%|████▋     | 553/1184 [00:02<00:02, 220.80it/s]Loading weights:  26%|██▌       | 306/1184 [00:01<00:03, 284.46it/s]Loading weights:   0%|          | 2/1184 [00:00<04:26,  4.43it/s]Loading weights:   0%|          | 2/1184 [00:00<03:45,  5.25it/s]Loading weights:  49%|████▊     | 576/1184 [00:02<00:03, 177.46it/s]Loading weights:  12%|█▏        | 147/1184 [00:00<00:03, 323.15it/s]Loading weights:   9%|▊         | 101/1184 [00:00<00:04, 269.03it/s]Loading weights:  29%|██▉       | 344/1184 [00:01<00:03, 231.22it/s]Loading weights:   0%|          | 2/1184 [00:00<05:44,  3.43it/s]Loading weights:  50%|█████     | 597/1184 [00:02<00:03, 165.37it/s]Loading weights:   0%|          | 2/1184 [00:00<05:52,  3.35it/s]Loading weights:  18%|█▊        | 210/1184 [00:00<00:02, 357.97it/s]Loading weights:  13%|█▎        | 156/1184 [00:00<00:03, 311.03it/s]Loading weights:   0%|          | 2/1184 [00:00<05:54,  3.34it/s]Loading weights:  11%|█         | 133/1184 [00:00<00:03, 291.45it/s]Loading weights:   0%|          | 2/1184 [00:00<06:37,  2.97it/s]Loading weights:  14%|█▎        | 160/1184 [00:00<00:03, 306.79it/s]Loading weights:  52%|█████▏    | 615/1184 [00:02<00:03, 158.70it/s]Loading weights:  11%|█         | 130/1184 [00:00<00:04, 248.54it/s]Loading weights:  32%|███▏      | 374/1184 [00:01<00:04, 184.37it/s]Loading weights:  17%|█▋        | 204/1184 [00:00<00:03, 321.63it/s]Loading weights:  16%|█▌        | 190/1184 [00:00<00:03, 323.57it/s]Loading weights:  22%|██▏       | 264/1184 [00:00<00:02, 334.94it/s]Loading weights:  12%|█▏        | 147/1184 [00:00<00:04, 248.40it/s]Loading weights:  53%|█████▎    | 632/1184 [00:02<00:03, 141.59it/s]Loading weights:  21%|██▏       | 252/1184 [00:00<00:02, 374.09it/s]Loading weights:  21%|██▏       | 253/1184 [00:00<00:02, 352.23it/s]Loading weights:  34%|███▎      | 398/1184 [00:01<00:04, 185.33it/s]Loading weights:  20%|██        | 240/1184 [00:00<00:02, 344.23it/s]Loading weights:  19%|█▊        | 220/1184 [00:00<00:03, 318.51it/s]Loading weights:  26%|██▌       | 309/1184 [00:01<00:02, 315.47it/s]Loading weights:  56%|█████▌    | 663/1184 [00:03<00:03, 172.69it/s]Loading weights:  17%|█▋        | 205/1184 [00:00<00:03, 268.95it/s]Loading weights:  25%|██▌       | 296/1184 [00:01<00:02, 313.25it/s]Loading weights:  36%|███▌      | 421/1184 [00:02<00:04, 172.18it/s]Loading weights:  24%|██▍       | 287/1184 [00:01<00:02, 318.75it/s]Loading weights:  58%|█████▊    | 682/1184 [00:03<00:02, 167.89it/s]Loading weights:  29%|██▉       | 348/1184 [00:01<00:02, 285.85it/s]Loading weights:  22%|██▏       | 260/1184 [00:01<00:03, 284.36it/s]Loading weights:  24%|██▍       | 284/1184 [00:01<00:02, 308.46it/s]Loading weights:  59%|█████▉    | 701/1184 [00:03<00:02, 172.47it/s]Loading weights:  38%|███▊      | 450/1184 [00:02<00:04, 180.20it/s]Loading weights:  32%|███▏      | 381/1184 [00:01<00:03, 261.72it/s]Loading weights:  27%|██▋       | 325/1184 [00:01<00:03, 267.23it/s]Loading weights:  40%|███▉      | 470/1184 [00:02<00:04, 165.88it/s]Loading weights:  61%|██████    | 719/1184 [00:03<00:03, 152.32it/s]Loading weights:  28%|██▊       | 333/1184 [00:01<00:03, 213.18it/s]Loading weights:  28%|██▊       | 327/1184 [00:01<00:03, 230.18it/s]Loading weights:  26%|██▌       | 306/1184 [00:01<00:03, 239.51it/s]Loading weights:  41%|████      | 488/1184 [00:02<00:04, 161.70it/s]Loading weights:  62%|██████▏   | 735/1184 [00:03<00:03, 144.76it/s]Loading weights:  35%|███▍      | 410/1184 [00:01<00:03, 209.15it/s]Loading weights:  28%|██▊       | 334/1184 [00:01<00:03, 230.47it/s]Loading weights:  31%|███       | 362/1184 [00:01<00:04, 200.94it/s]Loading weights:  30%|███       | 358/1184 [00:01<00:03, 217.11it/s]Loading weights:  43%|████▎     | 514/1184 [00:02<00:03, 170.19it/s]Loading weights:  64%|██████▍   | 755/1184 [00:03<00:02, 146.44it/s]Loading weights:  29%|██▉       | 342/1184 [00:01<00:03, 215.64it/s]Loading weights:  37%|███▋      | 434/1184 [00:01<00:03, 196.29it/s]Loading weights:  33%|███▎      | 387/1184 [00:01<00:04, 194.50it/s]Loading weights:  32%|███▏      | 376/1184 [00:01<00:03, 204.42it/s]Loading weights:  46%|████▌     | 539/1184 [00:02<00:03, 166.84it/s]Loading weights:  66%|██████▌   | 783/1184 [00:03<00:02, 157.76it/s]Loading weights:  31%|███▏      | 371/1184 [00:01<00:04, 199.20it/s]Loading weights:  39%|███▊      | 456/1184 [00:01<00:03, 190.17it/s]Loading weights:  35%|███▍      | 410/1184 [00:01<00:04, 190.77it/s]Loading weights:  33%|███▎      | 385/1184 [00:01<00:04, 174.28it/s]Loading weights:  35%|███▍      | 413/1184 [00:01<00:03, 202.65it/s]Loading weights:  47%|████▋     | 558/1184 [00:02<00:03, 156.53it/s]Loading weights:  31%|███▏      | 371/1184 [00:01<00:04, 178.09it/s]Loading weights:  34%|███▍      | 407/1184 [00:01<00:04, 173.63it/s]Loading weights:  67%|██████▋   | 799/1184 [00:04<00:03, 128.23it/s]Loading weights:  40%|████      | 476/1184 [00:02<00:04, 161.64it/s]Loading weights:  34%|███▍      | 400/1184 [00:02<00:04, 180.83it/s]Loading weights:  36%|███▋      | 432/1184 [00:02<00:04, 162.30it/s]Loading weights:  49%|████▊     | 576/1184 [00:03<00:04, 149.54it/s]Loading weights:  36%|███▌      | 428/1184 [00:02<00:04, 175.48it/s]Loading weights:  33%|███▎      | 394/1184 [00:02<00:04, 172.55it/s]Loading weights:  69%|██████▉   | 822/1184 [00:04<00:02, 133.57it/s]Loading weights:  42%|████▏     | 494/1184 [00:02<00:04, 154.12it/s]Loading weights:  38%|███▊      | 450/1184 [00:02<00:04, 158.17it/s]Loading weights:  36%|███▌      | 424/1184 [00:02<00:04, 177.12it/s]Loading weights:  38%|███▊      | 445/1184 [00:02<00:04, 178.89it/s]Loading weights:  50%|█████     | 597/1184 [00:03<00:04, 146.36it/s]Loading weights:  38%|███▊      | 450/1184 [00:02<00:04, 169.81it/s]Loading weights:  35%|███▌      | 415/1184 [00:02<00:04, 165.90it/s]Loading weights:  71%|███████   | 837/1184 [00:04<00:02, 128.99it/s]Loading weights:  44%|████▍     | 523/1184 [00:02<00:03, 168.73it/s]Loading weights:  39%|███▉      | 467/1184 [00:02<00:04, 148.76it/s]Loading weights:  38%|███▊      | 447/1184 [00:02<00:04, 180.31it/s]Loading weights:  40%|███▉      | 470/1184 [00:02<00:03, 181.04it/s]Loading weights:  52%|█████▏    | 612/1184 [00:03<00:04, 138.83it/s]Loading weights:  40%|███▉      | 469/1184 [00:02<00:04, 159.35it/s]Loading weights:  37%|███▋      | 434/1184 [00:02<00:04, 157.88it/s]Loading weights:  75%|███████▌  | 893/1184 [00:04<00:01, 212.23it/s]Loading weights:  41%|████      | 483/1184 [00:02<00:04, 144.86it/s]Loading weights:  47%|████▋     | 554/1184 [00:02<00:03, 181.99it/s]Loading weights:  40%|███▉      | 468/1184 [00:02<00:04, 174.10it/s]Loading weights:  53%|█████▎    | 630/1184 [00:03<00:04, 136.90it/s]Loading weights:  41%|████      | 486/1184 [00:02<00:04, 153.50it/s]Loading weights:  85%|████████▌ | 1011/1184 [00:04<00:00, 435.60it/s]Loading weights:  38%|███▊      | 451/1184 [00:02<00:04, 148.26it/s]Loading weights:  42%|████▏     | 494/1184 [00:02<00:04, 154.69it/s]Loading weights:  41%|████      | 488/1184 [00:02<00:04, 169.71it/s]Loading weights:  43%|████▎     | 504/1184 [00:02<00:04, 141.43it/s]Loading weights:  48%|████▊     | 573/1184 [00:02<00:03, 163.79it/s]Loading weights:  97%|█████████▋| 1147/1184 [00:04<00:00, 664.09it/s]Loading weights:  56%|█████▌    | 663/1184 [00:03<00:03, 168.45it/s]Loading weights: 100%|██████████| 1184/1184 [00:04<00:00, 253.51it/s]
+Loading weights:  43%|████▎     | 514/1184 [00:02<00:04, 165.31it/s]Loading weights:  39%|███▉      | 467/1184 [00:02<00:05, 138.35it/s]Loading weights:  44%|████▎     | 517/1184 [00:02<00:04, 164.48it/s]Loading weights:  43%|████▎     | 507/1184 [00:02<00:04, 160.86it/s]Loading weights:  44%|████▍     | 519/1184 [00:02<00:04, 133.55it/s]Loading weights:  46%|████▌     | 540/1184 [00:02<00:03, 186.92it/s]Loading weights:  59%|█████▉    | 701/1184 [00:03<00:02, 195.01it/s]Loading weights:  41%|████      | 482/1184 [00:02<00:05, 132.56it/s]Loading weights:  50%|█████     | 597/1184 [00:02<00:04, 145.99it/s]Loading weights:  46%|████▌     | 543/1184 [00:02<00:03, 164.58it/s]Loading weights:  44%|████▍     | 524/1184 [00:02<00:04, 153.19it/s]Loading weights:  46%|████▌     | 543/1184 [00:02<00:04, 140.81it/s]Loading weights:  62%|██████▏   | 730/1184 [00:03<00:02, 212.55it/s]Loading weights:  52%|█████▏    | 620/1184 [00:03<00:03, 157.46it/s]Loading weights:  42%|████▏     | 496/1184 [00:02<00:05, 126.87it/s]Loading weights:  46%|████▌     | 543/1184 [00:02<00:04, 150.62it/s]Loading weights:  47%|████▋     | 562/1184 [00:02<00:03, 159.01it/s]Loading weights:  47%|████▋     | 558/1184 [00:02<00:04, 134.45it/s]Loading weights:  47%|████▋     | 560/1184 [00:02<00:04, 137.22it/s]Loading weights:  64%|██████▍   | 755/1184 [00:03<00:02, 199.55it/s]Loading weights:  44%|████▎     | 517/1184 [00:02<00:04, 138.61it/s]Loading weights:  54%|█████▍    | 637/1184 [00:03<00:03, 145.52it/s]Loading weights:  47%|████▋     | 559/1184 [00:03<00:04, 140.25it/s]Loading weights:  49%|████▉     | 580/1184 [00:03<00:03, 151.42it/s]Loading weights:  66%|██████▌   | 784/1184 [00:04<00:01, 212.90it/s]Loading weights:  49%|████▊     | 577/1184 [00:03<00:04, 131.96it/s]Loading weights:  49%|████▊     | 577/1184 [00:03<00:04, 131.92it/s]Loading weights:  46%|████▌     | 543/1184 [00:03<00:03, 165.62it/s]Loading weights:  56%|█████▌    | 663/1184 [00:03<00:03, 156.71it/s]Loading weights:  49%|████▉     | 582/1184 [00:03<00:03, 158.00it/s]Loading weights:  50%|█████     | 597/1184 [00:03<00:03, 147.60it/s]Loading weights:  50%|█████     | 597/1184 [00:03<00:04, 134.09it/s]Loading weights:  50%|█████     | 597/1184 [00:03<00:04, 131.68it/s]Loading weights:  69%|██████▉   | 822/1184 [00:04<00:01, 218.63it/s]Loading weights:  47%|████▋     | 561/1184 [00:03<00:04, 138.06it/s]Loading weights:  57%|█████▋    | 680/1184 [00:03<00:03, 146.66it/s]Loading weights:  51%|█████     | 606/1184 [00:03<00:03, 165.75it/s]Loading weights:  52%|█████▏    | 613/1184 [00:03<00:03, 144.97it/s]Loading weights:  75%|███████▌  | 891/1184 [00:04<00:00, 328.47it/s]Loading weights:  52%|█████▏    | 619/1184 [00:03<00:03, 146.43it/s]Loading weights:  52%|█████▏    | 612/1184 [00:03<00:04, 125.44it/s]Loading weights:  59%|█████▉    | 701/1184 [00:03<00:03, 158.90it/s]Loading weights:  49%|████▉     | 584/1184 [00:03<00:03, 150.51it/s]Loading weights:  53%|█████▎    | 630/1184 [00:03<00:03, 143.29it/s]Loading weights:  53%|█████▎    | 623/1184 [00:03<00:03, 156.95it/s]Loading weights:  90%|█████████ | 1071/1184 [00:04<00:00, 695.83it/s]Loading weights: 100%|██████████| 1184/1184 [00:04<00:00, 264.32it/s]
+Loading weights:  54%|█████▎    | 634/1184 [00:03<00:04, 134.43it/s]Loading weights:  53%|█████▎    | 630/1184 [00:03<00:04, 125.64it/s]Loading weights:  51%|█████     | 606/1184 [00:03<00:03, 154.70it/s]Loading weights:  61%|██████    | 718/1184 [00:03<00:03, 143.15it/s]Loading weights:  56%|█████▌    | 663/1184 [00:03<00:03, 170.45it/s]Loading weights:  54%|█████▍    | 639/1184 [00:03<00:03, 142.00it/s]Loading weights:  56%|█████▌    | 663/1184 [00:03<00:03, 169.72it/s]Loading weights:  53%|█████▎    | 623/1184 [00:03<00:03, 155.77it/s]Loading weights:  56%|█████▌    | 663/1184 [00:03<00:03, 158.85it/s]Loading weights:  62%|██████▏   | 735/1184 [00:03<00:03, 138.83it/s]Loading weights:  58%|█████▊    | 682/1184 [00:03<00:03, 158.71it/s]Loading weights:  56%|█████▌    | 663/1184 [00:03<00:03, 147.26it/s]Loading weights:  58%|█████▊    | 681/1184 [00:03<00:03, 153.98it/s]Loading weights:  54%|█████▍    | 640/1184 [00:03<00:03, 140.45it/s]Loading weights:  64%|██████▍   | 755/1184 [00:03<00:02, 145.53it/s]Loading weights:  57%|█████▋    | 680/1184 [00:03<00:03, 142.43it/s]Loading weights:  57%|█████▋    | 679/1184 [00:03<00:03, 142.70it/s]Loading weights:  60%|██████    | 712/1184 [00:03<00:02, 176.28it/s]Loading weights:  59%|█████▉    | 701/1184 [00:03<00:03, 153.22it/s]Loading weights:  56%|█████▌    | 664/1184 [00:03<00:03, 163.43it/s]Loading weights:  59%|█████▉    | 701/1184 [00:03<00:03, 149.74it/s]Loading weights:  59%|█████▉    | 701/1184 [00:03<00:03, 156.94it/s]Loading weights:  66%|██████▌   | 782/1184 [00:04<00:02, 157.30it/s]Loading weights:  62%|██████▏   | 730/1184 [00:04<00:02, 168.51it/s]Loading weights:  61%|██████    | 717/1184 [00:04<00:03, 141.51it/s]Loading weights:  58%|█████▊    | 682/1184 [00:04<00:03, 155.73it/s]Loading weights:  61%|██████    | 717/1184 [00:04<00:03, 138.96it/s]Loading weights:  67%|██████▋   | 798/1184 [00:04<00:02, 145.73it/s]Loading weights:  63%|██████▎   | 747/1184 [00:04<00:02, 160.46it/s]Loading weights:  61%|██████    | 717/1184 [00:04<00:03, 142.18it/s]Loading weights:  62%|██████▏   | 735/1184 [00:04<00:03, 141.70it/s]Loading weights:  59%|█████▉    | 701/1184 [00:04<00:03, 155.49it/s]Loading weights:  65%|██████▍   | 766/1184 [00:04<00:02, 163.31it/s]Loading weights:  62%|██████▏   | 735/1184 [00:04<00:03, 141.30it/s]Loading weights:  62%|██████▏   | 735/1184 [00:04<00:03, 144.19it/s]Loading weights:  69%|██████▉   | 822/1184 [00:04<00:02, 154.68it/s]Loading weights:  64%|██████▍   | 755/1184 [00:04<00:03, 142.82it/s]Loading weights:  64%|██████▍   | 755/1184 [00:04<00:02, 145.08it/s]Loading weights:  66%|██████▌   | 783/1184 [00:04<00:02, 151.41it/s]Loading weights:  64%|██████▍   | 757/1184 [00:04<00:02, 148.22it/s]Loading weights:  61%|██████    | 717/1184 [00:04<00:03, 122.57it/s]Loading weights:  71%|███████   | 838/1184 [00:04<00:02, 140.16it/s]Loading weights:  66%|██████▌   | 783/1184 [00:04<00:02, 164.22it/s]Loading weights:  66%|██████▌   | 783/1184 [00:04<00:02, 162.23it/s]Loading weights:  68%|██████▊   | 804/1184 [00:04<00:02, 148.17it/s]Loading weights:  66%|██████▌   | 783/1184 [00:04<00:02, 161.16it/s]Loading weights:  63%|██████▎   | 747/1184 [00:04<00:02, 151.95it/s]Loading weights:  75%|███████▌  | 892/1184 [00:04<00:01, 220.52it/s]Loading weights:  68%|██████▊   | 800/1184 [00:04<00:02, 154.57it/s]Loading weights:  68%|██████▊   | 800/1184 [00:04<00:02, 155.25it/s]Loading weights:  66%|██████▌   | 779/1184 [00:04<00:02, 189.60it/s]Loading weights:  68%|██████▊   | 803/1184 [00:04<00:02, 167.21it/s]Loading weights:  89%|████████▉ | 1059/1184 [00:04<00:00, 559.78it/s]Loading weights:  69%|██████▉   | 822/1184 [00:04<00:02, 143.83it/s]/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+Loading weights:  70%|███████   | 831/1184 [00:04<00:01, 185.00it/s]Loading weights:  99%|█████████▊| 1167/1184 [00:04<00:00, 651.27it/s]Loading weights:  69%|██████▉   | 822/1184 [00:04<00:02, 140.54it/s]Loading weights:  68%|██████▊   | 800/1184 [00:04<00:02, 176.52it/s]Loading weights: 100%|██████████| 1184/1184 [00:04<00:00, 241.83it/s]
+Loading weights:  71%|███████   | 838/1184 [00:04<00:02, 138.93it/s]Loading weights:  69%|██████▉   | 822/1184 [00:04<00:02, 153.31it/s][INFO:swift] model_info: ModelInfo(model_type='qwen3_5', model_dir='/models/Qwen3.6-27B', torch_dtype=torch.bfloat16, max_model_len=262144, quant_method=None, quant_bits=None, rope_scaling=None, is_moe_model=False, is_multimodal=True, config=Qwen3_5Config {
+  "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+  ],
+  "dtype": "bfloat16",
+  "hidden_size": 5120,
+  "image_token_id": 248056,
+  "language_model_only": false,
+  "model_type": "qwen3_5",
+  "text_config": {
+    "attention_bias": false,
+    "attention_dropout": 0.0,
+    "attn_output_gate": true,
+    "bos_token_id": 248044,
+    "dtype": "bfloat16",
+    "eos_token_id": 248044,
+    "full_attention_interval": 4,
+    "head_dim": 256,
+    "hidden_act": "silu",
+    "hidden_size": 5120,
+    "initializer_range": 0.02,
+    "intermediate_size": 17408,
+    "layer_types": [
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention"
+    ],
+    "linear_conv_kernel_dim": 4,
+    "linear_key_head_dim": 128,
+    "linear_num_key_heads": 16,
+    "linear_num_value_heads": 48,
+    "linear_value_head_dim": 128,
+    "mamba_ssm_dtype": "float32",
+    "max_position_embeddings": 262144,
+    "model_type": "qwen3_5_text",
+    "mtp_num_hidden_layers": 1,
+    "mtp_use_dedicated_embeddings": false,
+    "num_attention_heads": 24,
+    "num_hidden_layers": 64,
+    "num_key_value_heads": 4,
+    "output_gate_type": "swish",
+    "pad_token_id": null,
+    "partial_rotary_factor": 0.25,
+    "rms_norm_eps": 1e-06,
+    "rope_parameters": {
+      "mrope_interleaved": true,
+      "mrope_section": [
+        11,
+        11,
+        10
+      ],
+      "partial_rotary_factor": 0.25,
+      "rope_theta": 10000000,
+      "rope_type": "default"
+    },
+    "tie_word_embeddings": false,
+    "use_cache": true,
+    "vocab_size": 248320
+  },
+  "tie_word_embeddings": false,
+  "transformers_version": "5.12.1",
+  "video_token_id": 248057,
+  "vision_config": {
+    "deepstack_visual_indexes": [],
+    "depth": 27,
+    "dtype": "bfloat16",
+    "hidden_act": "gelu_pytorch_tanh",
+    "hidden_size": 1152,
+    "in_channels": 3,
+    "initializer_range": 0.02,
+    "intermediate_size": 4304,
+    "model_type": "qwen3_5_vision",
+    "num_heads": 16,
+    "num_position_embeddings": 2304,
+    "out_hidden_size": 5120,
+    "patch_size": 16,
+    "spatial_merge_size": 2,
+    "temporal_patch_size": 2
+  },
+  "vision_end_token_id": 248054,
+  "vision_start_token_id": 248053
+}
+, task_type='causal_lm', num_labels=None)
+[INFO:swift] model.generation_config: GenerationConfig {
+  "bos_token_id": 248044,
+  "do_sample": true,
+  "eos_token_id": [
+    248046,
+    248044
+  ],
+  "length_penalty": 1.0,
+  "max_new_tokens": 512,
+  "num_beams": 1,
+  "pad_token_id": 248044,
+  "repetition_penalty": 1.0,
+  "temperature": 0.9,
+  "top_k": 20,
+  "top_p": 1.0
+}
+
+[INFO:swift] default_system: None
+[INFO:swift] max_length: 512
+[INFO:swift] response_prefix: None
+[INFO:swift] agent_template: qwen3_5
+[INFO:swift] norm_bbox: norm1000
+[INFO:swift] Setting ROOT_IMAGE_DIR: None. You can adjust this hyperparameter through the environment variable: `ROOT_IMAGE_DIR`.
+[INFO:swift] Setting QWENVL_BBOX_FORMAT: legacy. You can adjust this hyperparameter through the environment variable: `QWENVL_BBOX_FORMAT`.
+[INFO:swift] Start time of running main: 2026-07-03 12:54:45.569938
+[INFO:swift] swift.__version__: 4.5.0.dev0
+Loading weights:  70%|███████   | 833/1184 [00:04<00:01, 212.84it/s]Loading weights:  71%|███████   | 837/1184 [00:04<00:02, 135.21it/s]/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+Loading weights:  72%|███████▏  | 850/1184 [00:04<00:02, 164.17it/s]Loading weights:  75%|███████▌  | 893/1184 [00:04<00:01, 223.67it/s]Loading weights:  71%|███████   | 843/1184 [00:04<00:02, 152.35it/s]Loading weights:  72%|███████▏  | 857/1184 [00:04<00:01, 217.73it/s]Loading weights:  91%|█████████▏| 1083/1184 [00:05<00:00, 636.68it/s]Loading weights:  75%|███████▌  | 893/1184 [00:05<00:01, 215.84it/s]Loading weights:  87%|████████▋ | 1027/1184 [00:05<00:00, 557.16it/s]Loading weights:  79%|███████▉  | 937/1184 [00:05<00:00, 315.01it/s]Loading weights: 100%|██████████| 1184/1184 [00:05<00:00, 234.73it/s]
+Loading weights: 100%|██████████| 1184/1184 [00:05<00:00, 234.22it/s]
+Loading weights:  84%|████████▍ | 999/1184 [00:05<00:00, 537.03it/s]Loading weights: 100%|██████████| 1184/1184 [00:05<00:00, 232.09it/s]
+Loading weights: 100%|██████████| 1184/1184 [00:05<00:00, 231.14it/s]
+Loading weights: 100%|██████████| 1184/1184 [00:05<00:00, 232.30it/s]
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+Map (num_proc=1): 100%|██████████| 256/256 [00:00<?, ? examples/s]Map (num_proc=1): 512 examples [00:00, 1749.11 examples/s]        Map (num_proc=1): 512 examples [00:00, 901.01 examples/s] 
+[INFO:swift] train_dataset: Dataset({
+    features: ['messages', 'rejected_response'],
+    num_rows: 256
+})
+[INFO:swift] val_dataset: None
+[INFO:swift] [CHOSEN_INPUT_IDS] [248045, 8678, 198, 2523, 513, 264, 61446, 321, 14294, 17313, 13, 248046, 198, 248045, 846, 198, 3710, 1503, 264, 414, 1977, 4706, 6505, 6435, 30, 11206, 220, 15, 18, 20, 13, 248046, 198, 248045, 74455, 198, 248068, 271, 248069, 271, 32, 414, 1977, 6505, 5435, 264, 9640, 11, 264, 14459, 4087, 11, 321, 264, 17030, 4087, 364, 2050, 21257, 24460, 13, 248046, 198]
+[INFO:swift] [CHOSEN_INPUT] <|im_start|>system
+You are a concise and reliable assistant.<|im_end|>
+<|im_start|>user
+What does a DPO training pair contain? Case 035.<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+
+A DPO pair contains a prompt, a preferred answer, and a rejected answer for direct preference optimization.<|im_end|>
+
+[INFO:swift] [CHOSEN_LABELS_IDS] [-100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, 32, 414, 1977, 6505, 5435, 264, 9640, 11, 264, 14459, 4087, 11, 321, 264, 17030, 4087, 364, 2050, 21257, 24460, 13, 248046, 198]
+[INFO:swift] [CHOSEN_LABELS] [-100 * 40]A DPO pair contains a prompt, a preferred answer, and a rejected answer for direct preference optimization.<|im_end|>
+
+[INFO:swift] [REJECTED_INPUT_IDS] [248045, 8678, 198, 2523, 513, 264, 61446, 321, 14294, 17313, 13, 248046, 198, 248045, 846, 198, 3710, 1503, 264, 414, 1977, 4706, 6505, 6435, 30, 11206, 220, 15, 18, 20, 13, 248046, 198, 248045, 74455, 198, 248068, 271, 248069, 271, 35, 1977, 1132, 3749, 799, 4087, 321, 1503, 524, 958, 18738, 13, 248046, 198]
+[INFO:swift] [REJECTED_INPUT] <|im_start|>system
+You are a concise and reliable assistant.<|im_end|>
+<|im_start|>user
+What does a DPO training pair contain? Case 035.<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+
+DPO only needs one answer and does not use preferences.<|im_end|>
+
+[INFO:swift] [REJECTED_LABELS_IDS] [-100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, 35, 1977, 1132, 3749, 799, 4087, 321, 1503, 524, 958, 18738, 13, 248046, 198]
+[INFO:swift] [REJECTED_LABELS] [-100 * 40]DPO only needs one answer and does not use preferences.<|im_end|>
+
+[INFO:swift] The RLHFArguments will be saved in: /workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-resume-10-to-12/v0-20260703-125433/args.json
+[INFO:swift] model: SwiftModel(
+  (base_model): Qwen3_5ForConditionalGeneration(
+    (model): Qwen3_5Model(
+      (visual): Qwen3_5VisionModel(
+        (patch_embed): Qwen3_5VisionPatchEmbed(
+          (proj): Conv3d(3, 1152, kernel_size=(2, 16, 16), stride=(2, 16, 16))
+        )
+        (pos_embed): Embedding(2304, 1152)
+        (rotary_pos_emb): Qwen3_5VisionRotaryEmbedding()
+        (blocks): ModuleList(
+          (0-26): 27 x Qwen3_5VisionBlock(
+            (norm1): LayerNorm((1152,), eps=1e-06, elementwise_affine=True)
+            (norm2): LayerNorm((1152,), eps=1e-06, elementwise_affine=True)
+            (attn): Qwen3_5VisionAttention(
+              (qkv): Linear(in_features=1152, out_features=3456, bias=True)
+              (proj): Linear(in_features=1152, out_features=1152, bias=True)
+            )
+            (mlp): Qwen3_5VisionMLP(
+              (linear_fc1): Linear(in_features=1152, out_features=4304, bias=True)
+              (linear_fc2): Linear(in_features=4304, out_features=1152, bias=True)
+              (act_fn): GELUTanh()
+            )
+          )
+        )
+        (merger): Qwen3_5VisionPatchMerger(
+          (norm): LayerNorm((1152,), eps=1e-06, elementwise_affine=True)
+          (linear_fc1): Linear(in_features=4608, out_features=4608, bias=True)
+          (act_fn): GELU(approximate='none')
+          (linear_fc2): Linear(in_features=4608, out_features=5120, bias=True)
+        )
+      )
+      (language_model): Qwen3_5TextModel(
+        (embed_tokens): Embedding(248320, 5120)
+        (layers): ModuleList(
+          (0-2): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (3): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (4-6): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (7): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (8-10): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (11): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (12-14): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (15): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (16-18): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (19): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (20-22): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (23): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (24-26): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (27): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (28-30): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (31): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (32-34): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (35): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (36-38): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (39): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (40-42): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (43): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (44-46): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (47): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (48-50): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (51): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (52-54): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (55): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (56-58): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (59): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (60-62): 3 x Qwen3_5DecoderLayer(
+            (linear_attn): Qwen3_5GatedDeltaNet(
+              (act): SiLUActivation()
+              (conv1d): Conv1d(10240, 10240, kernel_size=(4,), stride=(1,), padding=(3,), groups=10240, bias=False)
+              (norm): Qwen3_5RMSNormGated()
+              (out_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (in_proj_qkv): Linear(in_features=5120, out_features=10240, bias=False)
+              (in_proj_z): Linear(in_features=5120, out_features=6144, bias=False)
+              (in_proj_b): Linear(in_features=5120, out_features=48, bias=False)
+              (in_proj_a): Linear(in_features=5120, out_features=48, bias=False)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+          (63): Qwen3_5DecoderLayer(
+            (self_attn): Qwen3_5Attention(
+              (q_proj): Linear(in_features=5120, out_features=12288, bias=False)
+              (k_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (v_proj): Linear(in_features=5120, out_features=1024, bias=False)
+              (o_proj): Linear(in_features=6144, out_features=5120, bias=False)
+              (q_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+              (k_norm): NpuQwen3_5RMSNorm((256,), eps=1e-06)
+            )
+            (mlp): Qwen3_5MLP(
+              (gate_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (up_proj): Linear(in_features=5120, out_features=17408, bias=False)
+              (down_proj): Linear(in_features=17408, out_features=5120, bias=False)
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+            (post_attention_layernorm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+          )
+        )
+        (norm): NpuQwen3_5RMSNorm((5120,), eps=1e-06)
+        (rotary_emb): Qwen3_5TextRotaryEmbedding()
+      )
+    )
+    (lm_head): Linear(in_features=5120, out_features=248320, bias=False)
+  )
+)
+[INFO:swift] model_parameter_info: SwiftModel: 27356.7286M Params (0.0000M Trainable [0.0000%]), 0.0001M Buffers.
+[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 248046, 'bos_token_id': None, 'pad_token_id': 248044}.
+[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 248046, 'bos_token_id': None, 'pad_token_id': 248044}.
+[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 248046, 'bos_token_id': None, 'pad_token_id': 248044}.
+[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 248046, 'bos_token_id': None, 'pad_token_id': 248044}.
+[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 248046, 'bos_token_id': None, 'pad_token_id': 248044}.
+[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 248046, 'bos_token_id': None, 'pad_token_id': 248044}.
+[INFO:swift] use_reentrant: True
+[INFO:swift] The logging file will be saved in: /workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-resume-10-to-12/v0-20260703-125433/logging.jsonl
+[INFO:swift] Successfully registered post_encode hook: ['SwiftModel'].
+[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 248046, 'bos_token_id': None, 'pad_token_id': 248044}.
+[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 248046, 'bos_token_id': None, 'pad_token_id': 248044}.
+[transformers] Warning: The following arguments do not match the ones in the `trainer_state.json` within the checkpoint directory: 
+	save_steps: 500.0 (from args) != 10 (from trainer_state.json)
+[transformers] Warning: The following arguments do not match the ones in the `trainer_state.json` within the checkpoint directory: 
+	save_steps: 500.0 (from args) != 10 (from trainer_state.json)
+[transformers] Warning: The following arguments do not match the ones in the `trainer_state.json` within the checkpoint directory: 
+	save_steps: 500.0 (from args) != 10 (from trainer_state.json)
+[transformers] Warning: The following arguments do not match the ones in the `trainer_state.json` within the checkpoint directory: 
+	save_steps: 500.0 (from args) != 10 (from trainer_state.json)
+[transformers] Warning: The following arguments do not match the ones in the `trainer_state.json` within the checkpoint directory: 
+	save_steps: 500.0 (from args) != 10 (from trainer_state.json)
+[transformers] Warning: The following arguments do not match the ones in the `trainer_state.json` within the checkpoint directory: 
+	save_steps: 500.0 (from args) != 10 (from trainer_state.json)
+[transformers] Warning: The following arguments do not match the ones in the `trainer_state.json` within the checkpoint directory: 
+	save_steps: 500.0 (from args) != 10 (from trainer_state.json)
+[transformers] Warning: The following arguments do not match the ones in the `trainer_state.json` within the checkpoint directory: 
+	save_steps: 500.0 (from args) != 10 (from trainer_state.json)
+/opt/conda/lib/python3.11/site-packages/torch_npu/utils/storage.py:102: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  if self.device.type != 'cpu':
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank1]:     rlhf_main()
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank1]:     return SwiftRLHF(args).main()
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank1]:     result = self.run()
+[rank1]:              ^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank1]:     return func(self, *args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 184, in run
+[rank1]:     return self.train(trainer)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 258, in train
+[rank1]:     trainer.train(resume_checkpoint)
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/trainers/mixin.py", line 967, in train
+[rank1]:     res = super().train(*args, **kwargs)
+[rank1]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1433, in train
+[rank1]:     return inner_training_loop(
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1472, in _inner_training_loop
+[rank1]:     model, train_dataloader = self._prepare_for_training(max_steps, train_dataloader, resume_from_checkpoint)
+[rank1]:                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1608, in _prepare_for_training
+[rank1]:     model, self.optimizer = self.accelerator.prepare(self.model, self.optimizer)
+[rank1]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1552, in prepare
+[rank1]:     result = self._prepare_fsdp2(*args)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/model/npu_patch/fsdp.py", line 73, in wrapped_prepare_fsdp2
+[rank1]:     return _original_prepare_fsdp2(self, *patched_args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1726, in _prepare_fsdp2
+[rank1]:     model = fsdp2_prepare_model(self, model)
+[rank1]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 705, in fsdp2_prepare_model
+[rank1]:     fsdp2_load_full_state_dict(
+[rank1]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 553, in fsdp2_load_full_state_dict
+[rank1]:     model.load_state_dict(sharded_sd, assign=True)
+[rank1]: TypeError: SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'
+[rank5]: Traceback (most recent call last):
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank5]:     rlhf_main()
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank5]:     return SwiftRLHF(args).main()
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank5]:     result = self.run()
+[rank5]:              ^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank5]:     return func(self, *args, **kwargs)
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 184, in run
+[rank5]:     return self.train(trainer)
+[rank5]:            ^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 258, in train
+[rank5]:     trainer.train(resume_checkpoint)
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/trainers/mixin.py", line 967, in train
+[rank5]:     res = super().train(*args, **kwargs)
+[rank5]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1433, in train
+[rank5]:     return inner_training_loop(
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1472, in _inner_training_loop
+[rank5]:     model, train_dataloader = self._prepare_for_training(max_steps, train_dataloader, resume_from_checkpoint)
+[rank5]:                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1608, in _prepare_for_training
+[rank5]:     model, self.optimizer = self.accelerator.prepare(self.model, self.optimizer)
+[rank5]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1552, in prepare
+[rank5]:     result = self._prepare_fsdp2(*args)
+[rank5]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/model/npu_patch/fsdp.py", line 73, in wrapped_prepare_fsdp2
+[rank5]:     return _original_prepare_fsdp2(self, *patched_args, **kwargs)
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1726, in _prepare_fsdp2
+[rank5]:     model = fsdp2_prepare_model(self, model)
+[rank5]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 705, in fsdp2_prepare_model
+[rank5]:     fsdp2_load_full_state_dict(
+[rank5]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 553, in fsdp2_load_full_state_dict
+[rank5]:     model.load_state_dict(sharded_sd, assign=True)
+[rank5]: TypeError: SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank3]:     rlhf_main()
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank3]:     return SwiftRLHF(args).main()
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank3]:     result = self.run()
+[rank3]:              ^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank3]:     return func(self, *args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 184, in run
+[rank3]:     return self.train(trainer)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 258, in train
+[rank3]:     trainer.train(resume_checkpoint)
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/trainers/mixin.py", line 967, in train
+[rank3]:     res = super().train(*args, **kwargs)
+[rank3]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1433, in train
+[rank3]:     return inner_training_loop(
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1472, in _inner_training_loop
+[rank3]:     model, train_dataloader = self._prepare_for_training(max_steps, train_dataloader, resume_from_checkpoint)
+[rank3]:                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1608, in _prepare_for_training
+[rank3]:     model, self.optimizer = self.accelerator.prepare(self.model, self.optimizer)
+[rank3]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1552, in prepare
+[rank3]:     result = self._prepare_fsdp2(*args)
+[rank3]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/model/npu_patch/fsdp.py", line 73, in wrapped_prepare_fsdp2
+[rank3]:     return _original_prepare_fsdp2(self, *patched_args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1726, in _prepare_fsdp2
+[rank3]:     model = fsdp2_prepare_model(self, model)
+[rank3]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 705, in fsdp2_prepare_model
+[rank3]:     fsdp2_load_full_state_dict(
+[rank3]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 553, in fsdp2_load_full_state_dict
+[rank3]:     model.load_state_dict(sharded_sd, assign=True)
+[rank3]: TypeError: SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank2]:     rlhf_main()
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank2]:     return SwiftRLHF(args).main()
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank2]:     result = self.run()
+[rank2]:              ^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank2]:     return func(self, *args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 184, in run
+[rank2]:     return self.train(trainer)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 258, in train
+[rank2]:     trainer.train(resume_checkpoint)
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/trainers/mixin.py", line 967, in train
+[rank2]:     res = super().train(*args, **kwargs)
+[rank2]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1433, in train
+[rank2]:     return inner_training_loop(
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1472, in _inner_training_loop
+[rank2]:     model, train_dataloader = self._prepare_for_training(max_steps, train_dataloader, resume_from_checkpoint)
+[rank2]:                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1608, in _prepare_for_training
+[rank2]:     model, self.optimizer = self.accelerator.prepare(self.model, self.optimizer)
+[rank2]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1552, in prepare
+[rank2]:     result = self._prepare_fsdp2(*args)
+[rank2]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/model/npu_patch/fsdp.py", line 73, in wrapped_prepare_fsdp2
+[rank2]:     return _original_prepare_fsdp2(self, *patched_args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1726, in _prepare_fsdp2
+[rank2]:     model = fsdp2_prepare_model(self, model)
+[rank2]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 705, in fsdp2_prepare_model
+[rank2]:     fsdp2_load_full_state_dict(
+[rank2]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 553, in fsdp2_load_full_state_dict
+[rank2]:     model.load_state_dict(sharded_sd, assign=True)
+[rank2]: TypeError: SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'
+[rank7]: Traceback (most recent call last):
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank7]:     rlhf_main()
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank7]:     return SwiftRLHF(args).main()
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank7]:     result = self.run()
+[rank7]:              ^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank7]:     return func(self, *args, **kwargs)
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 184, in run
+[rank7]:     return self.train(trainer)
+[rank7]:            ^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 258, in train
+[rank7]:     trainer.train(resume_checkpoint)
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/trainers/mixin.py", line 967, in train
+[rank7]:     res = super().train(*args, **kwargs)
+[rank7]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1433, in train
+[rank7]:     return inner_training_loop(
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1472, in _inner_training_loop
+[rank7]:     model, train_dataloader = self._prepare_for_training(max_steps, train_dataloader, resume_from_checkpoint)
+[rank7]:                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1608, in _prepare_for_training
+[rank7]:     model, self.optimizer = self.accelerator.prepare(self.model, self.optimizer)
+[rank7]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1552, in prepare
+[rank7]:     result = self._prepare_fsdp2(*args)
+[rank7]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/model/npu_patch/fsdp.py", line 73, in wrapped_prepare_fsdp2
+[rank7]:     return _original_prepare_fsdp2(self, *patched_args, **kwargs)
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1726, in _prepare_fsdp2
+[rank7]:     model = fsdp2_prepare_model(self, model)
+[rank7]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 705, in fsdp2_prepare_model
+[rank7]:     fsdp2_load_full_state_dict(
+[rank7]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 553, in fsdp2_load_full_state_dict
+[rank7]:     model.load_state_dict(sharded_sd, assign=True)
+[rank7]: TypeError: SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'
+[rank4]: Traceback (most recent call last):
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank4]:     rlhf_main()
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank4]:     return SwiftRLHF(args).main()
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank4]:     result = self.run()
+[rank4]:              ^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank4]:     return func(self, *args, **kwargs)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 184, in run
+[rank4]:     return self.train(trainer)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 258, in train
+[rank4]:     trainer.train(resume_checkpoint)
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/trainers/mixin.py", line 967, in train
+[rank4]:     res = super().train(*args, **kwargs)
+[rank4]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1433, in train
+[rank4]:     return inner_training_loop(
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1472, in _inner_training_loop
+[rank4]:     model, train_dataloader = self._prepare_for_training(max_steps, train_dataloader, resume_from_checkpoint)
+[rank4]:                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1608, in _prepare_for_training
+[rank4]:     model, self.optimizer = self.accelerator.prepare(self.model, self.optimizer)
+[rank4]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1552, in prepare
+[rank4]:     result = self._prepare_fsdp2(*args)
+[rank4]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/model/npu_patch/fsdp.py", line 73, in wrapped_prepare_fsdp2
+[rank4]:     return _original_prepare_fsdp2(self, *patched_args, **kwargs)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1726, in _prepare_fsdp2
+[rank4]:     model = fsdp2_prepare_model(self, model)
+[rank4]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 705, in fsdp2_prepare_model
+[rank4]:     fsdp2_load_full_state_dict(
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 553, in fsdp2_load_full_state_dict
+[rank4]:     model.load_state_dict(sharded_sd, assign=True)
+[rank4]: TypeError: SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'
+[rank6]: Traceback (most recent call last):
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank6]:     rlhf_main()
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank6]:     return SwiftRLHF(args).main()
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank6]:     result = self.run()
+[rank6]:              ^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank6]:     return func(self, *args, **kwargs)
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 184, in run
+[rank6]:     return self.train(trainer)
+[rank6]:            ^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 258, in train
+[rank6]:     trainer.train(resume_checkpoint)
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/trainers/mixin.py", line 967, in train
+[rank6]:     res = super().train(*args, **kwargs)
+[rank6]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1433, in train
+[rank6]:     return inner_training_loop(
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1472, in _inner_training_loop
+[rank6]:     model, train_dataloader = self._prepare_for_training(max_steps, train_dataloader, resume_from_checkpoint)
+[rank6]:                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1608, in _prepare_for_training
+[rank6]:     model, self.optimizer = self.accelerator.prepare(self.model, self.optimizer)
+[rank6]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1552, in prepare
+[rank6]:     result = self._prepare_fsdp2(*args)
+[rank6]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/model/npu_patch/fsdp.py", line 73, in wrapped_prepare_fsdp2
+[rank6]:     return _original_prepare_fsdp2(self, *patched_args, **kwargs)
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1726, in _prepare_fsdp2
+[rank6]:     model = fsdp2_prepare_model(self, model)
+[rank6]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 705, in fsdp2_prepare_model
+[rank6]:     fsdp2_load_full_state_dict(
+[rank6]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 553, in fsdp2_load_full_state_dict
+[rank6]:     model.load_state_dict(sharded_sd, assign=True)
+[rank6]: TypeError: SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'
+[INFO:swift] last_model_checkpoint: None
+[INFO:swift] best_model_checkpoint: None
+[INFO:swift] images_dir: /workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-resume-10-to-12/v0-20260703-125433/images
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank0]:     rlhf_main()
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank0]:     return SwiftRLHF(args).main()
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank0]:     result = self.run()
+[rank0]:              ^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank0]:     return func(self, *args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 184, in run
+[rank0]:     return self.train(trainer)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 258, in train
+[rank0]:     trainer.train(resume_checkpoint)
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/trainers/mixin.py", line 967, in train
+[rank0]:     res = super().train(*args, **kwargs)
+[rank0]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1433, in train
+[rank0]:     return inner_training_loop(
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1472, in _inner_training_loop
+[rank0]:     model, train_dataloader = self._prepare_for_training(max_steps, train_dataloader, resume_from_checkpoint)
+[rank0]:                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/transformers/trainer.py", line 1608, in _prepare_for_training
+[rank0]:     model, self.optimizer = self.accelerator.prepare(self.model, self.optimizer)
+[rank0]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1552, in prepare
+[rank0]:     result = self._prepare_fsdp2(*args)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/model/npu_patch/fsdp.py", line 73, in wrapped_prepare_fsdp2
+[rank0]:     return _original_prepare_fsdp2(self, *patched_args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/accelerator.py", line 1726, in _prepare_fsdp2
+[rank0]:     model = fsdp2_prepare_model(self, model)
+[rank0]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 705, in fsdp2_prepare_model
+[rank0]:     fsdp2_load_full_state_dict(
+[rank0]:   File "/opt/conda/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 553, in fsdp2_load_full_state_dict
+[rank0]:     model.load_state_dict(sharded_sd, assign=True)
+[rank0]: TypeError: SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'
+[ERROR] 2026-07-03-12:55:28 (PID:73619, Device:5, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-03-12:55:29 (PID:73617, Device:3, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-03-12:55:29 (PID:73616, Device:2, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-03-12:55:29 (PID:73621, Device:7, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-03-12:55:29 (PID:73620, Device:6, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-03-12:55:29 (PID:73615, Device:1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-03-12:55:29 (PID:73614, Device:0, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-03-12:55:29 (PID:73618, Device:4, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+W0703 12:55:37.744000 73549 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 73615 closing signal SIGTERM
+W0703 12:55:37.744000 73549 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 73616 closing signal SIGTERM
+W0703 12:55:37.745000 73549 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 73617 closing signal SIGTERM
+W0703 12:55:37.745000 73549 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 73618 closing signal SIGTERM
+W0703 12:55:37.745000 73549 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 73619 closing signal SIGTERM
+W0703 12:55:37.745000 73549 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 73620 closing signal SIGTERM
+W0703 12:55:37.745000 73549 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 73621 closing signal SIGTERM
+E0703 12:55:38.755000 73549 site-packages/torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 0 (pid: 73614) of binary: /opt/conda/bin/python3.11
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 896, in <module>
+    main()
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 892, in main
+    run(args)
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 883, in run
+    elastic_launch(
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 270, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-07-03_12:55:37
+  host      : 269f1583621d
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 73614)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

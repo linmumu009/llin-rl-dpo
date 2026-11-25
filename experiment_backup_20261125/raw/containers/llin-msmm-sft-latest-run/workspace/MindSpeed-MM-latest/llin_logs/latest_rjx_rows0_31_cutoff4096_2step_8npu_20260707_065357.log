@@ -1,0 +1,622 @@
+<frozen runpy>:128: RuntimeWarning: 'torch.distributed.run' found in sys.modules after import of package 'torch.distributed', but prior to execution of 'torch.distributed.run'; this may result in unpredictable behaviour
+
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+[INFO] Starting configuration loading...
+[INFO] Loaded configuration file: llin_configs/rjx_rows0_31_cutoff4096_2step.yaml
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.model_name_or_path (type: <class 'str'>, value: /models/Qwen3.6-27B)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.use_fast_tokenizer (type: <class 'bool'>, value: True)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.split_special_tokens (type: <class 'bool'>, value: False)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.image_max_pixels (type: <class 'int'>, value: 262144)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.image_min_pixels (type: <class 'int'>, value: 1024)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.video_max_pixels (type: <class 'int'>, value: 16384)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.video_min_pixels (type: <class 'int'>, value: 0)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.video_fps (type: <class 'float'>, value: 2.0)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.video_maxlen (type: <class 'int'>, value: 64)
+[INFO] Automatically registered YAML field: model.gdn_implementation (type: <class 'str'>, value: triton)
+[INFO] Automatically registered YAML field: model.causal_conv1d_implementation (type: <class 'str'>, value: eager)
+[INFO] Automatically registered YAML field: features.recompute (type: <class 'bool'>, value: True)
+============================================================
+BaseArguments Configuration Manager Summary
+============================================================
+
+Configuration class: Arguments
+Configuration file: llin_configs/rjx_rows0_31_cutoff4096_2step.yaml
+Allow YAML extensions: True
+Allow CLI override: True
+Strict CLI validation: True
+Allow registering YAML fields: True
+
+Defined field count: 204
+Dynamic field count: 12
+Total field count: 216
+
+
+============ Configuration Details ============
+parallel:
+  data_parallel_size: 8
+  fully_shard_parallel_size: 8
+  fsdp_plan:
+    ignored_modules: []
+    apply_modules: ['model.language_model', 'model.language_model.embed_tokens', 'model.language_model.layers.{*}', 'lm_head']
+    param_dtype: bf16
+    reduce_dtype: fp32
+    output_dtype: None
+    cast_forward_inputs: True
+    reshard_after_forward: True
+    num_to_forward_prefetch: 0
+    num_to_backward_prefetch: 0
+    pregather: False
+    hook_modules: None
+    cpu_offload: False
+  tensor_parallel_size: 1
+  tp_plan:
+    colwise_parallel: []
+    rowwise_parallel: []
+    sequence_parallel: []
+  ring_attention_size: 1
+  ulysses_parallel_size: 1
+  expert_parallel_size: 1
+  expert_fully_shard_parallel_size: 8
+  ep_plan:
+    apply_modules: []
+    use_npu_fused_ops: True
+    dispatcher: alltoall
+    apply_efsdp_modules: []
+  recompute: False
+  recompute_plan:
+    apply_modules: []
+    use_reentrant: False
+  local_rank: 0
+  global_rank: 0
+  world_size: 8
+model:
+  model_id: qwen3_5
+  model_name_or_path: /models/Qwen3.6-27B
+  trust_remote_code: True
+  attn_implementation: flash_attention_2
+  freeze: []
+  mtp_num_layers: 0
+  mtp_loss_scaling_factor: 0.1
+  gdn_implementation: triton
+  causal_conv1d_implementation: eager
+data:
+  dataset_param:
+    dataset_type: huggingface
+    basic_parameters:
+      cache_dir: /workspace/MindSpeed-MM-latest/llin_cache/rjx_rows0_31_cutoff4096_2step
+      template: qwen3_6
+      chat_template: None
+      enable_thinking: True
+      dataset_dir: /workspace/MindSpeed-MM-latest/data/llin_rjx
+      dataset: ['/workspace/MindSpeed-MM-latest/data/llin_rjx/rjx_openai_rows0_31.jsonl']
+      cutoff_len: 4096
+      train_on_prompt: False
+      mask_history: False
+      streaming: False
+      overwrite_cache: True
+      preprocessing_batch_size: 1000
+      preprocessing_num_workers: 4
+      max_samples: None
+      tool_format: None
+      val_dataset: None
+      val_max_samples: None
+      val_rate: None
+      packing: None
+      neat_packing: False
+      preprocess_on_fly: False
+      async_preprocess: False
+      async_preprocess_buffer_size: None
+      stage: sft
+    preprocess_parameters:
+      model_name_or_path: /models/Qwen3.6-27B
+      use_fast_tokenizer: True
+      split_special_tokens: False
+      image_resolution: 512
+      video_resolution: 128
+      image_max_pixels: 262144
+      image_min_pixels: 1024
+      video_max_pixels: 16384
+      video_min_pixels: 0
+      video_fps: 2.0
+      video_maxlen: 64
+      image_do_pan_and_scan: False
+      crop_to_patches: False
+      use_audio_in_video: False
+      audio_sampling_rate: 16000
+      trust_remote_code: False
+    attr:
+      ranking: False
+      system: None
+      images: None
+      videos: None
+      audios: None
+      prompt: None
+      query: None
+      response: None
+      history: None
+      messages: messages
+      tools: tools
+      role_tag: role
+      content_tag: content
+      user_tag: user
+      assistant_tag: assistant
+      observation_tag: tool
+      function_tag: function_call
+      system_tag: system
+      chosen: None
+      rejected: None
+      formatting: openai
+  val_dataset_param: None
+  dataloader_param:
+    dataloader_mode: sampler
+    sampler_type: BaseRandomBatchSampler
+    shuffle: False
+    drop_last: True
+    pin_memory: True
+    collate_param:
+      collator_id: None
+      model_name: qwen3vl
+      ignore_pad_token_for_loss: True
+      pad_to_multiple_of: 8
+    num_workers: 4
+    enable_preload: False
+training:
+  profile:
+    enable: False
+    start_step: 1
+    end_step: 2
+    save_path: ./profiling
+    record_shapes: True
+    with_memory: True
+    with_stack: True
+    ranks: [0]
+    _train_steps: -1
+    local_rank: 0
+    global_rank: 0
+    world_size: 8
+    profile_this_rank: False
+  lora:
+    enable: False
+    rank: 8
+    alpha: 16
+    target_modules: ['q_proj', 'k_proj', 'v_proj']
+    dropout: 0.0
+    init_lora_weights: True
+    pretrained_lora_path: None
+    lora_target_modules_support: None
+  lr: 1e-05
+  lr_min: 0.0
+  lr_start: 0.0
+  weight_decay: 0.0
+  no_decay_modules: []
+  no_decay_params: []
+  optimizer: adamw
+  matched_adamw_rms: 0.2
+  muon_momentum: 0.95
+  ns_steps: 5
+  adam_fused: True
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_eps: 1e-08
+  clip_grad: 0.0
+  clip_grad_foreach: True
+  micro_batch_size: 2
+  gradient_accumulation_steps: 1
+  lr_warmup_ratio: 0.1
+  lr_decay_style: cosine
+  lr_decay_ratio: 1.0
+  enable_full_determinism: False
+  ckpt_manager: dcp
+  save_async: False
+  save_ckpt_dtype: None
+  load_checkpoint_path: None
+  save_steps: 0
+  seed: 42
+  max_steps: None
+  init_model_with_meta_device: True
+  train_iters: 2
+  train_epochs: None
+  load: /workspace/llin-rl-dpo/checkpoints/msmm-qwen36-27b-dcp
+  load_format: auto
+  load_strict: False
+  load_rank0_and_broadcast: False
+  no_load_optim: True
+  no_load_rng: True
+  save: /workspace/MindSpeed-MM-latest/llin_outputs/rjx_rows0_31_cutoff4096_2step
+  no_save_optim: True
+  no_save_rng: True
+  log_interval: 1
+  save_interval: 1000
+  val_interval: 0
+  val_micro_batch_size: None
+  use_deter_comp: False
+  allow_hf32: None
+  plugin: ['mindspeed_mm/fsdp/models/qwen3_5', 'mindspeed_mm/fsdp/data/datasets/huggingface']
+  lr_scaling_plan: None
+  quantization_plan: QuantizeConfig(recipe_name=None, apply_modules=[], ignored_modules=[], quant_converters=[], extra_args={}, enable_fsdp_low_precision_all_gather=True, fsdp_low_precision_all_gather_mode='on-demand')
+  _train_steps: -1
+  local_rank: 0
+  global_rank: 0
+  world_size: 8
+  global_batch_size: 16
+tools:
+  profile:
+    enable: False
+    profile_type: static
+    ranks: [0]
+    static_param:
+      level: level1
+      with_stack: False
+      with_memory: False
+      record_shapes: False
+      with_cpu: True
+      save_path: ./profiling
+      start_step: 10
+      end_step: 11
+      data_simplification: False
+      aic_metrics_type: PipeUtilization
+      analyse_flag: True
+  memory_profile:
+    enable: False
+    start_step: 1
+    end_step: 2
+    save_path: ./memory_snapshot
+    dump_ranks: [0]
+    stacks: all
+    max_entries: None
+    mem_info: False
+features:
+  recompute_plan:
+    apply_modules: ['model.language_model.layers.{*}']
+    use_reentrant: False
+  loss_cfg:
+    loss_type: default
+    router_aux_loss_coef: 0.0
+    router_aux_loss_offload: False
+  enable_chunk_loss: True
+  enable_dynamic_chunk_loss: False
+  chunkloss_plan:
+    apply_module: lm_head
+    chunk_size: 256
+    total_chunk_size: 4096
+  enable_activation_offload: True
+  activation_offload_plan:
+    apply_modules: ['model.language_model.layers.{*}']
+  enable_chunk_mbs: False
+  chunkmbs_plan:
+    apply_modules: None
+    chunk_mbs: 1
+    batch_dim: 0
+    chunk_arg_indexs: [0]
+    chunk_kwarg_names: []
+  enable_ep_balance: False
+  ep_balance_plan:
+    max_dup_experts_num: 2
+  recompute: True
+data.dataset_param.preprocess_parameters.model_name_or_path: /models/Qwen3.6-27B
+data.dataset_param.preprocess_parameters.use_fast_tokenizer: True
+data.dataset_param.preprocess_parameters.split_special_tokens: False
+data.dataset_param.preprocess_parameters.image_max_pixels: 262144
+data.dataset_param.preprocess_parameters.image_min_pixels: 1024
+data.dataset_param.preprocess_parameters.video_max_pixels: 16384
+data.dataset_param.preprocess_parameters.video_min_pixels: 0
+data.dataset_param.preprocess_parameters.video_fps: 2.0
+data.dataset_param.preprocess_parameters.video_maxlen: 64
+
+
+============ Dynamic Fields ============
+ data.dataset_param.preprocess_parameters.image_max_pixels
+ data.dataset_param.preprocess_parameters.image_min_pixels
+ data.dataset_param.preprocess_parameters.model_name_or_path
+ data.dataset_param.preprocess_parameters.split_special_tokens
+ data.dataset_param.preprocess_parameters.use_fast_tokenizer
+ data.dataset_param.preprocess_parameters.video_fps
+ data.dataset_param.preprocess_parameters.video_max_pixels
+ data.dataset_param.preprocess_parameters.video_maxlen
+ data.dataset_param.preprocess_parameters.video_min_pixels
+ features.recompute
+ model.causal_conv1d_implementation
+ model.gdn_implementation
+============================================================
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 155, in initialize
+    import_plugin(getattr(args.training, "plugin", []))
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 35, in import_plugin
+    _ = import_package(module_name, print_info=False)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 20, in import_package
+    raise e
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 12, in import_package
+    package = importlib.import_module(package_name)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/models/qwen3_5/causal_conv1d.py", line 11, in <module>
+    from mindspeed_mm.fsdp.ops.gdn.triton.convolution import (
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/ops/gdn/triton/convolution.py", line 12, in <module>
+    import triton
+ModuleNotFoundError: No module named 'triton'
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 155, in initialize
+    import_plugin(getattr(args.training, "plugin", []))
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 35, in import_plugin
+    _ = import_package(module_name, print_info=False)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 20, in import_package
+    raise e
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 12, in import_package
+    package = importlib.import_module(package_name)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/models/qwen3_5/causal_conv1d.py", line 11, in <module>
+    from mindspeed_mm.fsdp.ops.gdn.triton.convolution import (
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/ops/gdn/triton/convolution.py", line 12, in <module>
+    import triton
+ModuleNotFoundError: No module named 'triton'
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 155, in initialize
+    import_plugin(getattr(args.training, "plugin", []))
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 35, in import_plugin
+    _ = import_package(module_name, print_info=False)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 20, in import_package
+    raise e
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 12, in import_package
+    package = importlib.import_module(package_name)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/models/qwen3_5/causal_conv1d.py", line 11, in <module>
+    from mindspeed_mm.fsdp.ops.gdn.triton.convolution import (
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/ops/gdn/triton/convolution.py", line 12, in <module>
+    import triton
+ModuleNotFoundError: No module named 'triton'
+Successfully imported: mindspeed_mm.fsdp.models.qwen3_5
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 155, in initialize
+    import_plugin(getattr(args.training, "plugin", []))
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 35, in import_plugin
+    _ = import_package(module_name, print_info=False)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 20, in import_package
+    raise e
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 12, in import_package
+    package = importlib.import_module(package_name)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/models/qwen3_5/causal_conv1d.py", line 11, in <module>
+    from mindspeed_mm.fsdp.ops.gdn.triton.convolution import (
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/ops/gdn/triton/convolution.py", line 12, in <module>
+    import triton
+ModuleNotFoundError: No module named 'triton'
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 155, in initialize
+    import_plugin(getattr(args.training, "plugin", []))
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 35, in import_plugin
+    _ = import_package(module_name, print_info=False)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 20, in import_package
+    raise e
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 12, in import_package
+    package = importlib.import_module(package_name)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/models/qwen3_5/causal_conv1d.py", line 11, in <module>
+    from mindspeed_mm.fsdp.ops.gdn.triton.convolution import (
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/ops/gdn/triton/convolution.py", line 12, in <module>
+    import triton
+ModuleNotFoundError: No module named 'triton'
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 155, in initialize
+    import_plugin(getattr(args.training, "plugin", []))
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 35, in import_plugin
+    _ = import_package(module_name, print_info=False)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 20, in import_package
+    raise e
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 12, in import_package
+    package = importlib.import_module(package_name)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/models/qwen3_5/causal_conv1d.py", line 11, in <module>
+    from mindspeed_mm.fsdp.ops.gdn.triton.convolution import (
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/ops/gdn/triton/convolution.py", line 12, in <module>
+    import triton
+ModuleNotFoundError: No module named 'triton'
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 155, in initialize
+    import_plugin(getattr(args.training, "plugin", []))
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 35, in import_plugin
+    _ = import_package(module_name, print_info=False)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 20, in import_package
+    raise e
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 12, in import_package
+    package = importlib.import_module(package_name)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/models/qwen3_5/causal_conv1d.py", line 11, in <module>
+    from mindspeed_mm.fsdp.ops.gdn.triton.convolution import (
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/ops/gdn/triton/convolution.py", line 12, in <module>
+    import triton
+ModuleNotFoundError: No module named 'triton'
+Traceback (most recent call last):
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 436, in <module>
+    trainer = Trainer(args=arguments)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 64, in __init__
+    self.initialize()
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/train/trainer.py", line 155, in initialize
+    import_plugin(getattr(args.training, "plugin", []))
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 35, in import_plugin
+    _ = import_package(module_name, print_info=False)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 20, in import_package
+    raise e
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/utils/register.py", line 12, in import_package
+    package = importlib.import_module(package_name)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/models/qwen3_5/causal_conv1d.py", line 11, in <module>
+    from mindspeed_mm.fsdp.ops.gdn.triton.convolution import (
+  File "/workspace/MindSpeed-MM-latest/mindspeed_mm/fsdp/ops/gdn/triton/convolution.py", line 12, in <module>
+    import triton
+ModuleNotFoundError: No module named 'triton'
+[ERROR] 2026-07-07-06:54:11 (PID:4517, Device:5, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-07-06:54:11 (PID:4516, Device:4, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-07-06:54:11 (PID:4515, Device:3, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-07-06:54:11 (PID:4514, Device:2, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-07-06:54:11 (PID:4512, Device:0, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-07-06:54:11 (PID:4513, Device:1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-07-06:54:12 (PID:4518, Device:6, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-07-06:54:12 (PID:4519, Device:7, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+W0707 06:54:14.796000 4443 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 4512 closing signal SIGTERM
+W0707 06:54:14.797000 4443 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 4513 closing signal SIGTERM
+W0707 06:54:14.797000 4443 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 4514 closing signal SIGTERM
+W0707 06:54:14.797000 4443 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 4515 closing signal SIGTERM
+W0707 06:54:14.797000 4443 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 4516 closing signal SIGTERM
+W0707 06:54:14.797000 4443 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 4518 closing signal SIGTERM
+W0707 06:54:14.798000 4443 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 4519 closing signal SIGTERM
+E0707 06:54:15.176000 4443 site-packages/torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 5 (pid: 4517) of binary: /workspace/msmm-latest-probe-venv/bin/python
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 896, in <module>
+    main()
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 892, in main
+    run(args)
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 883, in run
+    elastic_launch(
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 270, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+mindspeed_mm/fsdp/train/trainer.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-07-07_06:54:14
+  host      : eb74922e580d
+  rank      : 5 (local_rank: 5)
+  exitcode  : 1 (pid: 4517)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+[ERROR] 2026-07-07-06:54:15 (PID:4443, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception

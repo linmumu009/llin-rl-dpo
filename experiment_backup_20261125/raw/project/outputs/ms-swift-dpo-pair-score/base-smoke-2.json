@@ -1,0 +1,35 @@
+{
+  "model_path": "/models/Qwen3.6-27B",
+  "adapter_path": "",
+  "dataset": "/workspace/llin-rl-dpo/datasets/ops_dpo_512.jsonl",
+  "limit": 2,
+  "summary": {
+    "count": 2,
+    "win_rate": 0.5,
+    "mean_margin": 0.044047619047619335,
+    "mean_chosen_logprob": -4.396428571428571,
+    "mean_rejected_logprob": -4.440476190476191
+  },
+  "records": [
+    {
+      "index": 0,
+      "case_id": 0,
+      "topic": "long DPO run readiness",
+      "chosen_mean_logprob": -4.45,
+      "rejected_mean_logprob": -4.380952380952381,
+      "margin": -0.0690476190476188,
+      "chosen_tokens": 40,
+      "rejected_tokens": 21
+    },
+    {
+      "index": 1,
+      "case_id": 1,
+      "topic": "checkpoint policy",
+      "chosen_mean_logprob": -4.3428571428571425,
+      "rejected_mean_logprob": -4.5,
+      "margin": 0.15714285714285747,
+      "chosen_tokens": 35,
+      "rejected_tokens": 25
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+base_status=0
+adapter_status=0
+base_result=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/base-nonthinking-128-20260703.jsonl
+adapter_result=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/adapter-nonthinking-128-20260703.jsonl
+base_log=/workspace/llin-rl-dpo/logs/ms_swift_fixed_prompt_eval_base-nonthinking-128-20260703.log
+adapter_log=/workspace/llin-rl-dpo/logs/ms_swift_fixed_prompt_eval_adapter-nonthinking-128-20260703.log

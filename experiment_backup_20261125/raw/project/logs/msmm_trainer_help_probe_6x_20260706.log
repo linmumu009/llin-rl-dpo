@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/workspace/llin-rl-dpo/reference/MindSpeed-MM/mindspeed_mm/fsdp/train/trainer.py", line 10, in <module>
+    from mindspeed.fsdp.utils.log import print_rank, set_log_level
+ModuleNotFoundError: No module named 'mindspeed.fsdp'

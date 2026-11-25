@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+NameError: name 'torchair_import_ok' is not defined
+[ERROR] 2026-07-06-07:19:06 (PID:3197, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception

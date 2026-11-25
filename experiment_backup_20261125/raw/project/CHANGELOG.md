@@ -1,0 +1,719 @@
+# 更新说明
+
+## v0.1.24 - 2026-07-07
+
+ms-swift DPO 长上下文压力测试准备：
+
+- `scripts/run_ms_swift_qwen36_dpo_smoke.sh` 增加可配置训练参数：
+  - `MAX_LENGTH`
+  - `PER_DEVICE_TRAIN_BATCH_SIZE`
+  - `GRADIENT_ACCUMULATION_STEPS`
+  - `LEARNING_RATE`
+- 新增 `scripts/make_long_context_dpo.py`，生成长上下文、长 answer 的 DPO 压力测试数据。
+- 新增 `datasets/long_context_dpo_192.jsonl`，共 `192` 条样本，文件约 `10.97 MB`。
+- 新增 `scripts/check_dpo_token_lengths.py`，用目标模型 tokenizer 检查 prompt/chosen/rejected token 长度。
+- 新增 `scripts/run_ms_swift_long_context_4096_b2_10step.sh`，封装目标测试：
+  - `MAX_LENGTH=4096`
+  - `PER_DEVICE_TRAIN_BATCH_SIZE=2`
+  - `MAX_STEPS=10`
+  - 8 卡 FSDP2 DPO
+
+预检结果：
+
+- 容器内 tokenizer 检查确认样本原始上下文超过 `4096`：
+  - sample 0: `prompt_tokens=8659`, `chosen_tokens=10309`, `rejected_tokens=10156`
+  - sample 1: `prompt_tokens=8659`, `chosen_tokens=10314`, `rejected_tokens=10155`
+  - sample 2: `prompt_tokens=8659`, `chosen_tokens=10316`, `rejected_tokens=10155`
+
+当前阻塞：
+
+- 用户要求只使用 `llin-rl-dpo`，不使用 `llin-rl-dpo-p2`。
+- `llin-rl-dpo` 当前有 `/dev/davinci8-15` 和 Ascend 环境变量，但容器内 `npu-smi` 返回 `device is used`。
+- `torch_npu.npu.device_count()` 在 `llin-rl-dpo` 中返回 `0`。
+- 主机 `npu-smi info` 显示 16 张卡均有 python 进程占用。
+- 因此 4096/batch2/10step 压力测试已准备好，但尚未启动；需要释放 `llin-rl-dpo` 绑定的 8 张卡后才能按要求运行。
+
+## v0.1.23 - 2026-07-07
+
+MindSpeed-MM Qwen3.6 `561002` 中文根因分析：
+
+- 新增中文记录：`reference/MSMM_561002_ROOT_CAUSE_CN_20260707.md`。
+- 确认 latest MindSpeed-MM 的 OpenAI converter 会把 assistant 的 `reasoning_content` 包成 `<think>...</think>` 后合并进训练标签；此前只看 `content` 会低估真实 token 长度。
+- 按真实 tokenizer/template 重新计算前 32 条数据：row20 为 `2506` token，其中 label `2052`；row28 为 `1264` token，其中 label `707`；row31 为 `3506` token，其中 label `3045`。
+- sampler 对齐：`shuffle=false`、8 卡、`micro_batch_size=2` 时，iteration 2 rank4 正好处理 rows `20` 和 `28`。
+- 增加临时 shape probe wrapper，只记录 `torch_npu.npu_rotary_mul` 输入，不替换 rotary 算法；shape probe 日志为 `/workspace/MindSpeed-MM-latest/llin_logs/latest_rjx_rows0_31_shapeprobe_8npu_20260707_081147.log`。
+- 捕获失败前真实 shape：rank4 iteration 2 的 text rotary 输入为 `(2,24,2576,64)` 和 `(2,4,2576,64)`，dtype `bfloat16`，q tensor 非连续；随后同步报 `npu_rotary_mul_backward -> aclnnRotaryPositionEmbeddingGrad`，`reserveAlignNum=2592`。
+- 单独构造相同 `(2,24,2576,64)` / `(2,4,2576,64)` shape 和非连续 stride 调用 `torch_npu.npu_rotary_mul` backward 可以通过；因此根因不是单纯 shape 数字，而是完整 MindSpeed-MM 训练路径下的 Ascend fused rotary backward tiling 缺陷。
+- 更新 README 当前版本和 MindSpeed-MM `561002` 根因收敛小节。
+
+## v0.1.22 - 2026-07-07
+
+MindSpeed-MM latest 训练复现 561002：
+
+- 在用户授权后停止旧的空闲 `llin-msmm-*` / `llin-autoresearch*` 实验容器释放 Ascend 设备；保留 `llin-rl-dpo`、`llin-rl-dpo-lrsearch`、`swift_sft_rjx`、`mindspeed_mm_rjx` 和 k8s 容器。
+- 新建非 DPO SFT 容器 `llin-msmm-sft-latest-run`，使用逻辑 NPU `0-7`，8 卡 NPU smoke 全部通过。
+- 使用 latest `MindSpeed-MM@643738f` + latest `MindSpeed@38ecf80`，在隔离 venv 中按 Qwen3.6 官方示例对齐到 `transformers 5.2.0`、`accelerate 1.2.0`，并补 `triton-ascend 3.2.1`。
+- 配置：老板数据前 32 条、`formatting: openai`、`template: qwen3_6`、Full SFT、`freeze: []`、`cutoff_len: 4096`、`micro_batch_size: 2`、`global_batch_size: 16`、activation offload、chunk loss `256`、`train_iters: 2`。
+- 结果：iteration 1 通过，loss `6.545060E-01`，grad norm `8.827`，elapsed `161933.9 ms`；iteration 2 rank4 复现 `aclnnRotaryPositionEmbeddingGrad error 561002`，同样包含 `reserveAlignNum = 2592 too large, aicore do not support`。
+- 结论：latest MindSpeed-MM 已支持 Qwen3.6/OpenAI 数据路径，但 latest 训练仍复现同一个 NPU rotary backward tiling 限制；问题不是旧版缺 OpenAI/qwen3_6 支持导致。
+- 新增记录：`reference/MSMM_LATEST_561002_REPRO_20260707.md`。
+
+## v0.1.21 - 2026-07-07
+
+MindSpeed-MM latest Qwen3.6/OpenAI 支持验证：
+
+- 按用户要求，改在原 SFT 实验容器 `llin-msmm-sft-probe-8rtm` 中验证，没有进入或修改 `llin-rl-dpo` DPO 容器。
+- 现有 SFT 容器默认 `/workspace/MindSpeed-MM` 版本为 `9e6ca6ca`，未搜到 `qwen3_6`、`formatting: openai` 或 `OpenAIDatasetConverter`。
+- 在同一 SFT 容器内隔离拉取 latest MindSpeed-MM：`/workspace/MindSpeed-MM-latest`，commit `643738f`。
+- latest MindSpeed-MM 源码包含 `examples/qwen3_6`、`OpenAIDatasetConverter`、`formatting: openai`、`template: qwen3_6` 和 `template: qwen3_6_nothink`。
+- latest MindSpeed-MM 需要配套 latest MindSpeed 的 `mindspeed.fsdp`；现有旧 MindSpeed 目录不包含该模块，因此隔离拉取 `/workspace/MindSpeed-latest`，commit `38ecf80`。
+- 新建隔离 venv `/workspace/msmm-latest-probe-venv`，只在其中补 `torchdata`、`datasets`、`av`、`pytest`。
+- import probe 通过：`openai_converter=True`，`has_qwen3_6=True`，`has_qwen3_6_nothink=True`。
+- 运行 latest 自带 `tests/ut_fsdp/data/test_openai_converter.py`，结果 `22 passed`。
+- 结论：latest MindSpeed-MM 在源码、import 和单测层面支持 Qwen3.6 + OpenAI 数据格式；但尚未证明 latest 栈能解决 Qwen3.6-27B 全量训练中的 rotary `561002`。
+- 新增记录：`reference/MSMM_LATEST_QWEN36_OPENAI_20260707.md`。
+
+## v0.1.20 - 2026-07-07
+
+MindSpeed-MM 旧版本栈完整数据对照：
+
+- 生成完整老板数据的旧源码兼容格式：`datasets/rjx/20260702_openai_sharegpt.jsonl`，25167 条；只改字段结构，保留 message 内容。
+- 使用我们旧环境路径：`MindSpeed-MM@1050e5ba`、`transformers 5.2.0`、`torch_npu 2.7.1.post4`、`accelerate 1.2.0`、`datasets 5.0.0`。
+- 对齐老板训练规模：8 NPU、Full SFT、`freeze: []`、`cutoff_len: 4096`、`micro_batch_size: 2`、`global_batch_size: 16`、`enable_activation_offload: true`、`chunk_size: 256`、`train_iters: 10`。
+- 兼容性差异：旧源码不支持 `formatting: openai` 和 `template: qwen3_6`，因此使用 `sharegpt + qwen3_vl`。
+- 结果：第 2 step 通过，未出现 `aclnnRotaryPositionEmbeddingGrad`、`npu_rotary` 或 `561002`；完成 6 step 后在第 7 step forward 的视觉塔路径 `get_image_features/self.visual` OOM。
+- 结论：老板的第二步 rotary 561002 在我们旧版本栈/旧模板路径下不复现，但该实验仍不能把差异归因到单一包版本，因为数据格式和模板路径不可避免地改变了 token/label shape。
+- 更新 README 和 `reference/RJX_561002_REPRO_20260707.md`。
+
+## v0.1.19 - 2026-07-07
+
+MindSpeed-MM 561002 根因收敛：
+
+- 补充 `cutoff=2048` 对照：前 32 条数据、同事源码/venv/配置规模下完成 2 step，未触发 561002；row20 从 `2506/2052` 截到 `2048/1594`。
+- 补充 `micro_batch_size=1` 对照：仍在 rank4 处理原始 row20 时复现 `aclnnRotaryPositionEmbeddingGrad error 561002`，说明不需要 row20 和 row28 同 batch 才触发。
+- 补充关闭 activation offload 对照：仍先报同一个 rotary 561002，说明 offload 不是必要触发条件；后续 OOM 属于异常后的连带错误。
+- 补充 `ASCEND_LAUNCH_BLOCKING=1` 同步栈：确认真实失败点是 `loss.backward()` 中的 `npu_rotary_mul_backward/aclnnRotaryPositionEmbeddingGrad`，不是 FSDP reduce-scatter 本身。
+- 补充旧 MindSpeed-MM/`transformers 5.2.0` 对照：旧源码不支持 `formatting: openai` 和 `template: qwen3_6`；转换到 `sharegpt + qwen3_vl` 后可以跑通，但 cache 显示 row20 从 `2506/2052` 变成 `475/21`，因此通过原因是模板/预处理避开危险 shape，不是底层 NPU rotary 问题消失。
+- 更新 `reference/RJX_561002_REPRO_20260707.md` 和 README 的当前结论。
+
+## v0.1.18 - 2026-07-07
+
+MindSpeed-MM 同事真实配置 561002 复现：
+
+- 按老板给出的真实数据、配置、启动脚本、失败日志和 `mindspeed_mm_rjx` 源码快照，在我们自己的 `llin-rl-dpo` 工作区内复现；没有修改同事容器或宿主机。
+- 新增 `reference/RJX_561002_REPRO_20260707.md`，记录对齐环境、完整路径、全量复现和 32 行最小复现。
+- 原生、不 patch rotary 的情况下复现 `aclnnRotaryPositionEmbeddingGrad error 561002`：iteration 1 通过，iteration 2 rank4 失败，日志包含 `reserveAlignNum = 2592 too large`。
+- 确认 16-31 行单独 1 step 可以通过，但 0-31 行 2 step 会在第二步复现，说明触发条件不是单条样本孤立出现，而是第一步完成后的第二个 global batch / rank-local shape 或运行状态。
+- README 已同步更新当前版本说明和 MindSpeed-MM cutoff 复现结论。
+
+## v0.1.17 - 2026-07-07
+
+MindSpeed-MM freeze visual 对照：
+
+- 为回答“纯文本任务视觉塔是否可以冻结”，补充同条件 3-step 对照。
+- 配置：`configs/msmm_qwen36_sft_cutoff4096_longanswer_freezevisual_3step.yaml`
+- 日志：`logs/msmm_qwen36_sft_cutoff4096_longanswer_freezevisual_3step_8npu_venv_20260707.log`
+- 条件：
+  - 8 NPU
+  - `cutoff_len: 4096`
+  - long-answer 数据，原始上下文超过 4096
+  - `freeze: ['model.visual']`
+  - `train_iters: 3`
+  - `recompute: true`
+  - `enable_chunk_loss: true`
+- 结果：
+  - exit code：`0`
+  - iteration 1/3：`16885.2 ms`，loss `1.215048E+01`
+  - iteration 2/3：`13886.2 ms`，loss `5.530391E-02`
+  - iteration 3/3：`19824.2 ms`，loss `3.774317E-02`
+  - after 2 iterations memory：allocated `38700.54 MB`，max allocated `58801.49 MB`，reserved `58880.0 MB`，max reserved `61132.0 MB`
+  - checkpoint 保存到 `outputs/msmm-qwen36-sft-cutoff4096-longanswer-freezevisual-3step/iter_0000003`
+
+判断：
+
+- 纯文本数据 `images=[]` 时，冻结视觉塔不影响当前文本 SFT 目标，是推荐默认路线。
+- 与 `v0.1.16` 的全参数 OOM 形成直接对照：同样 8 卡、同样 `cutoff=4096`、同样 long-answer 3 step，冻结视觉塔通过，全参数在第二步附近 OOM。
+- 当前可确认的问题是 8 卡全参数显存不足；仍未复现老板截图中的 rotary `561002` 或 patch 后 `aclnnCat` 精确路径。
+
+## v0.1.16 - 2026-07-07
+
+新增：
+
+- `scripts/make_msmm_sft_probe_assets.py` 增加 `--full-param`，用于生成不冻结 `model.visual` 的 MindSpeed-MM SFT probe 配置。
+
+MindSpeed-MM full-param 复查：
+
+- 用户反馈老板已试：8 卡、全参、`cutoff=4096`、上下文超过 4096。按同条件在昨天实际可见 8 NPU 的实验容器里复查 3 step。
+- 配置：`configs/msmm_qwen36_sft_cutoff4096_longanswer_fullparam_3step.yaml`
+- 日志：`logs/msmm_qwen36_sft_cutoff4096_longanswer_fullparam_3step_8npu_venv_20260707.log`
+- exit code：`1`
+- 配置确认：
+  - `freeze: []`
+  - `train_iters: 3`
+  - `cutoff_len: 4096`
+  - long-answer 数据，原始上下文超过 4096，cache 仍按 cutoff 截到 4096。
+- 结果：
+  - iteration 1/3 跑通，`elapsed time per iteration (ms): 17755.8`，loss `1.215048E+01`，grad norm `3245.044`。
+  - 随后在下一次 backward / FSDP reduce-scatter 附近 OOM。
+  - 关键错误：`NPUWorkspaceAllocator tried to allocate 31.06 MiB`，设备可用显存只剩约 `29.20-97.34 MiB`。
+  - 报错含 `runtime result = 207001`，当前 working operator 显示为 `aclnnFlashAttentionScore`。
+  - 未出现 `aclnnRotaryPositionEmbeddingGrad`、`561002` 或 `aclnnCat`。
+
+判断：
+
+- 老板的“8 卡全参 cutoff=4096 上下文超过 4096 会 OOM”在本轮复查中成立。
+- 与上一版冻结视觉塔的 2-step 通过不矛盾：去掉 `freeze: model.visual` 后显存余量被吃完，第二步附近只剩几十 MiB，无法再分配 31 MiB workspace。
+- 当前复现到的是显存硬限制，不是 rotary 算子 561002 问题。
+
+## v0.1.15 - 2026-07-06
+
+新增：
+
+- `scripts/make_msmm_sft_probe_assets.py` 支持生成 long-answer probe：
+  - `--prompt-repeat`
+  - `--answer-repeat`
+  - `--train-iters`
+  - `--name-suffix`
+
+MindSpeed-MM cutoff=4096 复查：
+
+- 使用我们自己的 `llin-rl-dpo` 容器、8 逻辑 NPU、隔离 venv `/workspace/llin-rl-dpo/.venvs/msmm-qwen36`。
+- `cutoff=4096` 短 answer 版本完成 2 step：
+  - 日志：`logs/msmm_qwen36_sft_cutoff4096_2step_8npu_venv_20260706.log`
+  - exit code：`0`
+  - iteration 1：`16419.2 ms`，loss `1.006310E+01`
+  - iteration 2：`14716.3 ms`，loss `2.602338E+00`
+  - max reserved memory：约 `61132 MB`
+  - 未出现 `aclnnRotaryPositionEmbeddingGrad`、`561002` 或 OOM。
+- `cutoff=4096` long-answer 版本完成 2 step：
+  - 日志：`logs/msmm_qwen36_sft_cutoff4096_longanswer_2step_8npu_venv_20260706.log`
+  - exit code：`0`
+  - iteration 1：`16957.6 ms`，loss `1.215048E+01`
+  - iteration 2：`14105.7 ms`，loss `5.574024E-02`
+  - cache 中 `input_ids` 长度全部为 `4096`
+  - `labels != -100` 的监督 token 为 `4073`，位置范围 `23..4095`
+  - max reserved memory：约 `61132 MB`
+  - 未出现 `aclnnCat` OOM、`RotaryPositionEmbeddingGrad` 或 `561002`。
+
+当前判断：
+
+- 我们本轮不是“上下文没到 4096”：long-answer cache 证明训练实际吃到了 4096，并且几乎全长都有 loss。
+- 但本轮仍不等同于老板截图中的全参数/patch 场景。我们的配置冻结了 `model.visual`、没有图像输入、开启 `recompute` 和 `chunk loss`，且未走截图里提到的 `torch.cat([q_embed, q_pass], dim=-1)` extra allocation 路径。
+- 显存边际很紧：max reserved 约 `61.1GB/64GB`。如果换成 torch 原生 rotary patch、真实多模态数据、不同 checkpoint/optimizer 状态、少一些重计算或更多可训练模块，`aclnnCat alloc device memory failed` 是合理风险。
+
+## v0.1.13 - 2026-07-03
+
+新增：
+
+- 新增 `scripts/make_ops_dpo.py`，生成面向训练运维/框架评估主题的半真实 DPO 数据。
+- 新增 `datasets/ops_dpo_512.jsonl`，共 `512` 条 DPO pairs。
+- 新增 `scripts/run_ms_swift_ops_dpo_100step.sh`，封装 `ops_dpo_512` 的 100 step DPO 试跑。
+- `.gitignore` 新增 `__pycache__/`。
+
+100 step 半真实 DPO 试跑：
+
+- 数据：`/workspace/llin-rl-dpo/datasets/ops_dpo_512.jsonl`
+- 输出目录：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-ops-100step/ops-100step-20260703/v0-20260703-141605`
+- 参数：
+  - `MAX_STEPS=100`
+  - `NUM_TRAIN_EPOCHS=3`
+  - `SAVE_ONLY_MODEL=true`
+  - `FSDP_CONFIG=/workspace/llin-rl-dpo/configs/fsdp2_full_state.json`
+- exit code 为 `0`。
+- `global_step/max_steps=100/100`
+- `train_runtime=344.9065s`
+- `train_samples_per_second=2.319`
+- `train_steps_per_second=0.29`
+- `train_loss=0.01584221`
+- `memory(GiB)=52.56`
+- 最终 step：
+  - `loss=1.607e-07`
+  - `rewards/accuracies=1.0`
+  - `rewards/margins=18.0`
+
+adapter 产物：
+
+- 路径：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-ops-100step/ops-100step-20260703/v0-20260703-141605/checkpoint-100`
+- `adapter_model.safetensors` 约 `223M`。
+- `scripts/inspect_adapter.py` 检查通过：
+  - `adapter_type=LORA`
+  - `base_model=/models/Qwen3.6-27B`
+  - `num_tensors=992`
+
+固定 prompts 对照：
+
+- 参数：
+  - `RUN_ID=ops-100step-eval-20260703`
+  - `MAX_NEW_TOKENS=128`
+  - `ENABLE_THINKING=false`
+- base：
+  - `num_generated_tokens=194`
+  - `runtime=63.2442s`
+  - `tokens/s=3.0675`
+- adapter：
+  - `num_generated_tokens=194`
+  - `runtime=63.9543s`
+  - `tokens/s=3.0334`
+- base 与 adapter 在这 2 条固定 prompts 上输出完全一致。
+
+当前判断：
+
+- 100 step 半真实 DPO 链路跑通，adapter 导出和重新加载推理均通过。
+- 训练集很容易拟合，loss 和 reward margin 不能单独证明泛化效果。
+- 固定 prompts 上没有看到输出差异，说明下一步需要更真实的验证集和更贴近训练目标的评测，而不是继续依赖 2 条 prompts。
+
+## v0.1.12 - 2026-07-03
+
+新增：
+
+- `scripts/run_ms_swift_fixed_prompt_eval.sh` 支持：
+  - `ENABLE_THINKING`
+  - `PRESERVE_THINKING`
+  - `TEMPERATURE`
+- `scripts/run_ms_swift_base_adapter_compare.sh` 同步透传上述推理参数。
+
+固定 prompts non-thinking 128 token 对照：
+
+- 运行参数：
+  - `RUN_ID=nonthinking-128-20260703`
+  - `MAX_NEW_TOKENS=128`
+  - `ENABLE_THINKING=false`
+- base 结果：
+  - `result_path=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/base-nonthinking-128-20260703.jsonl`
+  - `num_generated_tokens=256`
+  - `runtime=53.7887s`
+  - `tokens/s=4.7594`
+- adapter 结果：
+  - `result_path=/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/adapter-nonthinking-128-20260703.jsonl`
+  - `num_generated_tokens=240`
+  - `runtime=77.8954s`
+  - `tokens/s=3.0811`
+
+当前判断：
+
+- `--enable_thinking false` 已确认传入 ms-swift 命令。
+- 输出不再展开思考内容，但仍保留空的 `<think></think>` 前缀；这属于模板行为，不能把 `enable_thinking=false` 理解为完全删除 thinking 标签。
+- adapter 两条输出均完整结束，base 两条输出仍在 128 token 上限处截断。
+- adapter 推理速度仍低于 base，小样本观测约为 `3.08` vs `4.76 tokens/s`。
+
+## v0.1.11 - 2026-07-03
+
+新增：
+
+- 新增 `datasets/fixed_eval_prompts.jsonl`，包含 2 条固定 prompts，用于 base/adapter 对照。
+- 新增 `scripts/run_ms_swift_fixed_prompt_eval.sh`：
+  - `ADAPTER_PATH` 为空时跑 base。
+  - `ADAPTER_PATH` 非空时加载 LoRA adapter。
+  - 支持 `RESULT_PATH` 指定输出文件。
+- 新增 `scripts/run_ms_swift_base_adapter_compare.sh`，封装固定 prompts 的 base/adapter 顺序对照，分别保存日志、退出码和结果文件。
+
+固定 prompts 对照实测：
+
+- base 结果：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/base-20260703.jsonl`
+- adapter 结果：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-fixed-prompt-eval/adapter-20260703.jsonl`
+- 两边均完成 2 条 prompts、各生成 `128` tokens。
+- base：
+  - runtime `27.8733s`
+  - tokens/s `4.5922`
+  - samples/s `0.0718`
+- adapter：
+  - runtime `42.1431s`
+  - tokens/s `3.0373`
+  - samples/s `0.0475`
+
+当前判断：
+
+- base 和 adapter 固定 prompts 输出方向基本一致；2 step 合成 DPO adapter 太小，不能期待明显效果差异。
+- adapter 推理比 base 慢，当前小样本观测约为 `3.04` vs `4.59` tokens/s。
+- 两边各出现 2 次 `chunk_gated_delta_rule` tensor shape warning，说明该 warning 不是 adapter 独有。
+- 64 tokens 仍会截断部分输出；正式评测需要禁用 thinking 或提高 `MAX_NEW_TOKENS`。
+
+## v0.1.10 - 2026-07-03
+
+新增：
+
+- 新增 `datasets/tiny_infer.jsonl`，用于非交互式 adapter 推理 smoke test。
+- 新增 `scripts/run_ms_swift_adapter_infer_smoke.sh`，默认加载上一版导出的 LoRA adapter：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step/v0-20260703-130918/checkpoint-2`
+
+adapter 重新加载推理测试：
+
+- 命令在 `llin-rl-dpo` 容器内运行，使用 `swift infer`。
+- 参数：
+  - `--model /models/Qwen3.6-27B`
+  - `--model_type qwen3_5`
+  - `--adapters <checkpoint-2>`
+  - `--infer_backend pt`
+  - `--device_map auto`
+  - `--max_new_tokens 16`
+  - `--val_dataset /workspace/llin-rl-dpo/datasets/tiny_infer.jsonl`
+- exit code 为 `0`。
+- 结果文件：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step/v0-20260703-130918/checkpoint-2/infer_result/20260703-132529.jsonl`
+
+推理指标：
+
+- prompt tokens: `37`
+- generated tokens: `16`
+- runtime: `49.2921s`
+- samples/s: `0.0203`
+- tokens/s: `0.3246`
+
+当前判断：
+
+- `FULL_STATE_DICT + save_only_model=true` 导出的 LoRA adapter 已验证可以被 ms-swift 重新加载并生成。
+- 16 token smoke 输出被截断，只说明加载/推理链路可用，不代表效果。
+- 日志出现 `chunk_gated_delta_rule` tensor shape warning，推理仍完成；后续长训或正式评测前需要单独确认该 warning 是否影响正确性/效率。
+- 默认 FSDP2 sharded checkpoint resume 仍未通过；当前可靠产物路线是导出普通 LoRA adapter。
+
+## v0.1.9 - 2026-07-03
+
+新增：
+
+- 新增 `patches/sitecustomize.py`，提供可选 runtime patch：
+  - `LLIN_SWIFTMODEL_ASSIGN_PATCH=1`
+  - 让 `SwiftModel.load_state_dict` 接受 `assign=` 参数，并在普通加载时传给底层 `base_model.load_state_dict`。
+- 新增 `configs/fsdp2_full_state.json`，用于 FSDP2 `FULL_STATE_DICT` 保存对照测试。
+- 新增 `scripts/inspect_adapter.py`，用于读取并检查 LoRA adapter 配置和 safetensors 权重。
+- `scripts/run_ms_swift_qwen36_dpo_smoke.sh` 增加：
+  - `FSDP_CONFIG`
+  - `SAVE_ONLY_MODEL`
+  - `LLIN_SWIFTMODEL_ASSIGN_PATCH`
+
+resume 排查：
+
+- 启用 `LLIN_SWIFTMODEL_ASSIGN_PATCH=1` 后，从 `checkpoint-10` resume 不再卡在：
+  - `SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'`
+- 但继续失败于：
+  - `Missing key in checkpoint state_dict: model.model.visual.patch_embed.proj.weight`
+
+判断：
+
+- 默认 FSDP2 sharded checkpoint 保存的是 adapter/trainable 状态，不包含完整视觉塔等冻结底座权重。
+- FSDP2 resume loader 期望完整模型 sharded state，因此仍无法恢复。
+- 这说明 `assign` patch 只能解决签名兼容第一层问题，不足以让默认 FSDP2 sharded checkpoint 可恢复。
+
+adapter 导出测试：
+
+- 使用 `configs/fsdp2_full_state.json`。
+- 参数：
+  - `MAX_STEPS=2`
+  - `SAVE_STRATEGY=steps`
+  - `SAVE_STEPS=1`
+  - `SAVE_TOTAL_LIMIT=1`
+  - `SAVE_ONLY_MODEL=true`
+  - `FSDP_CONFIG=/workspace/llin-rl-dpo/configs/fsdp2_full_state.json`
+- 输出目录：
+  - `/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-fullstate-saveonly-2step/v0-20260703-130918/checkpoint-2`
+
+adapter 导出结果：
+
+- 训练 exit code 为 `0`。
+- 生成普通 LoRA adapter 文件：
+  - `adapter_config.json`
+  - `adapter_model.safetensors`
+- `adapter_model.safetensors` 约 `223M`。
+- `scripts/inspect_adapter.py` 检查通过：
+  - `adapter_type=LORA`
+  - `base_model=/models/Qwen3.6-27B`
+  - `num_tensors=992`
+
+当前判断：
+
+- 默认 FSDP2 sharded checkpoint resume 仍未通过。
+- `FULL_STATE_DICT + save_only_model=true` 可以作为当前最低限度可用产物保存路线，能导出普通 LoRA adapter。
+- 下一步应测试该 adapter 是否能重新加载做推理/评测，并继续调查 sharded checkpoint resume 的根修复。
+
+## v0.1.8 - 2026-07-03
+
+新增：
+
+- `scripts/run_ms_swift_qwen36_dpo_smoke.sh` 增加环境变量配置：
+  - `NUM_TRAIN_EPOCHS`
+  - `SAVE_STRATEGY`
+  - `SAVE_STEPS`
+  - `SAVE_TOTAL_LIMIT`
+  - `EVAL_STRATEGY`
+  - `RESUME_FROM_CHECKPOINT`
+
+实测：
+
+- 使用 `ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2 + 8 NPU` 路线。
+- 使用 `datasets/synthetic_dpo_256.jsonl`。
+- 跑 20 step checkpoint 保存测试：
+  - `MAX_STEPS=20`
+  - `SAVE_STRATEGY=steps`
+  - `SAVE_STEPS=10`
+  - `SAVE_TOTAL_LIMIT=2`
+- 输出目录：`/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-checkpoint-20step/v0-20260703-124743`
+
+保存测试结果：
+
+- 训练 exit code 为 `0`。
+- `global_step/max_steps=20/20`
+- `train_runtime=97.8253s`
+- `train_samples_per_second=1.636`
+- `train_steps_per_second=0.204`
+- `memory(GiB)=51.85`
+- 生成 `checkpoint-10` 和 `checkpoint-20`。
+- 每个 checkpoint 约 `713M`。
+- checkpoint 形态为 FSDP2 sharded checkpoint：
+  - `pytorch_model_fsdp_0`
+  - `optimizer_0`
+  - `scheduler.pt`
+  - `trainer_state.json`
+  - `rng_state_0.pth` 到 `rng_state_7.pth`
+
+恢复测试结果：
+
+- 尝试从 `checkpoint-10` 恢复并跑到 `max_steps=12`。
+- 训练 exit code 为 `1`。
+- 失败点：
+  - `TypeError: SwiftModel.load_state_dict() got an unexpected keyword argument 'assign'`
+- 发生位置：
+  - `accelerate.utils.fsdp_utils.fsdp2_load_full_state_dict`
+  - `model.load_state_dict(sharded_sd, assign=True)`
+
+当前判断：
+
+- FSDP2 checkpoint 保存链路通过。
+- FSDP2 checkpoint resume 链路未通过。
+- 正式长训前必须解决恢复问题，或采用可验证的 adapter 导出/保存方案作为备选。
+
+## v0.1.7 - 2026-07-03
+
+新增：
+
+- 新增 `scripts/make_synthetic_dpo.py`，用于生成可复现的合成 DPO JSONL 数据。
+- 新增 `datasets/synthetic_dpo_256.jsonl`，包含 256 条合成偏好样本，用于短程稳定性和吞吐 smoke。
+
+实测：
+
+- 使用上一版跑通的 `ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2 + 8 NPU` 路线。
+- 数据集从 16 条 tiny DPO 扩展到 256 条合成 DPO。
+- 设置 `MAX_STEPS=20`，输出目录为 `/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-stability-20step/v0-20260703-120434`。
+- 训练任务 exit code 为 `0`。
+
+结果：
+
+- `global_step/max_steps=20/20`
+- `train_runtime=118.3962s`
+- `train_samples_per_second=1.351`
+- `train_steps_per_second=0.169`
+- 平均 step time 约 `5.918s/it`
+- `memory(GiB)=51.93`
+- `train_loss=0.0722111`
+- 最后一步 `loss=5.117e-05`
+- 最后一步 `rewards/accuracies=1.0`
+- 最后一步 `rewards/margins=10.25`
+
+判断：
+
+- FSDP2 路线不只是单步可跑，至少在 20 step 合成数据上完成了短程稳定性测试。
+- 1 step smoke 的 `139.6s/step` 主要受启动、首次 batch、编译/初始化影响；20 step 运行中平均约 `5.92s/step` 更接近短程训练速度。
+- 该数据集是合成数据，loss 和 reward margin 不能代表真实偏好效果；下一步必须接真实或半真实 DPO 数据和验证集。
+
+## v0.1.6 - 2026-07-03
+
+新增：
+
+- 新增 `datasets/tiny_dpo.jsonl`，提供 16 条标准 `messages` + `rejected_response` 的 tiny DPO smoke 数据。
+- 新增 `scripts/run_ms_swift_qwen36_dpo_smoke.sh`，固化 `ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2` 的 8 NPU 最小训练命令。
+- 新增 `scripts/env_report.py`，用于记录容器内关键包版本和 NPU 可见数量。
+
+环境推进：
+
+- 记录官方 `quay.io/ascend/ms-swift:v4.3.0-A3-py311-CANN9.0.0-ubuntu22.04` 镜像 tag 存在且 manifest 支持 arm64，但服务器下载大层不稳定，未作为本轮主路线。
+- 在现有 `llin-rl-dpo` 容器中安装 `triton-ascend==3.2.1`。
+- 从 GitCode 拉取并安装 `MindSpeed core_r0.16.0`，替换容器原有 `mindspeed 0.12.1`。
+- `ms-swift` 默认 NPU model patch 已能正常加载 Qwen3.5/Qwen3.6 linear attention 的 MindSpeed 实现。
+
+实测：
+
+- `swift rlhf --help` 通过。
+- 首次 `--deepspeed zero2` smoke 因容器内未安装 `deepspeed` 失败，训练未进入模型加载阶段。
+- 切换到 `--fsdp fsdp2` 后，4 条数据版本成功加载模型并初始化 LoRA/FSDP2，但 8 rank 分片后没有形成有效训练 step，停在 `global_step=0`。
+- 扩展 tiny 数据到 16 条后，`ms-swift + Qwen3.6-27B + DPO + LoRA + FSDP2` 完成 1 个 optimizer step。
+
+结果：
+
+- 输出目录：`/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-smoke/v1-20260703-094330`
+- `global_step/max_steps=1/1`
+- `loss=0.69140625`
+- `grad_norm=1.2919271`
+- `train_runtime=139.6129s`
+- `train_samples_per_second=0.057`
+- `train_steps_per_second=0.007`
+- `memory(GiB)=51.19`
+- 参数规模：`27415.0925M`，其中 LoRA 可训练参数 `58.3639M`，约 `0.2129%`
+
+当前判断：
+
+- 当前服务器和我们自己的 `llin-rl-dpo` 容器已经能跑通 Qwen3.6-27B 的 DPO 最小训练链路。
+- 这只是 smoke test，不代表最终效率或效果；下一步应换真实 DPO 数据，跑 20-100 step 级别的稳定性/吞吐评估，并补充验证集偏好指标。
+- 官方 NPU 文档里 DPO 已验证组合偏 `deepspeed`，但本轮实际跑通的是 FSDP2；后续需评估 FSDP2 长步数稳定性，并决定是否安装/测试 deepspeed。
+
+## v0.1.5 - 2026-07-03
+
+新增：
+
+- 新增 `scripts/ms_swift_qwen36_probe.py`，用于在不加载 27B 权重的情况下探测 ms-swift/Transformers 对本地 Qwen3.6-27B 的支持。
+
+实测：
+
+- 记录服务器只能访问部分中国大陆网站，后续服务器侧依赖默认使用大陆镜像、ModelScope、GitCode/Gitee，本地资料通过 `scp` 同步。
+- 将 `ms-swift` 源码从本地打包同步到服务器我们的工作区。
+- 在 `llin-rl-dpo` 容器内补齐 ms-swift framework 依赖，升级 `transformers==5.12.1` 和 `mistral-common==1.11.5`。
+- 卸载 CUDA 版 `torchaudio==2.11.0`，解决 Transformers 5.12 import 链路寻找 `libcudart.so.13` 的问题。
+
+结果：
+
+- Transformers 5.12 能识别 `qwen3_5`，并能在 meta device 上构建 `Qwen3_5ForConditionalGeneration`。
+- ms-swift 能识别本地 `/models/Qwen3.6-27B` 为 `qwen3_5`，模板为 `qwen3_5`。
+- 关闭 ms-swift NPU model patch 后，Qwen3.6 processor 加载通过，tokenizer 和 chat_template 正常。
+
+当前阻塞：
+
+- 默认开启 ms-swift NPU model patch 时，Qwen3.5/Qwen3.6 linear attention 的 MindSpeed Triton 路径在当前容器中编译失败。
+- 当前容器是 `torch_npu 2.7.1.post4`、`mindspeed 0.12.1`、`triton 3.2.0`、CANN 9.0.0；与 ms-swift Qwen3.5 NPU patch 文档里的验证组合不一致。
+- 还不能开始正式 DPO 训练；下一步应寻找或构建 ms-swift Qwen3.6 适配版本组合的 Ascend 容器。
+
+## v0.1.4 - 2026-07-03
+
+新增：
+
+- 新增 `reference/ASCEND_QWEN36_FRAMEWORK_SURVEY.md`，专门记录 Ascend + Qwen3.6 + DPO 的框架调查。
+
+框架调查结论：
+
+- 不再只考虑 MindSpeed-RL 和 FSDP。
+- 将阿里 ModelScope `ms-swift` 列为下一轮第一优先级，因为官方资料同时覆盖 Qwen3.6、DPO、人类对齐、Ascend NPU、FSDP/FSDP2/DeepSpeed/Megatron。
+- 将 LLaMA-Factory NPU 列为第二优先级，因为官方资料覆盖 NPU、DPO 和 Qwen3.6，但仍需实测 `qwen3_5`/Qwen3.6 在 Ascend 上的模型加载。
+- 保留 MindSpeed-RL、verl Ascend、FlagScale/FlagOS、vLLM Ascend 作为候选，但分别标注了 DPO/Qwen3.6 直接证据不足或仅适合推理评测的限制。
+
+更新：
+
+- 更新 `README.md` 当前优先级。
+- 更新 `reference/FRAMEWORK_EVAL_MATRIX.md`，加入 `ms-swift`、LLaMA-Factory NPU、FlagScale/FlagOS，并调整评估顺序。
+
+## v0.1.3 - 2026-07-03
+
+新增：
+
+- 新增 `scripts/npu_multicard_smoke.py`：逐卡 NPU tensor smoke test。
+- 新增 `scripts/hccl_smoke.py`：多进程 HCCL all-reduce smoke test。
+
+容器更新：
+
+- 将 `llin-rl-dpo` 从单逻辑 NPU 改为 8 逻辑 NPU：
+  - `ASCEND_VISIBLE_DEVICES=8,9,10,11,12,13,14,15`
+  - `ASCEND_RT_VISIBLE_DEVICES=0,1,2,3,4,5,6,7`
+- 容器内 `torch_npu.npu.device_count()` 返回 `8`。
+- `npu-smi info` 只显示物理设备 8-15 对应的 NPU 4-7。
+
+验证结果：
+
+- 逐卡 tensor 计算通过：device 0-7 均返回 `4.0`。
+- HCCL all-reduce 通过：
+  - `torchrun --nproc_per_node 8 --master_port 29591 scripts/hccl_smoke.py`
+  - 输出：`world_size=8 all_reduce_sum=36.0 expected=36.0`
+
+训练前置检查：
+
+- Transformers 版本：`4.57.1`
+- `AutoConfig.from_pretrained("/models/Qwen3.6-27B", trust_remote_code=True)` 失败。
+- 失败原因：Transformers 当前不识别 `model_type=qwen3_5`。
+- MindSpeed-LLM FSDP2 支持 DPO 阶段，并支持 `qwen3` / `qwen3-moe` / `qwen3-next`，但当前没有直接支持 `qwen3_5`。
+- 服务器已有 qwen3.6-27B vLLM Ascend 推理配方；该配方证明推理可行，但不能直接作为 DPO 训练路径。
+
+结论：
+
+- 多 NPU 训练底座已可用。
+- qwen3.6-27B DPO 还不能直接启动，下一步要先解决 `qwen3_5` 模型类支持或选择一个已支持模型做框架基准。
+
+## v0.1.2 - 2026-07-03
+
+修复：
+
+- 解决 `llin-rl-dpo` 容器内 `torch_npu.npu.device_count()` 为 `0` 的问题。
+- 根因是 Ascend Docker Runtime 的设备注入依赖 `ASCEND_VISIBLE_DEVICES`，而不是只依赖 `ASCEND_RT_VISIBLE_DEVICES` 或手动 `--device=/dev/davinci*`。
+- `ASCEND_VISIBLE_DEVICES=0` 会触发 runtime hook，但该设备已被已有容器占用，容器内 `npu-smi` 报 `device is used`。
+- 改用 `ASCEND_VISIBLE_DEVICES=1` 后，容器内 NPU 可见。
+
+当前验证：
+
+- 容器：`llin-rl-dpo`
+- 镜像：`swr.cn-south-1.myhuaweicloud.com/ascendhub/mindspeed-llm:26.0.0-a3-openeuler24.03-py3.11-aarch64`
+- `torch`：`2.7.1+cpu`
+- `torch_npu`：`2.7.1.post4`
+- `torch_npu.npu.device_count()`：`1`
+- 最小 NPU 计算：`torch.ones(4).npu().sum().cpu().item()` 返回 `4.0`
+
+注意：
+
+- 当前只是单 NPU smoke test 通过。
+- qwen3.6-27B DPO 训练通常需要多 NPU；正式训练前需要重新确认可用设备集合，例如 `ASCEND_VISIBLE_DEVICES=1,2,3,...`，并避免占用他人容器已分配设备。
+
+## v0.1.1 - 2026-07-03
+
+新增：
+
+- 初始化本地 Git 仓库，添加远程仓库 `https://github.com/linmumu009/llin-rl-dpo.git`，并推送 `v0.1.0` 首版内容。
+- 在服务器创建工作区 `/data/liulin/llin-rl-dpo`。
+- 按约束只创建我们自己的容器 `llin-rl-dpo`，未修改其他人的容器。
+- 分别验证了 MindSpeed-RL 专用镜像和 MindSpeed-LLM 26.0.0 A3 镜像的容器 smoke test。
+
+当前容器：
+
+- 名称：`llin-rl-dpo`
+- 镜像：`swr.cn-south-1.myhuaweicloud.com/ascendhub/mindspeed-llm:26.0.0-a3-openeuler24.03-py3.11-aarch64`
+- 状态：running
+- 挂载：
+  - `/data/liulin/llin-rl-dpo:/workspace/llin-rl-dpo`
+  - `/data/models/Qwen3.6-27B:/models/Qwen3.6-27B:ro`
+  - `/usr/local/Ascend/driver:/usr/local/Ascend/driver:ro`
+  - `/usr/local/Ascend/add-ons:/usr/local/Ascend/add-ons:ro`
+
+结果：
+
+- MindSpeed-RL 镜像默认 Python 没有 torch，需要激活 `/root/miniconda3/envs/mindspeed_rl_2.2.0`。
+- MindSpeed-RL 镜像补充 `LD_LIBRARY_PATH` 后可以 import torch/torch_npu，但 `torch_npu.npu.device_count()` 返回 `0`。
+- MindSpeed-LLM 26.0.0 A3 镜像可以 import torch/torch_npu，版本为 torch `2.7.1+cpu`、torch_npu `2.7.1.post4`，但 `torch_npu.npu.device_count()` 仍返回 `0`。
+- 单设备和全设备挂载都未解决 device_count 为 0。
+- `--privileged` 隔离实验因安全风险未执行。
+
+影响：
+
+- 当前还不能开始 DPO 训练。
+- 下一步需要确认 Ascend Docker runtime 的设备访问策略，或由用户明确确认是否允许做 privileged 容器隔离实验。
+
+## v0.1.0 - 2026-07-03
+
+第一版实验台账。
+
+新增：
+
+- 建立项目 README，说明项目来源、服务器边界、评估目标和仓库维护约定。
+- 新增 `reference/EXPERIMENT_LOG.md`，记录服务器只读基线检查、MindSpeed-RL DPO 参考信息和下一步计划。
+- 新增 `reference/FRAMEWORK_EVAL_MATRIX.md`，定义 MindSpeed-RL、verl NPU/FSDP、torch_npu FSDP 的评估矩阵。
+- 新增 `.gitignore`，排除 SSH 登录说明、第三方源码副本、模型权重、checkpoint 和训练输出。
+
+关键结论：
+
+- 服务器是 Ascend 训练环境，`nvidia-smi` 不存在，`npu-smi info` 可用。
+- 当前有 8 个 Ascend910 逻辑 NPU，训练进程为空。
+- 服务器已有 MindSpeed-RL 2.2.0 A3 ARM 镜像，可作为第一阶段容器基础镜像。
+- `/data/models/Qwen3.6-27B` 是 `qwen3_5` conditional/multimodal 配置，不是 MindSpeed-RL 官方 DPO 样例里的普通 `qwen3_30b_a3b`，需要先做架构支持验证。
+## v0.1.14 - 2026-07-06
+
+- 新增 MindSpeed-MM Qwen3.6-27B SFT cutoff 复现实验记录。
+- 在 8 NPU 隔离 venv 路径下完成 `cutoff=2048` 和 `cutoff=4096` 各 1 step。
+- `cutoff=2048`：exit code `0`，`elapsed time per iteration (ms): 125604.0`，`loss: 1.220408E+01`。
+- `cutoff=4096`：exit code `0`，`elapsed time per iteration (ms): 53971.2`，`loss: 1.006310E+01`。
+- 两组实验均未出现 `aclnnRotaryPositionEmbeddingGrad` 或 `561002`。
+- 记录排查限制：4 NPU 初始化 OOM；`transformers 5.13.0` 与 MindSpeed-MM Qwen3.6 路径不兼容；新建 MindSpeed-MM 容器存在 NPU device_count 为 0 的 runtime/镜像映射问题。
+- 新增 MindSpeed-MM/NPU rotary/cutoff 相关探针与 SFT probe asset 生成脚本。

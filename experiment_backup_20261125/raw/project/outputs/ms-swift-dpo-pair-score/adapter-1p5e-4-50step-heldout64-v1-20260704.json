@@ -1,0 +1,656 @@
+{
+  "model_path": "/models/Qwen3.6-27B",
+  "adapter_path": "/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-lrsearch/lr_1p5e-4_50step_save_eval10p_20260704/v0-20260704-031736/checkpoint-50",
+  "dataset": "/workspace/llin-rl-dpo/datasets/ops_dpo_heldout_64_v1.jsonl",
+  "limit": 64,
+  "offset": 0,
+  "summary": {
+    "count": 64,
+    "win_rate": 1.0,
+    "mean_margin": 2.7853315989400436,
+    "mean_chosen_logprob": -4.95202787952788,
+    "mean_rejected_logprob": -7.737359478467921
+  },
+  "records": [
+    {
+      "index": 0,
+      "case_id": 0,
+      "topic": "shared Ascend job safety",
+      "chosen_mean_logprob": -4.888888888888889,
+      "rejected_mean_logprob": -8.176470588235293,
+      "margin": 3.287581699346404,
+      "chosen_tokens": 27,
+      "rejected_tokens": 17
+    },
+    {
+      "index": 1,
+      "case_id": 1,
+      "topic": "shared Ascend job safety",
+      "chosen_mean_logprob": -4.425925925925926,
+      "rejected_mean_logprob": -7.882352941176471,
+      "margin": 3.4564270152505454,
+      "chosen_tokens": 27,
+      "rejected_tokens": 17
+    },
+    {
+      "index": 2,
+      "case_id": 2,
+      "topic": "shared Ascend job safety",
+      "chosen_mean_logprob": -5.148148148148148,
+      "rejected_mean_logprob": -8.352941176470589,
+      "margin": 3.204793028322441,
+      "chosen_tokens": 27,
+      "rejected_tokens": 17
+    },
+    {
+      "index": 3,
+      "case_id": 3,
+      "topic": "shared Ascend job safety",
+      "chosen_mean_logprob": -5.111111111111111,
+      "rejected_mean_logprob": -8.705882352941176,
+      "margin": 3.594771241830065,
+      "chosen_tokens": 27,
+      "rejected_tokens": 17
+    },
+    {
+      "index": 4,
+      "case_id": 4,
+      "topic": "shared Ascend job safety",
+      "chosen_mean_logprob": -4.851851851851852,
+      "rejected_mean_logprob": -9.529411764705882,
+      "margin": 4.67755991285403,
+      "chosen_tokens": 27,
+      "rejected_tokens": 17
+    },
+    {
+      "index": 5,
+      "case_id": 5,
+      "topic": "shared Ascend job safety",
+      "chosen_mean_logprob": -4.814814814814815,
+      "rejected_mean_logprob": -8.647058823529411,
+      "margin": 3.8322440087145964,
+      "chosen_tokens": 27,
+      "rejected_tokens": 17
+    },
+    {
+      "index": 6,
+      "case_id": 6,
+      "topic": "shared Ascend job safety",
+      "chosen_mean_logprob": -5.111111111111111,
+      "rejected_mean_logprob": -8.529411764705882,
+      "margin": 3.4183006535947715,
+      "chosen_tokens": 27,
+      "rejected_tokens": 17
+    },
+    {
+      "index": 7,
+      "case_id": 7,
+      "topic": "shared Ascend job safety",
+      "chosen_mean_logprob": -5.185185185185185,
+      "rejected_mean_logprob": -8.882352941176471,
+      "margin": 3.697167755991286,
+      "chosen_tokens": 27,
+      "rejected_tokens": 17
+    },
+    {
+      "index": 8,
+      "case_id": 8,
+      "topic": "offline dependency policy",
+      "chosen_mean_logprob": -4.9,
+      "rejected_mean_logprob": -10.277777777777779,
+      "margin": 5.377777777777778,
+      "chosen_tokens": 25,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 9,
+      "case_id": 9,
+      "topic": "offline dependency policy",
+      "chosen_mean_logprob": -5.76,
+      "rejected_mean_logprob": -9.777777777777779,
+      "margin": 4.017777777777779,
+      "chosen_tokens": 25,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 10,
+      "case_id": 10,
+      "topic": "offline dependency policy",
+      "chosen_mean_logprob": -5.52,
+      "rejected_mean_logprob": -8.5,
+      "margin": 2.9800000000000004,
+      "chosen_tokens": 25,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 11,
+      "case_id": 11,
+      "topic": "offline dependency policy",
+      "chosen_mean_logprob": -5.36,
+      "rejected_mean_logprob": -8.5,
+      "margin": 3.1399999999999997,
+      "chosen_tokens": 25,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 12,
+      "case_id": 12,
+      "topic": "offline dependency policy",
+      "chosen_mean_logprob": -5.2,
+      "rejected_mean_logprob": -9.88888888888889,
+      "margin": 4.688888888888889,
+      "chosen_tokens": 25,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 13,
+      "case_id": 13,
+      "topic": "offline dependency policy",
+      "chosen_mean_logprob": -5.68,
+      "rejected_mean_logprob": -8.722222222222221,
+      "margin": 3.0422222222222217,
+      "chosen_tokens": 25,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 14,
+      "case_id": 14,
+      "topic": "offline dependency policy",
+      "chosen_mean_logprob": -5.36,
+      "rejected_mean_logprob": -8.833333333333334,
+      "margin": 3.4733333333333336,
+      "chosen_tokens": 25,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 15,
+      "case_id": 15,
+      "topic": "offline dependency policy",
+      "chosen_mean_logprob": -5.56,
+      "rejected_mean_logprob": -8.833333333333334,
+      "margin": 3.2733333333333343,
+      "chosen_tokens": 25,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 16,
+      "case_id": 16,
+      "topic": "adapter checkpoint evidence",
+      "chosen_mean_logprob": -3.6785714285714284,
+      "rejected_mean_logprob": -7.875,
+      "margin": 4.196428571428571,
+      "chosen_tokens": 28,
+      "rejected_tokens": 16
+    },
+    {
+      "index": 17,
+      "case_id": 17,
+      "topic": "adapter checkpoint evidence",
+      "chosen_mean_logprob": -4.107142857142857,
+      "rejected_mean_logprob": -8.625,
+      "margin": 4.517857142857143,
+      "chosen_tokens": 28,
+      "rejected_tokens": 16
+    },
+    {
+      "index": 18,
+      "case_id": 18,
+      "topic": "adapter checkpoint evidence",
+      "chosen_mean_logprob": -3.75,
+      "rejected_mean_logprob": -7.59375,
+      "margin": 3.84375,
+      "chosen_tokens": 28,
+      "rejected_tokens": 16
+    },
+    {
+      "index": 19,
+      "case_id": 19,
+      "topic": "adapter checkpoint evidence",
+      "chosen_mean_logprob": -3.5714285714285716,
+      "rejected_mean_logprob": -7.96875,
+      "margin": 4.397321428571429,
+      "chosen_tokens": 28,
+      "rejected_tokens": 16
+    },
+    {
+      "index": 20,
+      "case_id": 20,
+      "topic": "adapter checkpoint evidence",
+      "chosen_mean_logprob": -4.357142857142857,
+      "rejected_mean_logprob": -9.125,
+      "margin": 4.767857142857143,
+      "chosen_tokens": 28,
+      "rejected_tokens": 16
+    },
+    {
+      "index": 21,
+      "case_id": 21,
+      "topic": "adapter checkpoint evidence",
+      "chosen_mean_logprob": -3.6607142857142856,
+      "rejected_mean_logprob": -8.3125,
+      "margin": 4.651785714285714,
+      "chosen_tokens": 28,
+      "rejected_tokens": 16
+    },
+    {
+      "index": 22,
+      "case_id": 22,
+      "topic": "adapter checkpoint evidence",
+      "chosen_mean_logprob": -3.6964285714285716,
+      "rejected_mean_logprob": -7.65625,
+      "margin": 3.9598214285714284,
+      "chosen_tokens": 28,
+      "rejected_tokens": 16
+    },
+    {
+      "index": 23,
+      "case_id": 23,
+      "topic": "adapter checkpoint evidence",
+      "chosen_mean_logprob": -3.892857142857143,
+      "rejected_mean_logprob": -8.8125,
+      "margin": 4.919642857142858,
+      "chosen_tokens": 28,
+      "rejected_tokens": 16
+    },
+    {
+      "index": 24,
+      "case_id": 24,
+      "topic": "FSDP2 checkpoint risk",
+      "chosen_mean_logprob": -5.5,
+      "rejected_mean_logprob": -9.066666666666666,
+      "margin": 3.5666666666666664,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 25,
+      "case_id": 25,
+      "topic": "FSDP2 checkpoint risk",
+      "chosen_mean_logprob": -4.961538461538462,
+      "rejected_mean_logprob": -8.866666666666667,
+      "margin": 3.9051282051282055,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 26,
+      "case_id": 26,
+      "topic": "FSDP2 checkpoint risk",
+      "chosen_mean_logprob": -4.461538461538462,
+      "rejected_mean_logprob": -8.666666666666666,
+      "margin": 4.205128205128204,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 27,
+      "case_id": 27,
+      "topic": "FSDP2 checkpoint risk",
+      "chosen_mean_logprob": -4.865384615384615,
+      "rejected_mean_logprob": -8.666666666666666,
+      "margin": 3.801282051282051,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 28,
+      "case_id": 28,
+      "topic": "FSDP2 checkpoint risk",
+      "chosen_mean_logprob": -5.461538461538462,
+      "rejected_mean_logprob": -8.6,
+      "margin": 3.138461538461538,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 29,
+      "case_id": 29,
+      "topic": "FSDP2 checkpoint risk",
+      "chosen_mean_logprob": -4.480769230769231,
+      "rejected_mean_logprob": -7.966666666666667,
+      "margin": 3.485897435897436,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 30,
+      "case_id": 30,
+      "topic": "FSDP2 checkpoint risk",
+      "chosen_mean_logprob": -4.865384615384615,
+      "rejected_mean_logprob": -8.933333333333334,
+      "margin": 4.067948717948719,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 31,
+      "case_id": 31,
+      "topic": "FSDP2 checkpoint risk",
+      "chosen_mean_logprob": -5.6923076923076925,
+      "rejected_mean_logprob": -8.333333333333334,
+      "margin": 2.6410256410256414,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 32,
+      "case_id": 32,
+      "topic": "learning-rate search",
+      "chosen_mean_logprob": -4.423076923076923,
+      "rejected_mean_logprob": -6.305555555555555,
+      "margin": 1.882478632478632,
+      "chosen_tokens": 26,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 33,
+      "case_id": 33,
+      "topic": "learning-rate search",
+      "chosen_mean_logprob": -4.384615384615385,
+      "rejected_mean_logprob": -6.361111111111111,
+      "margin": 1.9764957264957257,
+      "chosen_tokens": 26,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 34,
+      "case_id": 34,
+      "topic": "learning-rate search",
+      "chosen_mean_logprob": -5.153846153846154,
+      "rejected_mean_logprob": -6.694444444444445,
+      "margin": 1.5405982905982905,
+      "chosen_tokens": 26,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 35,
+      "case_id": 35,
+      "topic": "learning-rate search",
+      "chosen_mean_logprob": -4.8076923076923075,
+      "rejected_mean_logprob": -6.472222222222222,
+      "margin": 1.6645299145299148,
+      "chosen_tokens": 26,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 36,
+      "case_id": 36,
+      "topic": "learning-rate search",
+      "chosen_mean_logprob": -4.3076923076923075,
+      "rejected_mean_logprob": -5.75,
+      "margin": 1.4423076923076925,
+      "chosen_tokens": 26,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 37,
+      "case_id": 37,
+      "topic": "learning-rate search",
+      "chosen_mean_logprob": -4.288461538461538,
+      "rejected_mean_logprob": -6.472222222222222,
+      "margin": 2.183760683760684,
+      "chosen_tokens": 26,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 38,
+      "case_id": 38,
+      "topic": "learning-rate search",
+      "chosen_mean_logprob": -4.730769230769231,
+      "rejected_mean_logprob": -6.472222222222222,
+      "margin": 1.7414529914529915,
+      "chosen_tokens": 26,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 39,
+      "case_id": 39,
+      "topic": "learning-rate search",
+      "chosen_mean_logprob": -4.961538461538462,
+      "rejected_mean_logprob": -6.416666666666667,
+      "margin": 1.4551282051282053,
+      "chosen_tokens": 26,
+      "rejected_tokens": 18
+    },
+    {
+      "index": 40,
+      "case_id": 40,
+      "topic": "generation smoke interpretation",
+      "chosen_mean_logprob": -5.1,
+      "rejected_mean_logprob": -6.0,
+      "margin": 0.9000000000000004,
+      "chosen_tokens": 25,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 41,
+      "case_id": 41,
+      "topic": "generation smoke interpretation",
+      "chosen_mean_logprob": -4.7,
+      "rejected_mean_logprob": -5.333333333333333,
+      "margin": 0.6333333333333329,
+      "chosen_tokens": 25,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 42,
+      "case_id": 42,
+      "topic": "generation smoke interpretation",
+      "chosen_mean_logprob": -4.92,
+      "rejected_mean_logprob": -6.033333333333333,
+      "margin": 1.1133333333333333,
+      "chosen_tokens": 25,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 43,
+      "case_id": 43,
+      "topic": "generation smoke interpretation",
+      "chosen_mean_logprob": -4.78,
+      "rejected_mean_logprob": -6.066666666666666,
+      "margin": 1.2866666666666662,
+      "chosen_tokens": 25,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 44,
+      "case_id": 44,
+      "topic": "generation smoke interpretation",
+      "chosen_mean_logprob": -4.8,
+      "rejected_mean_logprob": -5.6,
+      "margin": 0.7999999999999998,
+      "chosen_tokens": 25,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 45,
+      "case_id": 45,
+      "topic": "generation smoke interpretation",
+      "chosen_mean_logprob": -4.82,
+      "rejected_mean_logprob": -5.9,
+      "margin": 1.08,
+      "chosen_tokens": 25,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 46,
+      "case_id": 46,
+      "topic": "generation smoke interpretation",
+      "chosen_mean_logprob": -4.7,
+      "rejected_mean_logprob": -5.8,
+      "margin": 1.0999999999999996,
+      "chosen_tokens": 25,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 47,
+      "case_id": 47,
+      "topic": "generation smoke interpretation",
+      "chosen_mean_logprob": -4.98,
+      "rejected_mean_logprob": -5.9,
+      "margin": 0.9199999999999999,
+      "chosen_tokens": 25,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 48,
+      "case_id": 48,
+      "topic": "experiment documentation",
+      "chosen_mean_logprob": -5.923076923076923,
+      "rejected_mean_logprob": -6.7894736842105265,
+      "margin": 0.8663967611336032,
+      "chosen_tokens": 26,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 49,
+      "case_id": 49,
+      "topic": "experiment documentation",
+      "chosen_mean_logprob": -5.884615384615385,
+      "rejected_mean_logprob": -6.842105263157895,
+      "margin": 0.9574898785425097,
+      "chosen_tokens": 26,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 50,
+      "case_id": 50,
+      "topic": "experiment documentation",
+      "chosen_mean_logprob": -6.615384615384615,
+      "rejected_mean_logprob": -7.2631578947368425,
+      "margin": 0.6477732793522275,
+      "chosen_tokens": 26,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 51,
+      "case_id": 51,
+      "topic": "experiment documentation",
+      "chosen_mean_logprob": -5.615384615384615,
+      "rejected_mean_logprob": -6.473684210526316,
+      "margin": 0.858299595141701,
+      "chosen_tokens": 26,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 52,
+      "case_id": 52,
+      "topic": "experiment documentation",
+      "chosen_mean_logprob": -6.230769230769231,
+      "rejected_mean_logprob": -7.315789473684211,
+      "margin": 1.0850202429149798,
+      "chosen_tokens": 26,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 53,
+      "case_id": 53,
+      "topic": "experiment documentation",
+      "chosen_mean_logprob": -5.884615384615385,
+      "rejected_mean_logprob": -7.105263157894737,
+      "margin": 1.2206477732793521,
+      "chosen_tokens": 26,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 54,
+      "case_id": 54,
+      "topic": "experiment documentation",
+      "chosen_mean_logprob": -5.8076923076923075,
+      "rejected_mean_logprob": -6.947368421052632,
+      "margin": 1.1396761133603244,
+      "chosen_tokens": 26,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 55,
+      "case_id": 55,
+      "topic": "experiment documentation",
+      "chosen_mean_logprob": -5.576923076923077,
+      "rejected_mean_logprob": -6.368421052631579,
+      "margin": 0.7914979757085021,
+      "chosen_tokens": 26,
+      "rejected_tokens": 19
+    },
+    {
+      "index": 56,
+      "case_id": 56,
+      "topic": "data leakage check",
+      "chosen_mean_logprob": -4.923076923076923,
+      "rejected_mean_logprob": -8.4,
+      "margin": 3.476923076923077,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 57,
+      "case_id": 57,
+      "topic": "data leakage check",
+      "chosen_mean_logprob": -5.038461538461538,
+      "rejected_mean_logprob": -7.9,
+      "margin": 2.861538461538462,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 58,
+      "case_id": 58,
+      "topic": "data leakage check",
+      "chosen_mean_logprob": -4.5576923076923075,
+      "rejected_mean_logprob": -7.866666666666666,
+      "margin": 3.3089743589743588,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 59,
+      "case_id": 59,
+      "topic": "data leakage check",
+      "chosen_mean_logprob": -5.269230769230769,
+      "rejected_mean_logprob": -8.266666666666667,
+      "margin": 2.9974358974358983,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 60,
+      "case_id": 60,
+      "topic": "data leakage check",
+      "chosen_mean_logprob": -5.076923076923077,
+      "rejected_mean_logprob": -8.6,
+      "margin": 3.523076923076923,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 61,
+      "case_id": 61,
+      "topic": "data leakage check",
+      "chosen_mean_logprob": -4.8076923076923075,
+      "rejected_mean_logprob": -8.266666666666667,
+      "margin": 3.45897435897436,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 62,
+      "case_id": 62,
+      "topic": "data leakage check",
+      "chosen_mean_logprob": -4.788461538461538,
+      "rejected_mean_logprob": -8.2,
+      "margin": 3.411538461538461,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    },
+    {
+      "index": 63,
+      "case_id": 63,
+      "topic": "data leakage check",
+      "chosen_mean_logprob": -5.1923076923076925,
+      "rejected_mean_logprob": -7.9,
+      "margin": 2.707692307692308,
+      "chosen_tokens": 26,
+      "rejected_tokens": 15
+    }
+  ]
+}

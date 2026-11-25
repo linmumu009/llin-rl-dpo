@@ -1,0 +1,999 @@
+run sh: `/opt/conda/bin/python3.11 -m torch.distributed.run --nproc_per_node 8 --master_port 29653 /workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py --rlhf_type dpo --model /models/Qwen3.6-27B --model_type qwen3_5 --dataset /workspace/llin-rl-dpo/datasets/long_context_dpo_192.jsonl --split_dataset_ratio 0 --dataset_num_proc 1 --dataloader_num_workers 0 --torch_dtype bfloat16 --tuner_type lora --target_modules all-linear --lora_rank 8 --lora_alpha 32 --lora_dropout 0 --max_length 4096 --per_device_train_batch_size 2 --gradient_accumulation_steps 1 --learning_rate 1e-4 --num_train_epochs 1 --max_steps 10 --logging_steps 1 --save_strategy no --save_steps 500 --eval_strategy no --output_dir /workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-longctx-4096-b2-10step/longctx-4096-b2-10step-20260708-0158 --check_model false --fsdp fsdp2`
+
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+[INFO:swift] Successfully registered `/workspace/llin-rl-dpo/reference/ms-swift/swift/dataset/data/dataset_info.json`.
+[INFO:swift] Patched torch_npu getenv to read from current os.environ.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[INFO:swift] Patched Qwen3.5 chunk_gated_delta_rule to embedded MindSpeed implementation: transformers.models.qwen3_5.modeling_qwen3_5, transformers.models.qwen3_5_moe.modeling_qwen3_5_moe.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[INFO:swift] rank: 0, local_rank: 0, world_size: 8, local_world_size: 8
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[WARNING:swift] Please install the package: `pip install "decord" -U`.
+[INFO:swift] Setting args.lazy_tokenize: True
+[WARNING:swift] Both gradient_checkpointing and fsdp_config.activation_checkpointing are enabled. For FSDP2, it is recommended to use only activation_checkpointing in fsdp_config. Disabling gradient_checkpointing automatically.
+[INFO:swift] Using FSDP2: fsdp=full_shard auto_wrap, fsdp_config={'fsdp_version': 2, 'reshard_after_forward': True, 'auto_wrap_policy': 'TRANSFORMER_BASED_WRAP', 'cpu_ram_efficient_loading': True, 'state_dict_type': 'SHARDED_STATE_DICT', 'activation_checkpointing': True}
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+/workspace/llin-rl-dpo/reference/ms-swift/swift/rlhf_trainers/arguments.py:13: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.cpo import CPOConfig as HfCPOConfig
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+[transformers] Passing `fsdp` as a string is deprecated and will be removed in Transformers v5.20. Use `fsdp=True` and configure everything via `fsdp_config` instead.
+[INFO:swift] output_dir: /workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-longctx-4096-b2-10step/longctx-4096-b2-10step-20260708-0158/v0-20260708-015908
+[INFO:swift] args: RLHFArguments(
+acc_strategy=token,
+accelerator_config={'dispatch_batches': False},
+adalora_beta1=0.85,
+adalora_beta2=0.85,
+adalora_deltaT=1,
+adalora_init_r=12,
+adalora_orth_reg_weight=0.5,
+adalora_target_r=8,
+adalora_tfinal=0,
+adalora_tinit=0,
+adam_beta1=0.9,
+adam_beta2=0.95,
+adam_epsilon=1e-08,
+adapter_act=gelu,
+adapter_length=128,
+adapters=[],
+add_non_thinking_prefix=True,
+add_version=True,
+advantage_estimator=grpo,
+agent_template=None,
+aligner_lr=None,
+async_generate=False,
+attn_impl=None,
+auto_find_batch_size=False,
+average_tokens_across_devices=True,
+batch_eval_metrics=False,
+beta=0.1,
+bf16=True,
+bf16_full_eval=False,
+bnb_4bit_compute_dtype=torch.bfloat16,
+bnb_4bit_quant_storage=None,
+bnb_4bit_quant_type=nf4,
+bnb_4bit_use_double_quant=True,
+boft_block_num=0,
+boft_block_size=4,
+boft_dropout=0.0,
+boft_n_butterfly_factor=1,
+cached_dataset=[],
+cached_val_dataset=[],
+callbacks=[],
+center_rewards_coefficient=None,
+check_model=False,
+chord_enable_phi_function=False,
+chord_mu_decay_steps=None,
+chord_mu_peak=None,
+chord_mu_valley=None,
+chord_mu_warmup_steps=None,
+chord_sft_dataset=[],
+chord_sft_per_device_train_batch_size=None,
+cliprange=0.2,
+cliprange_value=0.2,
+columns={},
+completion_length_limit_scope=per_round,
+cosine_max_len=None,
+cosine_max_len_value_correct=0.5,
+cosine_max_len_value_wrong=0.0,
+cosine_min_len_value_correct=1.0,
+cosine_min_len_value_wrong=-0.5,
+cpo_alpha=1.0,
+create_checkpoint_symlink=False,
+custom_dataset_info=[],
+custom_register_path=[],
+data_seed=42,
+dataloader_drop_last=False,
+dataloader_num_workers=0,
+dataloader_persistent_workers=False,
+dataloader_pin_memory=True,
+dataloader_prefetch_factor=None,
+dataset=['/workspace/llin-rl-dpo/datasets/long_context_dpo_192.jsonl'],
+dataset_num_proc=1,
+dataset_shuffle=True,
+ddp_backend=None,
+ddp_broadcast_buffers=None,
+ddp_bucket_cap_mb=None,
+ddp_find_unused_parameters=None,
+ddp_static_graph=None,
+ddp_timeout=18000000,
+debug=None,
+deepspeed=None,
+deepspeed_autotp_size=None,
+delta=None,
+desirable_weight=1.0,
+device_groups=None,
+device_map=None,
+disable_auto_column_mapping=False,
+disable_ignore_empty_think=False,
+disable_tqdm=None,
+discopop_tau=0.05,
+do_eval=False,
+do_predict=False,
+do_train=False,
+download_mode=reuse_dataset_if_exists,
+ds3_gather_for_generation=True,
+dynamic_sample=False,
+early_stop_interval=None,
+enable_channel_loss=False,
+enable_dft_loss=False,
+enable_flattened_weight_sync=True,
+enable_jit_checkpoint=False,
+enable_npu_model_patch=True,
+enable_thinking=None,
+epsilon=0.2,
+epsilon_high=None,
+eval_accumulation_steps=None,
+eval_dataset=[],
+eval_dataset_args=None,
+eval_delay=0,
+eval_do_concat_batches=True,
+eval_generation_config=None,
+eval_limit=None,
+eval_metric=None,
+eval_on_start=False,
+eval_steps=None,
+eval_strategy=no,
+eval_use_evalscope=False,
+eval_use_gather_object=False,
+experts_impl=None,
+external_plugins=[],
+extra_eval_args=None,
+fipo_clip_high_only=True,
+fipo_clip_range=0.2,
+fipo_decay_rate=32.0,
+fipo_safety_threshold=4.0,
+fourier_n_frequency=2000,
+fourier_scaling=300.0,
+fp16=False,
+fp16_full_eval=False,
+freeze_aligner=True,
+freeze_llm=False,
+freeze_parameters=[],
+freeze_parameters_ratio=0.0,
+freeze_parameters_regex=None,
+freeze_vit=True,
+fsdp=full_shard auto_wrap,
+fsdp_config={'fsdp_version': 2, 'reshard_after_forward': True, 'auto_wrap_policy': 'TRANSFORMER_BASED_WRAP', 'cpu_ram_efficient_loading': True, 'state_dict_type': 'SHARDED_STATE_DICT', 'activation_checkpointing': True},
+full_determinism=False,
+galore_cos_threshold=0.4,
+galore_gamma_proj=2,
+galore_optim_per_parameter=False,
+galore_proj_bits=4,
+galore_proj_group_size=256,
+galore_proj_quant=False,
+galore_proj_type=std,
+galore_quantization=False,
+galore_queue_size=5,
+galore_rank=128,
+galore_scale=1.0,
+galore_target_modules=None,
+galore_update_proj_gap=50,
+galore_with_embedding=False,
+gamma=1.0,
+generation_batch_size=None,
+generation_config=None,
+generation_max_length=None,
+generation_num_beams=None,
+gkd_logits_topk=None,
+gradient_accumulation_steps=1,
+gradient_checkpointing=False,
+gradient_checkpointing_kwargs=None,
+greater_is_better=False,
+group_by_length=False,
+gym_env=None,
+hqq_axis=None,
+hub_always_push=False,
+hub_model_id=None,
+hub_private_repo=None,
+hub_revision=None,
+hub_strategy=every_save,
+hub_token=<HUB_TOKEN>,
+ignore_args_error=False,
+ignore_data_skip=False,
+importance_sampling_level=token,
+include_for_metrics=[],
+include_num_input_tokens_seen=False,
+init_strategy=None,
+init_weights=True,
+interleave_prob=None,
+is_binary_loss_scale=None,
+kl_coef=0.05,
+kl_in_reward=None,
+label_names=None,
+label_smoothing=0,
+label_smoothing_factor=0.0,
+lam=0.95,
+lazy_tokenize=True,
+ld_alpha=None,
+learning_rate=0.0001,
+length_column_name=length,
+liger_kernel_config=None,
+lisa_activated_layers=0,
+lisa_step_interval=20,
+llamapro_num_groups=None,
+llamapro_num_new_blocks=4,
+lmbda=0.5,
+load_args=False,
+load_best_model_at_end=False,
+load_data_args=False,
+load_from_cache_file=False,
+local_rank=0,
+local_repo_path=None,
+local_rollout_forward_batch_size=64,
+log_completions=False,
+log_entropy=False,
+log_level=passive,
+log_level_replica=warning,
+log_on_each_node=True,
+log_rollout_offpolicy_metrics=False,
+logging_dir=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-longctx-4096-b2-10step/longctx-4096-b2-10step-20260708-0158/v0-20260708-015908/runs,
+logging_first_step=True,
+logging_nan_inf_filter=True,
+logging_steps=1,
+logging_strategy=steps,
+logprobs=False,
+lora_alpha=32,
+lora_bias=none,
+lora_dropout=0.0,
+lora_dtype=None,
+lora_ga_batch_size=2,
+lora_ga_direction=ArB2r,
+lora_ga_iters=2,
+lora_ga_max_length=1024,
+lora_ga_scale=stable,
+lora_ga_stable_gamma=16,
+lora_rank=8,
+lorap_lr_ratio=None,
+loss_scale=last_round+ignore_empty_think,
+loss_type=sigmoid,
+loss_weights=None,
+lr_scheduler_kwargs=None,
+lr_scheduler_type=cosine,
+max_completion_length=512,
+max_epochs=None,
+max_grad_norm=1.0,
+max_length=4096,
+max_memory={},
+max_model_len=None,
+max_new_tokens=512,
+max_pixels=None,
+max_resample_times=3,
+max_shard_size=5GB,
+max_steps=10,
+max_turns=None,
+metric_for_best_model=loss,
+missing_eos_penalty=None,
+model=/models/Qwen3.6-27B,
+model_author=None,
+model_kwargs={},
+model_name=None,
+model_revision=None,
+model_type=qwen3_5,
+modules_to_save=[],
+move_model_batches=None,
+mrl_dims=None,
+multi_turn_scheduler=None,
+neftune_noise_alpha=None,
+new_special_tokens=[],
+norm_bbox=None,
+num_beams=1,
+num_generations=8,
+num_generations_eval=None,
+num_iterations=1,
+num_labels=None,
+num_mini_batches=1,
+num_ppo_epochs=4,
+num_sample_generations=10,
+num_train_epochs=1.0,
+off_policy_sequence_mask_delta=None,
+offload_model=False,
+offload_optimizer=False,
+offload_teacher_model=False,
+optim=adamw_torch,
+optim_args=None,
+optim_target_modules=None,
+optimizer=None,
+output_dir=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-longctx-4096-b2-10step/longctx-4096-b2-10step-20260708-0158/v0-20260708-015908,
+overlong_filter=False,
+packing=False,
+packing_length=None,
+packing_num_proc=1,
+padding_free=False,
+padding_side=right,
+parallelism_config=None,
+per_device_eval_batch_size=1,
+per_device_train_batch_size=2,
+predict_with_generate=False,
+prediction_loss_only=False,
+preserve_thinking=None,
+problem_type=None,
+project=huggingface,
+push_to_hub=False,
+quant_bits=None,
+quant_method=None,
+ray_exp_name=None,
+real_tau=0.5,
+ref_adapters=[],
+ref_model=None,
+ref_model_mixup_alpha=0.6,
+ref_model_revision=None,
+ref_model_sync_steps=512,
+ref_model_type=None,
+reft_args=None,
+reft_intervention_type=LoreftIntervention,
+reft_layer_key=None,
+reft_layers=None,
+reft_rank=4,
+remove_unused_columns=True,
+repetition_max_penalty=-1.0,
+repetition_n_grams=3,
+repetition_penalty=1.0,
+report_to=['tensorboard'],
+response_length=512,
+response_prefix=None,
+restore_callback_states_from_checkpoint=False,
+resume_from_checkpoint=None,
+resume_only_model=False,
+reward_adapters=[],
+reward_funcs=[],
+reward_model=None,
+reward_model_plugin=None,
+reward_model_revision=None,
+reward_model_type=None,
+reward_template=None,
+reward_weights=None,
+rlhf_type=dpo,
+rollout_importance_sampling_mode=None,
+rollout_importance_sampling_threshold=2.0,
+rope_scaling=None,
+router_aux_loss_coef=0.0,
+rpo_alpha=None,
+run_name=/workspace/llin-rl-dpo/outputs/ms-swift-qwen36-dpo-longctx-4096-b2-10step/longctx-4096-b2-10step-20260708-0158/v0-20260708-015908,
+safe_serialization=True,
+save_on_each_node=False,
+save_only_model=False,
+save_steps=500.0,
+save_strategy=no,
+save_total_limit=None,
+scale_rewards=None,
+seed=42,
+seq_kd=False,
+sequence_parallel_size=1,
+sft_alpha=0,
+shuffle_buffer_size=1000,
+simpo_gamma=1,
+skip_memory_metrics=True,
+sleep_level=0,
+soft_cache_length=None,
+soft_max_length=None,
+sortish_sampler=False,
+split_dataset_ratio=0.0,
+steps_per_generation=None,
+stop_words=[],
+stopping_strategy=first_exhausted,
+stream=False,
+streaming=False,
+strict=False,
+structured_outputs_regex=None,
+swanlab_email_language=zh,
+swanlab_exp_name=None,
+swanlab_mode=cloud,
+swanlab_notification_method=None,
+swanlab_project=ms-swift,
+swanlab_receiver_email=None,
+swanlab_secret=None,
+swanlab_sender_email=None,
+swanlab_smtp_port=None,
+swanlab_smtp_server=None,
+swanlab_token=<SWANLAB_TOKEN>,
+swanlab_webhook_url=None,
+swanlab_workspace=None,
+sync_ref_model=False,
+system=None,
+target_modules=['all-linear'],
+target_parameters=None,
+target_regex=None,
+task_type=causal_lm,
+tau_neg=1.05,
+tau_pos=1.0,
+teacher_adapters=[],
+teacher_deepspeed=None,
+teacher_kl_coef=1.0,
+teacher_model=None,
+teacher_model_revision=None,
+teacher_model_server=None,
+teacher_model_type=None,
+temperature=0.9,
+template=qwen3_5,
+template_backend=swift,
+tf32=None,
+top_entropy_quantile=1.0,
+top_k=-1,
+top_logprobs=None,
+top_p=1.0,
+torch_compile=False,
+torch_compile_backend=None,
+torch_compile_mode=None,
+torch_dtype=torch.bfloat16,
+torch_empty_cache_steps=None,
+trackio_bucket_id=None,
+trackio_space_id=None,
+trackio_static_space_id=None,
+train_dataloader_shuffle=True,
+train_sampling_strategy=random,
+trainable_parameters=[],
+trainable_parameters_regex=None,
+truncation_strategy=delete,
+tuner_backend=peft,
+tuner_type=lora,
+undesirable_weight=1.0,
+use_cache=False,
+use_chat_template=True,
+use_cpu=False,
+use_dora=False,
+use_flash_ckpt=False,
+use_galore=False,
+use_gym_env=None,
+use_hf=False,
+use_liger_kernel=False,
+use_logits_to_keep=None,
+use_ray=False,
+use_rslora=False,
+use_swift_lora=False,
+use_vllm=False,
+val_dataset=[],
+val_dataset_shuffle=False,
+vera_d_initial=0.1,
+vera_dropout=0.0,
+vera_projection_prng_key=0,
+vera_rank=256,
+vf_coef=0.1,
+vit_gradient_checkpointing=False,
+vit_lr=None,
+vllm_data_parallel_size=1,
+vllm_disable_cascade_attn=False,
+vllm_disable_custom_all_reduce=True,
+vllm_enable_expert_parallel=False,
+vllm_enable_lora=False,
+vllm_enable_prefix_caching=True,
+vllm_enforce_eager=False,
+vllm_engine_kwargs={},
+vllm_gpu_memory_utilization=0.9,
+vllm_limit_mm_per_prompt=None,
+vllm_max_lora_rank=16,
+vllm_max_model_len=None,
+vllm_max_num_seqs=None,
+vllm_mm_processor_cache_gb=None,
+vllm_mode=None,
+vllm_pipeline_parallel_size=1,
+vllm_quantization=None,
+vllm_reasoning_parser=None,
+vllm_server_base_url=None,
+vllm_server_group_port=None,
+vllm_server_host=None,
+vllm_server_pass_dataset=False,
+vllm_server_port=[8000],
+vllm_server_timeout=240.0,
+vllm_speculative_config=None,
+vllm_tensor_parallel_size=1,
+vllm_use_async_engine=None,
+wandb_log_unique_prompts=None,
+warmup_ratio=None,
+warmup_steps=0,
+weight_decay=0.1,
+whiten_rewards=False,
+zero_hpz_partition_size=None,
+)
+[INFO:swift] Global seed set to 42
+[WARNING:swift] Please install the package: `pip install "decord" -U`.
+[INFO:swift] Setting max_ratio: 200. You can adjust this hyperparameter through the environment variable: `MAX_RATIO`.
+[INFO:swift] Setting frame_factor: 2. You can adjust this hyperparameter through the environment variable: `FRAME_FACTOR`.
+[INFO:swift] Setting fps: 2.0. You can adjust this hyperparameter through the environment variable: `FPS`.
+[INFO:swift] Setting fps_min_frames: 4. You can adjust this hyperparameter through the environment variable: `FPS_MIN_FRAMES`.
+[INFO:swift] Setting fps_max_frames: 768. You can adjust this hyperparameter through the environment variable: `FPS_MAX_FRAMES`.
+[INFO:swift] Setting image_max_token_num: 16384. You can adjust this hyperparameter through the environment variable: `IMAGE_MAX_TOKEN_NUM`.
+[INFO:swift] Setting image_min_token_num: 4. You can adjust this hyperparameter through the environment variable: `IMAGE_MIN_TOKEN_NUM`.
+[INFO:swift] Setting spatial_merge_size: 2. You can adjust this hyperparameter through the environment variable: `SPATIAL_MERGE_SIZE`.
+[INFO:swift] Setting video_max_token_num: 768. You can adjust this hyperparameter through the environment variable: `VIDEO_MAX_TOKEN_NUM`.
+[INFO:swift] Setting video_min_token_num: 128. You can adjust this hyperparameter through the environment variable: `VIDEO_MIN_TOKEN_NUM`.
+[INFO:swift] model_kwargs: {'device_map': 'npu:0', 'dtype': torch.bfloat16}
+Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:   0%|          | 2/1184 [00:00<04:05,  4.82it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:   8%|▊         | 100/1184 [00:00<00:04, 242.83it/s]Loading weights:  13%|█▎        | 149/1184 [00:00<00:03, 265.47it/s]Loading weights:  17%|█▋        | 200/1184 [00:00<00:03, 300.93it/s]Loading weights:  21%|██▏       | 253/1184 [00:00<00:02, 337.95it/s]Loading weights:   0%|          | 2/1184 [00:00<05:15,  3.74it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:  10%|█         | 121/1184 [00:00<00:04, 250.62it/s]Loading weights:   0%|          | 0/1184 [00:00<?, ?it/s]Loading weights:   0%|          | 1/1184 [00:00<01:59,  9.94it/s]Loading weights:  25%|██▍       | 294/1184 [00:01<00:03, 267.48it/s]Loading weights:  28%|██▊       | 327/1184 [00:01<00:03, 259.77it/s]Loading weights:  16%|█▌        | 187/1184 [00:00<00:03, 272.98it/s]Loading weights:   0%|          | 1/1184 [00:00<06:21,  3.10it/s]Loading weights:  20%|██        | 239/1184 [00:00<00:03, 313.14it/s]Loading weights:  30%|███       | 358/1184 [00:01<00:03, 233.23it/s]Loading weights:   0%|          | 2/1184 [00:00<04:44,  4.16it/s]Loading weights:  24%|██▍       | 287/1184 [00:01<00:03, 294.16it/s]Loading weights:   0%|          | 2/1184 [00:00<05:40,  3.47it/s]Loading weights:   6%|▌         | 67/1184 [00:00<00:06, 168.84it/s]Loading weights:  33%|███▎      | 385/1184 [00:01<00:03, 208.14it/s]Loading weights:   0%|          | 2/1184 [00:00<07:00,  2.81it/s]Loading weights:   0%|          | 2/1184 [00:00<06:03,  3.25it/s]Loading weights:   0%|          | 2/1184 [00:00<05:44,  3.43it/s]Loading weights:   8%|▊         | 96/1184 [00:00<00:05, 185.92it/s]Loading weights:   8%|▊         | 96/1184 [00:00<00:05, 187.59it/s]Loading weights:   0%|          | 2/1184 [00:00<07:17,  2.70it/s]Loading weights:  10%|▉         | 115/1184 [00:00<00:05, 213.27it/s]Loading weights:  34%|███▍      | 408/1184 [00:01<00:04, 184.61it/s]Loading weights:  10%|█         | 119/1184 [00:00<00:04, 216.37it/s]Loading weights:   8%|▊         | 96/1184 [00:00<00:05, 186.03it/s]Loading weights:  12%|█▏        | 147/1184 [00:00<00:04, 235.35it/s]Loading weights:  10%|█         | 123/1184 [00:00<00:05, 202.67it/s]Loading weights:  12%|█▏        | 147/1184 [00:00<00:04, 233.30it/s]Loading weights:  28%|██▊       | 327/1184 [00:01<00:03, 227.91it/s]Loading weights:  14%|█▎        | 162/1184 [00:00<00:04, 221.64it/s]Loading weights:  13%|█▎        | 149/1184 [00:00<00:05, 203.50it/s]Loading weights:  36%|███▌      | 428/1184 [00:02<00:04, 158.76it/s]Loading weights:  16%|█▌        | 191/1184 [00:00<00:03, 268.38it/s]Loading weights:  15%|█▌        | 179/1184 [00:00<00:04, 239.03it/s]Loading weights:  13%|█▎        | 149/1184 [00:00<00:05, 198.79it/s]Loading weights:  17%|█▋        | 196/1184 [00:01<00:03, 269.03it/s]Loading weights:  20%|█▉        | 233/1184 [00:01<00:03, 301.36it/s]Loading weights:  38%|███▊      | 451/1184 [00:02<00:04, 171.41it/s]Loading weights:  19%|█▉        | 230/1184 [00:01<00:03, 269.75it/s]Loading weights:  17%|█▋        | 200/1184 [00:01<00:04, 233.94it/s]Loading weights:  19%|█▉        | 224/1184 [00:01<00:03, 263.23it/s]Loading weights:  17%|█▋        | 200/1184 [00:01<00:04, 241.75it/s]Loading weights:  19%|█▉        | 227/1184 [00:01<00:03, 267.54it/s]Loading weights:  21%|██▏       | 252/1184 [00:01<00:03, 293.16it/s]Loading weights:  30%|███       | 359/1184 [00:01<00:04, 170.76it/s]Loading weights:  40%|███▉      | 470/1184 [00:02<00:04, 159.86it/s]Loading weights:  23%|██▎       | 274/1184 [00:01<00:03, 273.65it/s]Loading weights:  22%|██▏       | 265/1184 [00:01<00:03, 267.24it/s]Loading weights:  21%|██▏       | 253/1184 [00:01<00:03, 279.46it/s]Loading weights:  41%|████      | 487/1184 [00:02<00:04, 160.21it/s]Loading weights:  22%|██▏       | 257/1184 [00:01<00:03, 249.14it/s]Loading weights:  24%|██▍       | 290/1184 [00:01<00:03, 261.32it/s]Loading weights:  32%|███▏      | 383/1184 [00:01<00:04, 175.22it/s]Loading weights:  25%|██▍       | 292/1184 [00:01<00:03, 245.19it/s]Loading weights:  25%|██▌       | 301/1184 [00:01<00:03, 258.99it/s]Loading weights:  26%|██▌       | 309/1184 [00:01<00:03, 244.41it/s]Loading weights:  24%|██▍       | 284/1184 [00:01<00:03, 239.04it/s]Loading weights:  43%|████▎     | 504/1184 [00:02<00:04, 150.88it/s]Loading weights:  34%|███▍      | 406/1184 [00:02<00:04, 174.12it/s]Loading weights:  25%|██▍       | 292/1184 [00:01<00:03, 264.03it/s]Loading weights:  44%|████▍     | 520/1184 [00:02<00:04, 151.18it/s]Loading weights:  36%|███▌      | 427/1184 [00:02<00:04, 155.12it/s]Loading weights:  28%|██▊       | 336/1184 [00:01<00:04, 207.64it/s]Loading weights:  46%|████▌     | 543/1184 [00:02<00:03, 162.98it/s]Loading weights:  26%|██▌       | 310/1184 [00:01<00:04, 180.68it/s]Loading weights:  29%|██▊       | 339/1184 [00:01<00:04, 189.22it/s]Loading weights:  27%|██▋       | 325/1184 [00:01<00:04, 195.65it/s]Loading weights:  28%|██▊       | 326/1184 [00:01<00:04, 206.66it/s]Loading weights:  38%|███▊      | 445/1184 [00:02<00:04, 156.91it/s]Loading weights:  47%|████▋     | 560/1184 [00:02<00:04, 153.63it/s]Loading weights:  28%|██▊       | 333/1184 [00:01<00:05, 162.19it/s]Loading weights:  31%|███       | 363/1184 [00:01<00:04, 180.82it/s]Loading weights:  30%|██▉       | 352/1184 [00:01<00:04, 190.40it/s]Loading weights:  28%|██▊       | 333/1184 [00:01<00:05, 162.69it/s]Loading weights:  39%|███▉      | 463/1184 [00:02<00:04, 156.13it/s]Loading weights:  30%|██▉       | 353/1184 [00:01<00:04, 191.73it/s]Loading weights:  31%|███▏      | 371/1184 [00:01<00:04, 184.59it/s]Loading weights:  30%|███       | 359/1184 [00:01<00:04, 175.74it/s]Loading weights:  49%|████▊     | 576/1184 [00:03<00:04, 136.08it/s]Loading weights:  30%|██▉       | 352/1184 [00:02<00:05, 156.97it/s]Loading weights:  33%|███▎      | 385/1184 [00:02<00:04, 166.95it/s]Loading weights:  41%|████      | 480/1184 [00:02<00:04, 143.97it/s]Loading weights:  50%|█████     | 597/1184 [00:03<00:03, 146.81it/s]Loading weights:  34%|███▎      | 398/1184 [00:02<00:04, 184.32it/s]Loading weights:  34%|███▍      | 404/1184 [00:02<00:04, 165.59it/s]Loading weights:  32%|███▏      | 376/1184 [00:02<00:05, 146.58it/s]Loading weights:  32%|███▏      | 384/1184 [00:02<00:05, 158.46it/s]Loading weights:  31%|███▏      | 370/1184 [00:02<00:05, 141.89it/s]Loading weights:  52%|█████▏    | 613/1184 [00:03<00:03, 149.27it/s]Loading weights:  32%|███▏      | 376/1184 [00:02<00:05, 152.15it/s]Loading weights:  42%|████▏     | 496/1184 [00:02<00:05, 120.96it/s]Loading weights:  34%|███▍      | 405/1184 [00:02<00:04, 166.66it/s]Loading weights:  36%|███▌      | 423/1184 [00:02<00:04, 172.33it/s]Loading weights:  33%|███▎      | 395/1184 [00:02<00:05, 147.17it/s]Loading weights:  33%|███▎      | 386/1184 [00:02<00:05, 143.34it/s]Loading weights:  36%|███▌      | 422/1184 [00:02<00:05, 149.06it/s]Loading weights:  33%|███▎      | 395/1184 [00:02<00:05, 149.83it/s]Loading weights:  44%|████▎     | 517/1184 [00:02<00:05, 131.92it/s]Loading weights:  53%|█████▎    | 630/1184 [00:03<00:04, 128.40it/s]Loading weights:  37%|███▋      | 438/1184 [00:02<00:05, 148.94it/s]Loading weights:  34%|███▍      | 402/1184 [00:02<00:05, 137.23it/s]Loading weights:  35%|███▍      | 413/1184 [00:02<00:05, 140.47it/s]Loading weights:  38%|███▊      | 444/1184 [00:02<00:04, 161.28it/s]Loading weights:  36%|███▌      | 426/1184 [00:02<00:05, 148.09it/s]Loading weights:  46%|████▌     | 543/1184 [00:03<00:04, 156.37it/s]Loading weights:  35%|███▍      | 413/1184 [00:02<00:05, 143.87it/s]Loading weights:  39%|███▉      | 466/1184 [00:02<00:04, 177.65it/s]Loading weights:  56%|█████▌    | 663/1184 [00:03<00:03, 154.86it/s]Loading weights:  35%|███▌      | 417/1184 [00:02<00:05, 134.45it/s]Loading weights:  39%|███▉      | 463/1184 [00:02<00:04, 164.07it/s]Loading weights:  37%|███▋      | 433/1184 [00:02<00:04, 153.30it/s]Loading weights:  38%|███▊      | 444/1184 [00:02<00:05, 145.49it/s]Loading weights:  37%|███▋      | 438/1184 [00:02<00:05, 142.53it/s]Loading weights:  47%|████▋     | 560/1184 [00:03<00:04, 144.17it/s]Loading weights:  41%|████      | 486/1184 [00:02<00:04, 174.09it/s]Loading weights:  37%|███▋      | 437/1184 [00:02<00:05, 147.32it/s]Loading weights:  57%|█████▋    | 679/1184 [00:03<00:03, 141.28it/s]Loading weights:  41%|████      | 482/1184 [00:02<00:04, 155.87it/s]Loading weights:  38%|███▊      | 450/1184 [00:02<00:04, 148.82it/s]Loading weights:  39%|███▉      | 461/1184 [00:02<00:04, 147.79it/s]Loading weights:  38%|███▊      | 454/1184 [00:02<00:05, 138.79it/s]Loading weights:  49%|████▊     | 576/1184 [00:03<00:04, 141.04it/s]Loading weights:  43%|████▎     | 505/1184 [00:02<00:04, 165.09it/s]Loading weights:  38%|███▊      | 453/1184 [00:02<00:05, 137.38it/s]Loading weights:  59%|█████▉    | 701/1184 [00:03<00:03, 155.62it/s]Loading weights:  43%|████▎     | 504/1184 [00:02<00:04, 159.52it/s]Loading weights:  40%|████      | 478/1184 [00:02<00:05, 138.34it/s]Loading weights:  50%|█████     | 597/1184 [00:03<00:03, 150.20it/s]Loading weights:  39%|███▉      | 466/1184 [00:02<00:05, 131.87it/s]Loading weights:  40%|███▉      | 471/1184 [00:02<00:05, 126.32it/s]Loading weights:  44%|████▍     | 523/1184 [00:02<00:04, 155.06it/s]Loading weights:  61%|██████    | 718/1184 [00:03<00:03, 144.85it/s]Loading weights:  40%|███▉      | 471/1184 [00:02<00:05, 122.61it/s]Loading weights:  42%|████▏     | 493/1184 [00:02<00:05, 130.69it/s]Loading weights:  41%|████      | 480/1184 [00:02<00:05, 126.28it/s]Loading weights:  44%|████▍     | 521/1184 [00:03<00:04, 140.81it/s]Loading weights:  42%|████▏     | 492/1184 [00:02<00:04, 139.99it/s]Loading weights:  52%|█████▏    | 613/1184 [00:03<00:04, 133.68it/s]Loading weights:  62%|██████▏   | 735/1184 [00:04<00:03, 146.46it/s]Loading weights:  46%|████▌     | 543/1184 [00:03<00:04, 148.06it/s]Loading weights:  42%|████▏     | 492/1184 [00:03<00:05, 134.66it/s]Loading weights:  42%|████▏     | 499/1184 [00:03<00:05, 133.26it/s]Loading weights:  53%|█████▎    | 630/1184 [00:03<00:03, 139.67it/s]Loading weights:  44%|████▎     | 517/1184 [00:03<00:04, 142.25it/s]Loading weights:  43%|████▎     | 507/1184 [00:03<00:05, 131.05it/s]Loading weights:  46%|████▌     | 543/1184 [00:03<00:04, 136.05it/s]Loading weights:  64%|██████▍   | 755/1184 [00:04<00:02, 148.00it/s]Loading weights:  48%|████▊     | 571/1184 [00:03<00:03, 157.49it/s]Loading weights:  44%|████▎     | 517/1184 [00:03<00:04, 141.96it/s]Loading weights:  55%|█████▍    | 651/1184 [00:03<00:03, 154.54it/s]Loading weights:  45%|████▍     | 532/1184 [00:03<00:04, 142.22it/s]Loading weights:  44%|████▍     | 523/1184 [00:03<00:05, 132.17it/s]Loading weights:  44%|████▎     | 517/1184 [00:03<00:05, 129.12it/s]Loading weights:  47%|████▋     | 559/1184 [00:03<00:04, 127.85it/s]Loading weights:  66%|██████▌   | 784/1184 [00:04<00:02, 161.23it/s]Loading weights:  56%|█████▋    | 668/1184 [00:03<00:03, 151.60it/s]Loading weights:  50%|█████     | 595/1184 [00:03<00:03, 163.57it/s]Loading weights:  46%|████▌     | 540/1184 [00:03<00:04, 152.45it/s]Loading weights:  47%|████▋     | 558/1184 [00:03<00:03, 158.32it/s]Loading weights:  46%|████▌     | 543/1184 [00:03<00:04, 142.61it/s]Loading weights:  68%|██████▊   | 807/1184 [00:04<00:02, 168.55it/s]Loading weights:  49%|████▉     | 584/1184 [00:03<00:04, 141.49it/s]Loading weights:  46%|████▌     | 543/1184 [00:03<00:04, 136.19it/s]Loading weights:  47%|████▋     | 562/1184 [00:03<00:04, 154.26it/s]Loading weights:  47%|████▋     | 556/1184 [00:03<00:04, 142.51it/s]Loading weights:  58%|█████▊    | 684/1184 [00:04<00:03, 137.48it/s]Loading weights:  49%|████▊     | 576/1184 [00:03<00:04, 150.06it/s]Loading weights:  52%|█████▏    | 612/1184 [00:03<00:04, 137.40it/s]Loading weights:  51%|█████     | 603/1184 [00:03<00:03, 149.46it/s]Loading weights:  47%|████▋     | 558/1184 [00:03<00:04, 134.09it/s]Loading weights:  48%|████▊     | 573/1184 [00:03<00:04, 143.88it/s]Loading weights:  71%|███████   | 836/1184 [00:04<00:02, 172.81it/s]Loading weights:  59%|█████▉    | 701/1184 [00:04<00:03, 140.06it/s]Loading weights:  49%|████▉     | 578/1184 [00:03<00:04, 143.39it/s]Loading weights:  53%|█████▎    | 630/1184 [00:03<00:03, 138.58it/s]Loading weights:  52%|█████▏    | 619/1184 [00:03<00:03, 150.05it/s]Loading weights:  50%|█████     | 597/1184 [00:03<00:04, 131.29it/s]Loading weights:  50%|█████     | 597/1184 [00:03<00:03, 150.59it/s]Loading weights:  49%|████▊     | 576/1184 [00:03<00:04, 130.81it/s]Loading weights:  72%|███████▏  | 854/1184 [00:04<00:02, 157.49it/s]Loading weights:  61%|██████    | 717/1184 [00:04<00:03, 128.25it/s]Loading weights:  55%|█████▍    | 650/1184 [00:03<00:03, 148.60it/s]Loading weights:  50%|████▉     | 588/1184 [00:03<00:05, 116.14it/s]Loading weights:  54%|█████▎    | 635/1184 [00:03<00:04, 135.22it/s]Loading weights:  52%|█████▏    | 612/1184 [00:03<00:04, 129.48it/s]Loading weights:  53%|█████▎    | 623/1184 [00:03<00:03, 174.04it/s]Loading weights:  83%|████████▎ | 977/1184 [00:04<00:00, 379.15it/s]Loading weights:  50%|█████     | 597/1184 [00:03<00:04, 130.32it/s]Loading weights:  62%|██████▏   | 735/1184 [00:04<00:03, 128.34it/s]Loading weights:  57%|█████▋    | 674/1184 [00:03<00:03, 157.08it/s]Loading weights:  52%|█████▏    | 610/1184 [00:03<00:04, 136.81it/s]Loading weights:  56%|█████▌    | 658/1184 [00:03<00:03, 149.62it/s]Loading weights:  54%|█████▍    | 643/1184 [00:03<00:03, 172.56it/s]Loading weights:  98%|█████████▊| 1165/1184 [00:05<00:00, 733.13it/s]Loading weights: 100%|██████████| 1184/1184 [00:05<00:00, 234.08it/s]
+Loading weights:  65%|██████▌   | 770/1184 [00:04<00:02, 173.03it/s]Loading weights:  53%|█████▎    | 625/1184 [00:03<00:04, 136.97it/s]Loading weights:  58%|█████▊    | 691/1184 [00:04<00:03, 153.37it/s]Loading weights:  53%|█████▎    | 630/1184 [00:03<00:04, 114.50it/s]Loading weights:  52%|█████▏    | 620/1184 [00:04<00:04, 140.82it/s]Loading weights:  57%|█████▋    | 676/1184 [00:04<00:03, 155.74it/s]Loading weights:  56%|█████▌    | 662/1184 [00:04<00:03, 172.36it/s]Loading weights:  55%|█████▍    | 649/1184 [00:04<00:03, 158.64it/s]Loading weights:  60%|█████▉    | 707/1184 [00:04<00:03, 152.25it/s]Loading weights:  67%|██████▋   | 796/1184 [00:04<00:02, 173.62it/s]Loading weights:  54%|█████▎    | 635/1184 [00:04<00:04, 126.97it/s]Loading weights:  56%|█████▌    | 663/1184 [00:04<00:03, 141.43it/s]Loading weights:  58%|█████▊    | 692/1184 [00:04<00:03, 133.13it/s]Loading weights:  61%|██████    | 723/1184 [00:04<00:03, 148.47it/s]Loading weights:  57%|█████▋    | 680/1184 [00:04<00:03, 139.39it/s]Loading weights:  71%|███████   | 835/1184 [00:04<00:01, 224.89it/s]Loading weights:  56%|█████▋    | 666/1184 [00:04<00:03, 143.33it/s]Loading weights:  56%|█████▌    | 663/1184 [00:04<00:03, 144.34it/s]Loading weights:  60%|█████▉    | 707/1184 [00:04<00:03, 129.08it/s]Loading weights:  57%|█████▋    | 679/1184 [00:04<00:04, 125.32it/s]Loading weights:  59%|█████▉    | 701/1184 [00:04<00:03, 148.75it/s]Loading weights:  63%|██████▎   | 743/1184 [00:04<00:02, 147.30it/s]Loading weights:  75%|███████▌  | 893/1184 [00:05<00:01, 272.91it/s]Loading weights:  58%|█████▊    | 682/1184 [00:04<00:03, 126.66it/s]Loading weights:  62%|██████▏   | 730/1184 [00:04<00:03, 143.63it/s]Loading weights:  57%|█████▋    | 679/1184 [00:04<00:03, 133.45it/s]Loading weights:  59%|█████▉    | 701/1184 [00:04<00:03, 137.26it/s]Loading weights:  65%|██████▍   | 766/1184 [00:04<00:02, 162.19it/s]Loading weights: 100%|██████████| 1184/1184 [00:05<00:00, 232.75it/s]
+Loading weights:  61%|██████    | 717/1184 [00:04<00:03, 139.47it/s]Loading weights:  59%|█████▉    | 701/1184 [00:04<00:03, 138.72it/s]Loading weights:  59%|█████▉    | 701/1184 [00:04<00:03, 152.11it/s]Loading weights:  63%|██████▎   | 745/1184 [00:04<00:03, 138.67it/s]Loading weights:  66%|██████▋   | 785/1184 [00:04<00:02, 157.81it/s]Loading weights:  62%|██████▏   | 735/1184 [00:04<00:03, 144.80it/s]Loading weights:  61%|██████    | 717/1184 [00:04<00:03, 128.38it/s]Loading weights:  61%|██████    | 717/1184 [00:04<00:03, 128.95it/s]Loading weights:  65%|██████▍   | 766/1184 [00:04<00:02, 145.35it/s]Loading weights:  61%|██████    | 717/1184 [00:04<00:03, 141.85it/s]Loading weights:  62%|██████▏   | 735/1184 [00:04<00:03, 132.62it/s]Loading weights:  64%|██████▍   | 755/1184 [00:04<00:02, 144.92it/s]Loading weights:  68%|██████▊   | 801/1184 [00:04<00:02, 141.16it/s]Loading weights:  62%|██████▏   | 735/1184 [00:04<00:03, 136.57it/s]Loading weights:  66%|██████▌   | 783/1184 [00:04<00:02, 151.00it/s]Loading weights:  62%|██████▏   | 735/1184 [00:04<00:03, 137.79it/s]Loading weights:  64%|██████▍   | 755/1184 [00:04<00:03, 139.16it/s]Loading weights:  69%|██████▉   | 822/1184 [00:04<00:02, 147.10it/s]Loading weights:  66%|██████▋   | 785/1184 [00:04<00:02, 166.74it/s]Loading weights:  67%|██████▋   | 799/1184 [00:04<00:02, 145.11it/s]Loading weights:  64%|██████▍   | 755/1184 [00:04<00:03, 137.13it/s]Loading weights:  64%|██████▍   | 755/1184 [00:05<00:03, 139.20it/s]Loading weights:  68%|██████▊   | 802/1184 [00:04<00:02, 165.30it/s]Loading weights:  71%|███████   | 837/1184 [00:05<00:02, 138.64it/s]Loading weights:  66%|██████▌   | 783/1184 [00:05<00:02, 147.40it/s]Loading weights:  69%|██████▉   | 822/1184 [00:05<00:02, 152.76it/s]Loading weights:  66%|██████▌   | 783/1184 [00:04<00:02, 156.87it/s]Loading weights:  69%|██████▉   | 822/1184 [00:05<00:02, 171.91it/s]Loading weights:  66%|██████▌   | 783/1184 [00:05<00:02, 155.25it/s]Loading weights:  75%|███████▌  | 893/1184 [00:05<00:01, 228.04it/s]Loading weights:  67%|██████▋   | 798/1184 [00:05<00:02, 147.83it/s]Loading weights:  67%|██████▋   | 799/1184 [00:05<00:02, 148.69it/s]Loading weights:  71%|███████   | 840/1184 [00:05<00:02, 168.09it/s]Loading weights:  91%|█████████ | 1079/1184 [00:05<00:00, 634.92it/s]Loading weights:  67%|██████▋   | 799/1184 [00:05<00:02, 145.58it/s]Loading weights:  71%|███████   | 838/1184 [00:05<00:02, 121.26it/s]Loading weights:  69%|██████▉   | 822/1184 [00:05<00:02, 155.48it/s]Loading weights:  75%|███████▌  | 893/1184 [00:05<00:01, 261.20it/s]Loading weights:  69%|██████▉   | 822/1184 [00:05<00:02, 153.52it/s]Loading weights:  99%|█████████▉| 1177/1184 [00:05<00:00, 705.63it/s]Loading weights: 100%|██████████| 1184/1184 [00:05<00:00, 221.26it/s]
+Loading weights:  75%|███████▌  | 893/1184 [00:05<00:01, 208.87it/s]Loading weights:  70%|██████▉   | 824/1184 [00:05<00:02, 156.31it/s]Loading weights:  71%|███████   | 838/1184 [00:05<00:02, 141.07it/s]Loading weights:  99%|█████████▉| 1177/1184 [00:05<00:00, 909.12it/s]Loading weights: 100%|██████████| 1184/1184 [00:05<00:00, 217.60it/s]
+Loading weights:  91%|█████████▏| 1083/1184 [00:05<00:00, 604.31it/s]Loading weights:  71%|███████   | 838/1184 [00:05<00:02, 136.26it/s]Loading weights:  75%|███████▌  | 893/1184 [00:05<00:01, 250.56it/s]Loading weights:  75%|███████▌  | 893/1184 [00:05<00:01, 214.98it/s]Loading weights: 100%|█████████▉| 1179/1184 [00:05<00:00, 691.73it/s]Loading weights: 100%|██████████| 1184/1184 [00:05<00:00, 210.79it/s]
+Loading weights:  75%|███████▌  | 893/1184 [00:05<00:01, 217.21it/s]Loading weights: 100%|██████████| 1184/1184 [00:05<00:00, 208.77it/s]
+Loading weights:  92%|█████████▏| 1089/1184 [00:05<00:00, 622.83it/s]Loading weights: 100%|██████████| 1184/1184 [00:05<00:00, 208.82it/s]
+Loading weights: 100%|██████████| 1184/1184 [00:05<00:00, 209.88it/s]
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+[INFO:swift] model_info: ModelInfo(model_type='qwen3_5', model_dir='/models/Qwen3.6-27B', torch_dtype=torch.bfloat16, max_model_len=262144, quant_method=None, quant_bits=None, rope_scaling=None, is_moe_model=False, is_multimodal=True, config=Qwen3_5Config {
+  "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+  ],
+  "dtype": "bfloat16",
+  "hidden_size": 5120,
+  "image_token_id": 248056,
+  "language_model_only": false,
+  "model_type": "qwen3_5",
+  "text_config": {
+    "attention_bias": false,
+    "attention_dropout": 0.0,
+    "attn_output_gate": true,
+    "bos_token_id": 248044,
+    "dtype": "bfloat16",
+    "eos_token_id": 248044,
+    "full_attention_interval": 4,
+    "head_dim": 256,
+    "hidden_act": "silu",
+    "hidden_size": 5120,
+    "initializer_range": 0.02,
+    "intermediate_size": 17408,
+    "layer_types": [
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention",
+      "linear_attention",
+      "linear_attention",
+      "linear_attention",
+      "full_attention"
+    ],
+    "linear_conv_kernel_dim": 4,
+    "linear_key_head_dim": 128,
+    "linear_num_key_heads": 16,
+    "linear_num_value_heads": 48,
+    "linear_value_head_dim": 128,
+    "mamba_ssm_dtype": "float32",
+    "max_position_embeddings": 262144,
+    "model_type": "qwen3_5_text",
+    "mtp_num_hidden_layers": 1,
+    "mtp_use_dedicated_embeddings": false,
+    "num_attention_heads": 24,
+    "num_hidden_layers": 64,
+    "num_key_value_heads": 4,
+    "output_gate_type": "swish",
+    "pad_token_id": null,
+    "partial_rotary_factor": 0.25,
+    "rms_norm_eps": 1e-06,
+    "rope_parameters": {
+      "mrope_interleaved": true,
+      "mrope_section": [
+        11,
+        11,
+        10
+      ],
+      "partial_rotary_factor": 0.25,
+      "rope_theta": 10000000,
+      "rope_type": "default"
+    },
+    "tie_word_embeddings": false,
+    "use_cache": true,
+    "vocab_size": 248320
+  },
+  "tie_word_embeddings": false,
+  "transformers_version": "5.12.1",
+  "video_token_id": 248057,
+  "vision_config": {
+    "deepstack_visual_indexes": [],
+    "depth": 27,
+    "dtype": "bfloat16",
+    "hidden_act": "gelu_pytorch_tanh",
+    "hidden_size": 1152,
+    "in_channels": 3,
+    "initializer_range": 0.02,
+    "intermediate_size": 4304,
+    "model_type": "qwen3_5_vision",
+    "num_heads": 16,
+    "num_position_embeddings": 2304,
+    "out_hidden_size": 5120,
+    "patch_size": 16,
+    "spatial_merge_size": 2,
+    "temporal_patch_size": 2
+  },
+  "vision_end_token_id": 248054,
+  "vision_start_token_id": 248053
+}
+, task_type='causal_lm', num_labels=None)
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+[INFO:swift] model.generation_config: GenerationConfig {
+  "bos_token_id": 248044,
+  "do_sample": true,
+  "eos_token_id": [
+    248046,
+    248044
+  ],
+  "length_penalty": 1.0,
+  "max_new_tokens": 512,
+  "num_beams": 1,
+  "pad_token_id": 248044,
+  "repetition_penalty": 1.0,
+  "temperature": 0.9,
+  "top_k": 20,
+  "top_p": 1.0
+}
+
+[INFO:swift] default_system: None
+[INFO:swift] max_length: 4096
+[INFO:swift] response_prefix: None
+[INFO:swift] agent_template: qwen3_5
+[INFO:swift] norm_bbox: norm1000
+[INFO:swift] Setting ROOT_IMAGE_DIR: None. You can adjust this hyperparameter through the environment variable: `ROOT_IMAGE_DIR`.
+[INFO:swift] Setting QWENVL_BBOX_FORMAT: legacy. You can adjust this hyperparameter through the environment variable: `QWENVL_BBOX_FORMAT`.
+[INFO:swift] Start time of running main: 2026-07-08 01:59:22.895065
+[INFO:swift] swift.__version__: 4.5.0.dev0
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 192 examples [00:00, 4753.76 examples/s]
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/opt/conda/lib/python3.11/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:832: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)
+  init.copy_(module.A_log, torch.empty_like(module.A_log).uniform_(0, 16).log_())
+/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+Map (num_proc=1):   0%|          | 0/192 [00:00<?, ? examples/s]Map (num_proc=1): 100%|██████████| 192/192 [00:00<00:00, 893.72 examples/s]Map (num_proc=1): 100%|██████████| 192/192 [00:00<00:00, 512.31 examples/s]
+[INFO:swift] train_dataset: Dataset({
+    features: ['messages', 'rejected_response'],
+    num_rows: 192
+})
+[INFO:swift] val_dataset: None
+[rank4]: Traceback (most recent call last):
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank4]:     rlhf_main()
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank4]:     return SwiftRLHF(args).main()
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank4]:     result = self.run()
+[rank4]:              ^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank4]:     return func(self, *args, **kwargs)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 161, in run
+[rank4]:     train_dataset, val_dataset = self._prepare_dataset()
+[rank4]:                                  ^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank4]:     return func(self, *args, **kwargs)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 122, in _prepare_dataset
+[rank4]:     self._show_dataset(*datasets)
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 289, in _show_dataset
+[rank4]:     inputs = train_dataset[0]
+[rank4]:              ~~~~~~~~~~~~~^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/dataset/utils.py", line 108, in __getitem__
+[rank4]:     raise ValueError('Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or '
+[rank4]: ValueError: Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or modifying the `truncation_strategy`.
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank1]:     rlhf_main()
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank1]:     return SwiftRLHF(args).main()
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank1]:     result = self.run()
+[rank1]:              ^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank1]:     return func(self, *args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 161, in run
+[rank1]:     train_dataset, val_dataset = self._prepare_dataset()
+[rank1]:                                  ^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank1]:     return func(self, *args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 122, in _prepare_dataset
+[rank1]:     self._show_dataset(*datasets)
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 289, in _show_dataset
+[rank1]:     inputs = train_dataset[0]
+[rank1]:              ~~~~~~~~~~~~~^^^
+[rank1]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/dataset/utils.py", line 108, in __getitem__
+[rank1]:     raise ValueError('Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or '
+[rank1]: ValueError: Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or modifying the `truncation_strategy`.
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank2]:     rlhf_main()
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank2]:     return SwiftRLHF(args).main()
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank2]:     result = self.run()
+[rank2]:              ^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank2]:     return func(self, *args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 161, in run
+[rank2]:     train_dataset, val_dataset = self._prepare_dataset()
+[rank2]:                                  ^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank2]:     return func(self, *args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 122, in _prepare_dataset
+[rank2]:     self._show_dataset(*datasets)
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 289, in _show_dataset
+[rank2]:     inputs = train_dataset[0]
+[rank2]:              ~~~~~~~~~~~~~^^^
+[rank2]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/dataset/utils.py", line 108, in __getitem__
+[rank2]:     raise ValueError('Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or '
+[rank2]: ValueError: Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or modifying the `truncation_strategy`.
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank3]:     rlhf_main()
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank3]:     return SwiftRLHF(args).main()
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank3]:     result = self.run()
+[rank3]:              ^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank3]:     return func(self, *args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 161, in run
+[rank3]:     train_dataset, val_dataset = self._prepare_dataset()
+[rank3]:                                  ^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank3]:     return func(self, *args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 122, in _prepare_dataset
+[rank3]:     self._show_dataset(*datasets)
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 289, in _show_dataset
+[rank3]:     inputs = train_dataset[0]
+[rank3]:              ~~~~~~~~~~~~~^^^
+[rank3]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/dataset/utils.py", line 108, in __getitem__
+[rank3]:     raise ValueError('Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or '
+[rank3]: ValueError: Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or modifying the `truncation_strategy`.
+[rank6]: Traceback (most recent call last):
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank6]:     rlhf_main()
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank6]:     return SwiftRLHF(args).main()
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank6]:     result = self.run()
+[rank6]:              ^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank6]:     return func(self, *args, **kwargs)
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 161, in run
+[rank6]:     train_dataset, val_dataset = self._prepare_dataset()
+[rank6]:                                  ^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank6]:     return func(self, *args, **kwargs)
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 122, in _prepare_dataset
+[rank6]:     self._show_dataset(*datasets)
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 289, in _show_dataset
+[rank6]:     inputs = train_dataset[0]
+[rank6]:              ~~~~~~~~~~~~~^^^
+[rank6]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/dataset/utils.py", line 108, in __getitem__
+[rank6]:     raise ValueError('Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or '
+[rank6]: ValueError: Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or modifying the `truncation_strategy`.
+[rank7]: Traceback (most recent call last):
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank7]:     rlhf_main()
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank7]:     return SwiftRLHF(args).main()
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank7]:     result = self.run()
+[rank7]:              ^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank7]:     return func(self, *args, **kwargs)
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 161, in run
+[rank7]:     train_dataset, val_dataset = self._prepare_dataset()
+[rank7]:                                  ^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank7]:     return func(self, *args, **kwargs)
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 122, in _prepare_dataset
+[rank7]:     self._show_dataset(*datasets)
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 289, in _show_dataset
+[rank7]:     inputs = train_dataset[0]
+[rank7]:              ~~~~~~~~~~~~~^^^
+[rank7]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/dataset/utils.py", line 108, in __getitem__
+[rank7]:     raise ValueError('Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or '
+[rank7]: ValueError: Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or modifying the `truncation_strategy`.
+[rank5]: Traceback (most recent call last):
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank5]:     rlhf_main()
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank5]:     return SwiftRLHF(args).main()
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank5]:     result = self.run()
+[rank5]:              ^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank5]:     return func(self, *args, **kwargs)
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 161, in run
+[rank5]:     train_dataset, val_dataset = self._prepare_dataset()
+[rank5]:                                  ^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank5]:     return func(self, *args, **kwargs)
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 122, in _prepare_dataset
+[rank5]:     self._show_dataset(*datasets)
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 289, in _show_dataset
+[rank5]:     inputs = train_dataset[0]
+[rank5]:              ~~~~~~~~~~~~~^^^
+[rank5]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/dataset/utils.py", line 108, in __getitem__
+[rank5]:     raise ValueError('Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or '
+[rank5]: ValueError: Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or modifying the `truncation_strategy`.
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py", line 7, in <module>
+[rank0]:     rlhf_main()
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/rlhf.py", line 248, in rlhf_main
+[rank0]:     return SwiftRLHF(args).main()
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/base.py", line 52, in main
+[rank0]:     result = self.run()
+[rank0]:              ^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank0]:     return func(self, *args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 161, in run
+[rank0]:     train_dataset, val_dataset = self._prepare_dataset()
+[rank0]:                                  ^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/ray_utils/base.py", line 168, in wrapper
+[rank0]:     return func(self, *args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 122, in _prepare_dataset
+[rank0]:     self._show_dataset(*datasets)
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/pipelines/train/sft.py", line 283, in _show_dataset
+[rank0]:     inputs = train_dataset[0] if hasattr(train_dataset, '__len__') else next(iter(train_dataset))
+[rank0]:              ~~~~~~~~~~~~~^^^
+[rank0]:   File "/workspace/llin-rl-dpo/reference/ms-swift/swift/dataset/utils.py", line 108, in __getitem__
+[rank0]:     raise ValueError('Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or '
+[rank0]: ValueError: Failed to retrieve the dataset. You can avoid this issue by increasing `max_length` or modifying the `truncation_strategy`.
+[ERROR] 2026-07-08-01:59:27 (PID:2863, Device:6, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-08-01:59:27 (PID:2864, Device:7, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-08-01:59:27 (PID:2858, Device:1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-08-01:59:27 (PID:2857, Device:0, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-08-01:59:27 (PID:2859, Device:2, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-08-01:59:27 (PID:2860, Device:3, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-08-01:59:28 (PID:2861, Device:4, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+[ERROR] 2026-07-08-01:59:28 (PID:2862, Device:5, RankID:-1) ERR99999 UNKNOWN applicaiton exception
+W0708 01:59:34.877000 2792 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 2857 closing signal SIGTERM
+W0708 01:59:34.878000 2792 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 2858 closing signal SIGTERM
+W0708 01:59:34.878000 2792 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 2859 closing signal SIGTERM
+W0708 01:59:34.878000 2792 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 2860 closing signal SIGTERM
+W0708 01:59:34.878000 2792 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 2861 closing signal SIGTERM
+W0708 01:59:34.879000 2792 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 2862 closing signal SIGTERM
+W0708 01:59:34.879000 2792 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 2864 closing signal SIGTERM
+E0708 01:59:35.444000 2792 site-packages/torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 6 (pid: 2863) of binary: /opt/conda/bin/python3.11
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 896, in <module>
+    main()
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 892, in main
+    run(args)
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 883, in run
+    elastic_launch(
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 270, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/workspace/llin-rl-dpo/reference/ms-swift/swift/cli/rlhf.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-07-08_01:59:34
+  host      : 269f1583621d
+  rank      : 6 (local_rank: 6)
+  exitcode  : 1 (pid: 2863)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

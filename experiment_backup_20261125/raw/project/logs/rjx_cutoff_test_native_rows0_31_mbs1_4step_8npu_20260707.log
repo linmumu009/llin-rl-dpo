@@ -1,0 +1,858 @@
+<frozen runpy>:128: RuntimeWarning: 'torch.distributed.run' found in sys.modules after import of package 'torch.distributed', but prior to execution of 'torch.distributed.run'; this may result in unpredictable behaviour
+
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+[INFO] Starting configuration loading...
+[INFO] Loaded configuration file: /workspace/llin-rl-dpo/configs/rjx_cutoff_test_native_rows0_31_mbs1_4step.yaml
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.model_name_or_path (type: <class 'str'>, value: /models/Qwen3.6-27B)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.use_fast_tokenizer (type: <class 'bool'>, value: True)
+[WARNING] Field 'preprocess_parameters' exists but is not a BaseArguments subclass: typing.Optional[mindspeed_mm.fsdp.data.data_utils.func_utils.model_args.ProcessorArguments]
+[INFO] Automatically registered YAML field: data.dataset_param.preprocess_parameters.split_special_tokens (type: <class 'bool'>, value: False)
+[INFO] Automatically registered YAML field: model.gdn_implementation (type: <class 'str'>, value: triton)
+[INFO] Automatically registered YAML field: model.causal_conv1d_implementation (type: <class 'str'>, value: eager)
+[INFO] Automatically registered YAML field: features.recompute (type: <class 'bool'>, value: True)
+============================================================
+BaseArguments Configuration Manager Summary
+============================================================
+
+Configuration class: Arguments
+Configuration file: /workspace/llin-rl-dpo/configs/rjx_cutoff_test_native_rows0_31_mbs1_4step.yaml
+Allow YAML extensions: True
+Allow CLI override: True
+Strict CLI validation: True
+Allow registering YAML fields: True
+
+Defined field count: 203
+Dynamic field count: 6
+Total field count: 209
+
+
+============ Configuration Details ============
+parallel:
+  data_parallel_size: 8
+  fully_shard_parallel_size: 8
+  fsdp_plan:
+    ignored_modules: []
+    apply_modules: ['model.language_model', 'model.language_model.embed_tokens', 'model.language_model.layers.{*}', 'lm_head']
+    param_dtype: bf16
+    reduce_dtype: fp32
+    output_dtype: None
+    cast_forward_inputs: True
+    reshard_after_forward: True
+    num_to_forward_prefetch: 0
+    num_to_backward_prefetch: 0
+    pregather: False
+    hook_modules: None
+    cpu_offload: False
+  tensor_parallel_size: 1
+  tp_plan:
+    colwise_parallel: []
+    rowwise_parallel: []
+    sequence_parallel: []
+  ring_attention_size: 1
+  ulysses_parallel_size: 1
+  expert_parallel_size: 1
+  expert_fully_shard_parallel_size: 8
+  ep_plan:
+    apply_modules: []
+    use_npu_fused_ops: True
+    dispatcher: alltoall
+    apply_efsdp_modules: []
+  recompute: False
+  recompute_plan:
+    apply_modules: []
+    use_reentrant: False
+  local_rank: 0
+  global_rank: 0
+  world_size: 8
+model:
+  model_id: qwen3_5
+  model_name_or_path: /models/Qwen3.6-27B
+  trust_remote_code: True
+  attn_implementation: flash_attention_2
+  freeze: []
+  mtp_num_layers: 0
+  mtp_loss_scaling_factor: 0.1
+  gdn_implementation: triton
+  causal_conv1d_implementation: eager
+data:
+  dataset_param:
+    dataset_type: huggingface
+    basic_parameters:
+      cache_dir: /workspace/llin-rl-dpo/cache/rjx_cutoff_test_native_rows0_31_mbs1_4step
+      template: qwen3_6
+      chat_template: None
+      enable_thinking: True
+      dataset_dir: /workspace/llin-rl-dpo/datasets/rjx
+      dataset: ['/workspace/llin-rl-dpo/datasets/rjx/20260702_openai_rows0_31.jsonl']
+      cutoff_len: 4096
+      train_on_prompt: False
+      mask_history: False
+      streaming: False
+      overwrite_cache: False
+      preprocessing_batch_size: 1000
+      preprocessing_num_workers: 16
+      max_samples: None
+      tool_format: None
+      val_dataset: None
+      val_max_samples: None
+      val_rate: None
+      packing: None
+      neat_packing: False
+      preprocess_on_fly: False
+      async_preprocess: False
+      async_preprocess_buffer_size: None
+      stage: sft
+    preprocess_parameters:
+      model_name_or_path: /models/Qwen3.6-27B
+      use_fast_tokenizer: True
+      split_special_tokens: False
+      image_resolution: 512
+      video_resolution: 128
+      image_max_pixels: 589824
+      image_min_pixels: 1024
+      video_max_pixels: 65536
+      video_min_pixels: 256
+      video_fps: 2.0
+      video_maxlen: 128
+      image_do_pan_and_scan: False
+      crop_to_patches: False
+      use_audio_in_video: False
+      audio_sampling_rate: 16000
+      trust_remote_code: False
+    attr:
+      ranking: False
+      system: None
+      images: None
+      videos: None
+      audios: None
+      prompt: None
+      query: None
+      response: None
+      history: None
+      messages: messages
+      tools: tools
+      role_tag: role
+      content_tag: content
+      user_tag: user
+      assistant_tag: assistant
+      observation_tag: tool
+      function_tag: function_call
+      system_tag: system
+      chosen: None
+      rejected: None
+      formatting: openai
+  val_dataset_param: None
+  dataloader_param:
+    dataloader_mode: sampler
+    sampler_type: BaseRandomBatchSampler
+    shuffle: False
+    drop_last: True
+    pin_memory: True
+    collate_param:
+      collator_id: None
+      model_name: qwen3vl
+      ignore_pad_token_for_loss: True
+      pad_to_multiple_of: 8
+    num_workers: 8
+    enable_preload: False
+training:
+  profile:
+    enable: False
+    start_step: 1
+    end_step: 2
+    save_path: ./profiling
+    record_shapes: True
+    with_memory: True
+    with_stack: True
+    ranks: [0]
+    _train_steps: -1
+    local_rank: 0
+    global_rank: 0
+    world_size: 8
+    profile_this_rank: False
+  lora:
+    enable: False
+    rank: 8
+    alpha: 16
+    target_modules: ['q_proj', 'k_proj', 'v_proj']
+    dropout: 0.0
+    init_lora_weights: True
+    pretrained_lora_path: None
+    lora_target_modules_support: None
+  lr: 1e-05
+  lr_min: 0.0
+  lr_start: 0.0
+  weight_decay: 0.0
+  no_decay_modules: []
+  no_decay_params: []
+  optimizer: adamw
+  matched_adamw_rms: 0.2
+  muon_momentum: 0.95
+  ns_steps: 5
+  adam_fused: True
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_eps: 1e-08
+  clip_grad: 0.0
+  clip_grad_foreach: True
+  micro_batch_size: 1
+  gradient_accumulation_steps: 1
+  lr_warmup_ratio: 0.1
+  lr_decay_style: cosine
+  lr_decay_ratio: 1.0
+  enable_full_determinism: False
+  ckpt_manager: dcp
+  save_async: False
+  load_checkpoint_path: None
+  save_steps: 0
+  seed: 42
+  max_steps: None
+  init_model_with_meta_device: True
+  train_iters: 4
+  train_epochs: None
+  load: /workspace/llin-rl-dpo/checkpoints/msmm-qwen36-27b-dcp
+  load_format: auto
+  load_strict: False
+  load_rank0_and_broadcast: False
+  no_load_optim: True
+  no_load_rng: True
+  save: /workspace/llin-rl-dpo/outputs/rjx-cutoff-test-native-rows0-31-mbs1-4step
+  no_save_optim: True
+  no_save_rng: True
+  log_interval: 1
+  save_interval: 1000
+  val_interval: 0
+  val_micro_batch_size: None
+  use_deter_comp: False
+  allow_hf32: None
+  plugin: ['mindspeed_mm/fsdp/models/qwen3_5', 'mindspeed_mm/fsdp/data/datasets/huggingface']
+  lr_scaling_plan: None
+  quantization_plan: QuantizeConfig(recipe_name=None, apply_modules=[], ignored_modules=[], quant_converters=[], extra_args={}, enable_fsdp_low_precision_all_gather=True, fsdp_low_precision_all_gather_mode='on-demand')
+  _train_steps: -1
+  local_rank: 0
+  global_rank: 0
+  world_size: 8
+  global_batch_size: 8
+tools:
+  profile:
+    enable: False
+    profile_type: static
+    ranks: [0]
+    static_param:
+      level: level1
+      with_stack: False
+      with_memory: False
+      record_shapes: False
+      with_cpu: True
+      save_path: ./profiling
+      start_step: 10
+      end_step: 11
+      data_simplification: False
+      aic_metrics_type: PipeUtilization
+      analyse_flag: True
+  memory_profile:
+    enable: False
+    start_step: 1
+    end_step: 2
+    save_path: ./memory_snapshot
+    dump_ranks: [0]
+    stacks: all
+    max_entries: None
+    mem_info: False
+features:
+  recompute_plan:
+    apply_modules: ['model.language_model.layers.{*}']
+    use_reentrant: False
+  loss_cfg:
+    loss_type: default
+    router_aux_loss_coef: 0.0
+    router_aux_loss_offload: False
+  enable_chunk_loss: True
+  enable_dynamic_chunk_loss: False
+  chunkloss_plan:
+    apply_module: lm_head
+    chunk_size: 256
+    total_chunk_size: 4096
+  enable_activation_offload: True
+  activation_offload_plan:
+    apply_modules: ['model.language_model.layers.{*}']
+  enable_chunk_mbs: False
+  chunkmbs_plan:
+    apply_modules: None
+    chunk_mbs: 1
+    batch_dim: 0
+    chunk_arg_indexs: [0]
+    chunk_kwarg_names: []
+  enable_ep_balance: False
+  ep_balance_plan:
+    max_dup_experts_num: 2
+  recompute: True
+data.dataset_param.preprocess_parameters.model_name_or_path: /models/Qwen3.6-27B
+data.dataset_param.preprocess_parameters.use_fast_tokenizer: True
+data.dataset_param.preprocess_parameters.split_special_tokens: False
+
+
+============ Dynamic Fields ============
+ data.dataset_param.preprocess_parameters.model_name_or_path
+ data.dataset_param.preprocess_parameters.split_special_tokens
+ data.dataset_param.preprocess_parameters.use_fast_tokenizer
+ features.recompute
+ model.causal_conv1d_implementation
+ model.gdn_implementation
+============================================================
+Successfully imported: mindspeed_mm.fsdp.models.qwen3_5
+[ERROR] `cache_position` is part of Qwen3_5TextModel.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5Model.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5TextModel.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5ForCausalLM.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5Model.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5ForCausalLM.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+Successfully imported: mindspeed_mm.fsdp.data.datasets.huggingface
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,331 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,332 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 2 | Local Rank 2] 2026-07-07 04:41:05,341 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 2 | Local Rank 2] 2026-07-07 04:41:05,342 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,719 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,719 INFO [torch_npu.env:15] => get env MASTER_PORT = 29638
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,719 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[ERROR] `cache_position` is part of Qwen3_5TextModel.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5Model.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5ForCausalLM.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,757 INFO [mindspeed_mm.fsdp.distributed.parallel_state:87] => Parallel state initialized:
+ [dp] = True | Group size: 8 | device mesh:DeviceMesh('npu', [0, 1, 2, 3, 4, 5, 6, 7], mesh_dim_names=('dp',)) 
+[cp] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('cp',)) 
+[ulysses] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('ulysses',)) 
+[ring] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('ring',)) 
+[tp] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('tp',)) 
+[edp] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('edp',)) 
+[efsdp] = True | Group size: 8 | device mesh:DeviceMesh('npu', [0, 1, 2, 3, 4, 5, 6, 7], mesh_dim_names=('efsdp',)) 
+[ep] = False | Group size: 1 | device mesh:DeviceMesh('npu', [0], mesh_dim_names=('ep',)) 
+[fsdp] = True | Group size: 8 | device mesh:DeviceMesh('npu', [0, 1, 2, 3, 4, 5, 6, 7], mesh_dim_names=('dp_shard_cp',)) 
+
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,758 INFO [mindspeed_mm.fsdp.models.modelhub:48] => > Loading AutoConfig from /models/Qwen3.6-27B...
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,772 INFO [mindspeed_mm.fsdp.models.modelhub:48] => Building transformers model from configuration...
+[transformers] You are attempting to use Flash Attention 2 without specifying a dtype. This might lead to unexpected behaviour
+[Rank 3 | Local Rank 3] 2026-07-07 04:41:05,781 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 3 | Local Rank 3] 2026-07-07 04:41:05,782 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[ERROR] `cache_position` is part of Qwen3_5TextModel.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5Model.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5ForCausalLM.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5TextModel.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5Model.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5ForCausalLM.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[Rank 7 | Local Rank 7] 2026-07-07 04:41:05,892 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 7 | Local Rank 7] 2026-07-07 04:41:05,893 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 5 | Local Rank 5] 2026-07-07 04:41:05,935 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 5 | Local Rank 5] 2026-07-07 04:41:05,937 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[ERROR] `cache_position` is part of Qwen3_5TextModel.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5Model.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5ForCausalLM.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,980 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,980 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:340] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,983 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,984 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,987 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,989 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 2 | Local Rank 2] 2026-07-07 04:41:05,990 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 2 | Local Rank 2] 2026-07-07 04:41:05,990 INFO [torch_npu.env:15] => get env MASTER_PORT = 29638
+[Rank 2 | Local Rank 2] 2026-07-07 04:41:05,990 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,991 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,994 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,996 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:05,997 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,001 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,003 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,005 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,008 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 4 | Local Rank 4] 2026-07-07 04:41:06,009 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,009 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 4 | Local Rank 4] 2026-07-07 04:41:06,010 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,011 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,014 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,015 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,017 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[transformers] You are attempting to use Flash Attention 2 without specifying a dtype. This might lead to unexpected behaviour
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,020 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,022 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,023 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,026 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,028 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,030 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,033 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,034 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,036 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,039 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,041 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,042 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,045 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,047 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,049 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,052 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,054 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,055 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,058 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,060 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,062 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,065 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,066 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,068 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,071 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,073 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,075 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,078 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,079 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,081 INFO [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:48] => Qwen3_5GatedDeltaNet use NPU triton fused ops
+[Rank 2 | Local Rank 2] 2026-07-07 04:41:06,215 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:340] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 3 | Local Rank 3] 2026-07-07 04:41:06,220 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 3 | Local Rank 3] 2026-07-07 04:41:06,220 INFO [torch_npu.env:15] => get env MASTER_PORT = 29638
+[Rank 3 | Local Rank 3] 2026-07-07 04:41:06,220 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[ERROR] `cache_position` is part of Qwen3_5TextModel.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[transformers] You are attempting to use Flash Attention 2 without specifying a dtype. This might lead to unexpected behaviour
+[ERROR] `cache_position` is part of Qwen3_5Model.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5ForCausalLM.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[Rank 1 | Local Rank 1] 2026-07-07 04:41:06,278 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 1 | Local Rank 1] 2026-07-07 04:41:06,279 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.0
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.1
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.2
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.3
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.4
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.5
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.6
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.7
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.8
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.9
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.10
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.11
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.12
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.13
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.14
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.15
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.16
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.17
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.18
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.19
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,331 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.20
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.21
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.22
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.23
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.24
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.25
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.26
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.27
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.28
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.29
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.30
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.31
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.32
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.33
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.34
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.35
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.36
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.37
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.38
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.39
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.40
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.41
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.42
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.43
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.44
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.45
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.46
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.47
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.48
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.49
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.50
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.51
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.52
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.53
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.54
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.55
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.56
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.57
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.58
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.59
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.60
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.61
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,332 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.62
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.recompute:48] => Applying recompute to module: model.language_model.layers.63
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.0, offload idx: 0, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.1, offload idx: 1, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.2, offload idx: 2, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.3, offload idx: 3, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.4, offload idx: 4, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.5, offload idx: 5, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.6, offload idx: 6, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.7, offload idx: 7, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.8, offload idx: 8, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.9, offload idx: 9, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.10, offload idx: 10, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.11, offload idx: 11, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.12, offload idx: 12, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.13, offload idx: 13, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.14, offload idx: 14, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.15, offload idx: 15, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.16, offload idx: 16, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.17, offload idx: 17, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.18, offload idx: 18, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.19, offload idx: 19, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.20, offload idx: 20, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.21, offload idx: 21, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.22, offload idx: 22, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.23, offload idx: 23, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.24, offload idx: 24, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.25, offload idx: 25, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.26, offload idx: 26, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.27, offload idx: 27, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.28, offload idx: 28, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,333 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.29, offload idx: 29, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.30, offload idx: 30, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.31, offload idx: 31, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.32, offload idx: 32, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.33, offload idx: 33, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.34, offload idx: 34, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.35, offload idx: 35, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.36, offload idx: 36, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.37, offload idx: 37, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.38, offload idx: 38, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.39, offload idx: 39, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.40, offload idx: 40, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.41, offload idx: 41, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.42, offload idx: 42, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.43, offload idx: 43, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.44, offload idx: 44, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.45, offload idx: 45, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.46, offload idx: 46, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.47, offload idx: 47, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.48, offload idx: 48, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.49, offload idx: 49, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.50, offload idx: 50, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.51, offload idx: 51, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.52, offload idx: 52, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.53, offload idx: 53, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.54, offload idx: 54, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.55, offload idx: 55, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.56, offload idx: 56, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.57, offload idx: 57, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.58, offload idx: 58, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.59, offload idx: 59, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.60, offload idx: 60, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.61, offload idx: 61, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.62, offload idx: 62, offload_layers_num: 64
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:06,334 INFO [mindspeed_mm.fsdp.features.memory.async_offload:48] => Applying activation offload to module: model.language_model.layers.63, offload idx: 63, offload_layers_num: 64
+[ERROR] `cache_position` is part of Qwen3_5TextModel.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5Model.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[ERROR] `cache_position` is part of Qwen3_5ForCausalLM.forward's signature, but not documented. Make sure to add it to the docstring of the function in /workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/models/qwen3_5/modeling_qwen3_5.py.
+[Rank 6 | Local Rank 6] 2026-07-07 04:41:06,399 INFO [torch_npu.env:15] => get env USE_TF = FALSE
+[Rank 6 | Local Rank 6] 2026-07-07 04:41:06,400 INFO [datasets:114] => Disabling Tensorflow because USE_TORCH is set
+[Rank 4 | Local Rank 4] 2026-07-07 04:41:06,421 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 4 | Local Rank 4] 2026-07-07 04:41:06,421 INFO [torch_npu.env:15] => get env MASTER_PORT = 29638
+[Rank 4 | Local Rank 4] 2026-07-07 04:41:06,422 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[Rank 3 | Local Rank 3] 2026-07-07 04:41:06,427 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:340] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[transformers] You are attempting to use Flash Attention 2 without specifying a dtype. This might lead to unexpected behaviour
+[Rank 4 | Local Rank 4] 2026-07-07 04:41:06,630 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:340] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 1 | Local Rank 1] 2026-07-07 04:41:06,692 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 1 | Local Rank 1] 2026-07-07 04:41:06,693 INFO [torch_npu.env:15] => get env MASTER_PORT = 29638
+[Rank 1 | Local Rank 1] 2026-07-07 04:41:06,693 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[transformers] You are attempting to use Flash Attention 2 without specifying a dtype. This might lead to unexpected behaviour
+[Rank 6 | Local Rank 6] 2026-07-07 04:41:06,815 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 6 | Local Rank 6] 2026-07-07 04:41:06,815 INFO [torch_npu.env:15] => get env MASTER_PORT = 29638
+[Rank 6 | Local Rank 6] 2026-07-07 04:41:06,815 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[transformers] You are attempting to use Flash Attention 2 without specifying a dtype. This might lead to unexpected behaviour
+[Rank 1 | Local Rank 1] 2026-07-07 04:41:06,901 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:340] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 6 | Local Rank 6] 2026-07-07 04:41:07,022 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:340] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 7 | Local Rank 7] 2026-07-07 04:41:07,116 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 7 | Local Rank 7] 2026-07-07 04:41:07,116 INFO [torch_npu.env:15] => get env MASTER_PORT = 29638
+[Rank 7 | Local Rank 7] 2026-07-07 04:41:07,116 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[transformers] You are attempting to use Flash Attention 2 without specifying a dtype. This might lead to unexpected behaviour
+[Rank 5 | Local Rank 5] 2026-07-07 04:41:07,280 INFO [torch_npu.env:15] => get env MASTER_ADDR = localhost
+[Rank 5 | Local Rank 5] 2026-07-07 04:41:07,280 INFO [torch_npu.env:15] => get env MASTER_PORT = 29638
+[Rank 5 | Local Rank 5] 2026-07-07 04:41:07,280 INFO [torch_npu.env:15] => get env TORCHELASTIC_USE_AGENT_STORE = True
+[transformers] You are attempting to use Flash Attention 2 without specifying a dtype. This might lead to unexpected behaviour
+[Rank 7 | Local Rank 7] 2026-07-07 04:41:07,324 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:340] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 5 | Local Rank 5] 2026-07-07 04:41:07,485 WARNING [mindspeed_mm.fsdp.models.qwen3_5.modeling_qwen3_5:340] => The fast path is not available because one of the required library is not installed. Falling back to torch implementation.
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:07,872 INFO [__main__:48] => Prepare data
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+2026-07-07 04:41:09,345 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:09,345 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+2026-07-07 04:41:09,830 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 4 | Local Rank 4] 2026-07-07 04:41:09,830 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+2026-07-07 04:41:10,033 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 2 | Local Rank 2] 2026-07-07 04:41:10,033 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+2026-07-07 04:41:10,097 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 1 | Local Rank 1] 2026-07-07 04:41:10,097 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+2026-07-07 04:41:10,100 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 3 | Local Rank 3] 2026-07-07 04:41:10,100 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+[Rank 0 | Local Rank 0] 2026-07-07 04:41:10,130 INFO [httpx:1025] => HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/json/json.py "HTTP/1.1 200 OK"
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 32 examples [00:00, 8693.42 examples/s]
+Converting format of dataset (num_proc=16):   0%|          | 0/32 [00:00<?, ? examples/s]2026-07-07 04:41:10,637 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 6 | Local Rank 6] 2026-07-07 04:41:10,637 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+2026-07-07 04:41:10,702 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 5 | Local Rank 5] 2026-07-07 04:41:10,702 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+2026-07-07 04:41:10,943 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 7 | Local Rank 7] 2026-07-07 04:41:10,943 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+Converting format of dataset (num_proc=16):   6%|▋         | 2/32 [00:11<02:51,  5.70s/ examples]Converting format of dataset (num_proc=16):  56%|█████▋    | 18/32 [00:11<00:06,  2.06 examples/s]Converting format of dataset (num_proc=16):  75%|███████▌  | 24/32 [00:12<00:02,  2.99 examples/s]Converting format of dataset (num_proc=16):  88%|████████▊ | 28/32 [00:12<00:01,  3.80 examples/s]Converting format of dataset (num_proc=16): 100%|██████████| 32/32 [00:12<00:00,  4.74 examples/s]Converting format of dataset (num_proc=16): 100%|██████████| 32/32 [00:16<00:00,  1.88 examples/s]
+Rank 0, running tokenizer on train_dataset (num_proc=16):   0%|          | 0/32 [00:00<?, ? examples/s]Rank 0, running tokenizer on train_dataset (num_proc=16):   6%|▋         | 2/32 [00:12<03:12,  6.40s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  12%|█▎        | 4/32 [00:15<01:34,  3.38s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  19%|█▉        | 6/32 [00:17<01:02,  2.41s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  25%|██▌       | 8/32 [00:20<00:46,  1.95s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  31%|███▏      | 10/32 [00:22<00:36,  1.68s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  38%|███▊      | 12/32 [00:25<00:31,  1.57s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  44%|████▍     | 14/32 [00:27<00:25,  1.42s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  50%|█████     | 16/32 [00:30<00:21,  1.37s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  56%|█████▋    | 18/32 [00:32<00:18,  1.32s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  62%|██████▎   | 20/32 [00:35<00:15,  1.31s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  69%|██████▉   | 22/32 [00:37<00:13,  1.31s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  75%|███████▌  | 24/32 [00:40<00:10,  1.27s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  81%|████████▏ | 26/32 [00:42<00:07,  1.27s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  88%|████████▊ | 28/32 [00:45<00:05,  1.27s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16):  94%|█████████▍| 30/32 [00:47<00:02,  1.25s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16): 100%|██████████| 32/32 [00:50<00:00,  1.25s/ examples]Rank 0, running tokenizer on train_dataset (num_proc=16): 100%|██████████| 32/32 [00:54<00:00,  1.70s/ examples]
+training example:
+input_ids:
+[248045, 8678, 198, 760, 1156, 668, 2466, 264, 34780, 3296, 13, 1394, 1902, 11290, 424, 539, 2614, 1439, 7123, 25, 271, 16, 13, 25905, 286, 8340, 25, 5339, 11, 2649, 264, 16908, 31626, 1817, 13, 1061, 4307, 1817, 1902, 381, 42360, 2785, 359, 248068, 6, 321, 359, 248069, 6, 9212, 13, 198, 17, 13, 12650, 21134, 25, 38256, 279, 1534, 4087, 2785, 3729, 8944, 5417, 321, 7804, 8944, 5417, 9212, 13, 561, 6007, 1067, 1902, 381, 42360, 303, 1088, 76367, 44845, 271, 15529, 1692, 518, 86508, 22136, 25, 198, 12, 8618, 4619, 318, 248068, 11, 220, 248069, 11, 361, 8944, 7813, 672, 8944, 8958, 1902, 45993, 1141, 1765, 1500, 13, 198, 12, 561, 2144, 4613, 279, 9212, 1902, 1151, 383, 264, 491, 1500, 6849, 1238, 279, 8306, 4619, 13, 198, 12, 3054, 524, 884, 866, 1414, 4732, 314, 1439, 9212, 13, 248046, 198, 248045, 846, 198, 12151, 562, 1754, 3008, 314, 449, 3128, 41520, 20837, 17237, 24606, 55821, 1083, 2943, 5951, 5306, 13, 16410, 1754, 12436, 1406, 11, 3902, 4965, 14835, 310, 279, 975, 1330, 10744, 13, 561, 10744, 314, 20837, 42821, 24606, 55821, 3658, 440, 1439, 14835, 4965, 6762, 17237, 16, 20, 55821, 52448, 3387, 13, 7145, 279, 23856, 7308, 17237, 77, 55821, 1680, 421, 11, 874, 4766, 864, 17237, 77, 55821, 3387, 513, 11543, 4082, 1439, 17237, 16, 20, 55821, 52448, 3387, 11, 1017, 2590, 2905, 2250, 3387, 421, 1304, 449, 369, 428, 341, 624, 20837, 13, 198, 5836, 21156, 279, 3294, 3377, 11, 4338, 2468, 678, 1534, 4087, 303, 279, 2614, 3443, 25, 198, 13962, 561, 1534, 4087, 369, 25, 56014, 76367, 90, 27, 21061, 4087, 29, 30675, 198, 12929, 25, 198, 13962, 561, 1534, 4087, 369, 25, 56014, 76367, 90, 16, 17, 18, 30675, 198, 760, 1534, 4087, 1220, 381, 2574, 430, 22898, 430, 3102, 318, 940, 94535, 17210, 1680, 430, 1088, 26026, 11, 1088, 35790, 11, 1088, 2413, 11, 4831, 34163, 1368, 279, 1534, 4087, 17077, 264, 11778, 54315, 11, 424, 1902, 381, 12995, 310, 506, 3140, 2943, 11778, 7247, 13, 248046, 198, 248045, 74455, 198, 248068, 198, 9764, 279, 2250, 479, 1029, 399, 3387, 383, 3008, 1088, 2231, 1803, 10713, 8, 494, 17237, 32, 55821, 310, 17237, 33, 55821, 381, 17237, 43, 26351, 47875, 59, 1174, 279, 2250, 479, 1029, 399, 3387, 383, 3008, 1088, 2231, 4738, 10713, 8, 494, 17237, 33, 55821, 310, 17237, 34, 55821, 381, 17237, 53, 26386, 48781, 59, 1174, 321, 279, 2250, 479, 1029, 399, 3387, 383, 3008, 1088, 2231, 4887, 10713, 8, 494, 17237, 34, 55821, 310, 17237, 32, 55821, 381, 17237, 45, 40731, 26147, 59, 553, 561, 18664, 1406, 314, 1088, 2231, 64375, 16073, 22512, 16073, 14453, 10713, 8, 369, 17237, 47, 59, 1174, 279, 18664, 1406, 314, 1088, 2231, 64375, 16073, 35695, 16073, 5095, 10713, 8, 369, 17237, 48, 59, 1174, 321, 279, 18664, 1406, 314, 1088, 2231, 35695, 16073, 22512, 16073, 1113, 10713, 8, 369, 17237, 49, 59, 553, 1368, 279, 7776, 869, 314, 17237, 77, 55821, 369, 220, 20, 11, 4483, 220, 20, 52448, 3387, 383, 3008, 1088, 2231, 1803, 10713, 681, 874, 2250, 52448, 3387, 628, 1304, 449, 369, 428, 341, 624, 20837, 11, 8190, 17237, 77, 1088, 689, 80, 220, 21, 59, 553, 60101, 11, 1973, 4557, 314, 1704, 2632, 11, 220, 279, 17237, 77, 55821, 11543, 52448, 3387, 513, 2438, 3387, 11, 321, 279, 3672, 513, 6105, 3387, 13, 8439, 17237, 47, 48170, 22774, 55821, 4021, 660, 381, 2438, 3387, 11, 567, 4123, 2250, 4886, 3559, 25, 271, 7, 16, 8, 1368, 1017, 513, 1132, 1330, 2438, 3387, 4082, 17237, 47, 48170, 22774, 59, 681, 321, 9370, 11, 1973, 4557, 314, 1704, 2632, 11, 17237, 48, 22774, 55821, 513, 2438, 3387, 11, 1179, 17237, 47, 14595, 26386, 55821, 513, 660, 6105, 3387, 11, 321, 17237, 52, 38627, 55821, 321, 17237, 36, 11, 426, 55821, 513, 1048, 660, 6105, 3387, 13, 22677, 11, 2394, 506, 1379, 799, 2438, 1406, 628, 381, 11543, 494, 17237, 44, 10962, 55821, 318, 57913, 17237, 44, 10962, 55821, 321, 17237, 49, 55821, 668, 1304, 449, 369, 428, 341, 624, 20837, 681, 506, 1379, 799, 2438, 1406, 494, 17237, 45, 10962, 55821, 318, 57913, 17237, 45, 10962, 55821, 321, 17237, 49, 55821, 668, 1304, 449, 369, 428, 341, 624, 20837, 681, 321, 506, 1379, 799, 2438, 1406, 494, 17237, 44, 21359, 55821, 318, 57913, 17237, 44, 21359, 55821, 321, 17237, 48, 55821, 668, 1304, 449, 369, 428, 341, 624, 20837, 681, 1017, 369, 506, 1379, 799, 2438, 1406, 421, 628, 381, 11543, 494, 17237, 44, 21359, 10962, 59, 553, 33105, 11, 1017, 369, 506, 1379, 799, 2438, 1406, 494, 17237, 43, 26147, 7904, 59, 681, 8190, 3154, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 271, 7, 17, 8, 1368, 1017, 369, 1132, 799, 2438, 1406, 4082, 17237, 47, 48170, 22774, 59, 681, 567, 1189, 9370, 11, 1973, 4557, 314, 1704, 2632, 11, 17237, 47, 55821, 369, 279, 2438, 1406, 13, 1088, 1272, 41868, 806, 90, 16, 15623, 1368, 17237, 35, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 54, 21359, 55821, 513, 660, 6105, 3387, 11, 321, 506, 1379, 799, 2438, 1406, 494, 17237, 37, 29130, 26147, 40731, 59, 553, 198, 2592, 17237, 43, 55821, 318, 269, 17237, 44, 59, 578, 369, 264, 2438, 1406, 11, 1179, 17237, 32, 55821, 369, 264, 6105, 1406, 11, 506, 1379, 799, 2438, 1406, 494, 17237, 33, 10962, 55821, 321, 506, 1379, 799, 2438, 1406, 494, 17237, 52, 38627, 59, 681, 8190, 3154, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 1368, 17237, 37, 55821, 318, 269, 17237, 36, 59, 578, 369, 264, 2438, 1406, 11, 17237, 32, 55821, 369, 264, 6105, 1406, 11, 3154, 506, 1379, 799, 2438, 1406, 1881, 17237, 33, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 1881, 17237, 52, 38627, 59, 681, 8190, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 59, 1272, 41868, 806, 90, 17, 92, 1368, 17237, 35, 55821, 369, 264, 6105, 1406, 321, 17237, 32, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 43, 26147, 55821, 321, 17237, 54, 21359, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 36, 26351, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 33, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 220, 494, 17237, 52, 38627, 59, 681, 8190, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 59, 1272, 41868, 806, 90, 18, 92, 61806, 11, 1973, 4557, 314, 1704, 2632, 11, 17237, 43, 55821, 430, 2438, 1406, 11, 413, 17237, 35, 14595, 55821, 513, 2107, 6105, 321, 948, 506, 1379, 799, 2438, 1406, 628, 381, 11543, 494, 17237, 43, 26147, 59, 681, 17237, 36, 26351, 26147, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 1881, 17237, 54, 21359, 59, 1174, 506, 1379, 799, 2438, 1406, 1881, 17237, 33, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 1881, 17237, 52, 38627, 59, 681, 8190, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 59, 1272, 41868, 806, 90, 19, 92, 1368, 17237, 35, 14595, 29130, 26147, 55821, 513, 660, 6105, 3387, 321, 948, 17237, 36, 26351, 55821, 513, 2107, 2438, 3387, 11, 17237, 54, 21359, 55821, 321, 17237, 33, 10962, 55821, 513, 660, 6105, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 52, 38627, 59, 681, 8190, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 3095, 1017, 369, 506, 1379, 799, 2438, 1406, 494, 17237, 36, 26351, 59, 681, 506, 1379, 799, 2438, 1406, 494, 17237, 54, 21359, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 33, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 52, 38627, 59, 681, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 271, 7, 18, 8, 1368, 17237, 47, 48170, 22774, 55821, 513, 660, 6105, 3387, 321, 1017, 369, 506, 1379, 799, 2438, 1406, 303, 1754, 95296, 17237, 32, 29130, 26147, 26, 33, 38627, 47875, 26, 34, 21359, 48781, 26, 35, 40731, 26351, 59, 681, 1017, 513, 506, 1379, 2943, 2438, 3387, 26, 5752, 11, 1017, 1902, 381, 264, 95296, 4082, 17237, 32, 29130, 26147, 26, 33, 38627, 47875, 26, 34, 21359, 48781, 26, 35, 40731, 26351, 55821, 421, 5435, 506, 3140, 1330, 2438, 3387, 13, 198, 59, 1272, 41868, 806, 90, 16, 92, 60101, 11, 1973, 4557, 314, 1704, 2632, 11, 17237, 36, 26351, 55821, 513, 2438, 3387, 11, 321, 413, 17237, 35, 40731, 26351, 55821, 5435, 506, 3140, 1330, 2438, 3387, 11, 1116, 17237, 35, 14595, 55821, 321, 17237, 33, 10962, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 43, 26147, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 54, 38627, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 45, 48781, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 59, 1272, 41868, 806, 90, 17, 92, 1368, 1017, 369, 264, 95296, 4082, 17237, 32, 29130, 26147, 26, 33, 38627, 47875, 26, 34, 21359, 48781, 55821, 421, 5435, 506, 3140, 1330, 2438, 3387, 11, 567, 1189, 9370, 11, 1973, 4557, 314, 1704, 2632, 11, 17237, 33, 38627, 47875, 55821, 5435, 506, 3140, 1330, 2438, 3387, 26, 1368, 17237, 53, 47875, 55821, 513, 2438, 3387, 11, 1179, 17237, 33, 40731, 55821, 321, 17237, 37, 26386, 55821, 513, 660, 6105, 3387, 26, 24725, 11, 1973, 4557, 314, 1704, 2632, 11, 17237, 43, 55821, 369, 264, 2438, 1406, 11, 413, 1017, 369, 264, 2438, 1406, 494, 17237, 43, 48781, 59, 681, 1179, 17237, 34, 21359, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 32, 26147, 59, 1174, 1442, 413, 17237, 52, 55821, 369, 264, 2438, 1406, 11, 567, 1990, 599, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 1368, 17237, 43, 48781, 55821, 513, 2107, 6105, 3387, 11, 1179, 1017, 369, 506, 1379, 799, 2438, 1406, 494, 17237, 44, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 32, 21359, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 1368, 17237, 33, 38627, 55821, 513, 2438, 3387, 11, 17237, 54, 55821, 369, 264, 6105, 1406, 11, 321, 567, 628, 46522, 430, 1732, 25, 198, 2784, 8, 1368, 17237, 37, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 35, 26147, 21359, 55821, 513, 660, 6105, 3387, 13, 1368, 17237, 36, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 34, 14595, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 43, 48781, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 1368, 17237, 36, 55821, 369, 264, 6105, 1406, 11, 1017, 369, 506, 1379, 799, 2438, 1406, 494, 17237, 32, 10962, 55821, 321, 506, 1379, 799, 2438, 1406, 494, 17237, 43, 48781, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 1818, 8, 1368, 17237, 37, 55821, 369, 264, 6105, 1406, 321, 17237, 35, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 36, 29130, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 32, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 44, 21359, 48781, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 1290, 8, 1368, 17237, 37, 26386, 55821, 513, 6105, 3387, 321, 17237, 43, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 52, 21359, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 32, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 44, 40731, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 1446, 8, 1368, 17237, 37, 26386, 29130, 55821, 513, 6105, 3387, 321, 17237, 52, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 32, 55821, 369, 264, 6105, 1406, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 44, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 45, 40731, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 1958, 8, 1368, 17237, 37, 26386, 29130, 48781, 55821, 513, 6105, 3387, 11, 1179, 1017, 369, 506, 1379, 799, 2438, 1406, 494, 17237, 44, 21359, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 32, 10962, 59, 681, 3154, 17237, 36, 55821, 264, 2438, 1406, 11, 567, 599, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 13891, 11, 567, 628, 3902, 264, 16198, 25, 413, 567, 4992, 17237, 77, 55821, 52448, 3387, 494, 1439, 220, 16, 20, 52448, 3387, 1680, 421, 874, 2250, 52448, 3387, 628, 1304, 449, 369, 428, 341, 624, 20837, 11, 1179, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 2985, 1141, 5838, 29425, 3295, 11, 567, 628, 30076, 421, 948, 17237, 77, 1088, 689, 80, 220, 21, 59, 681, 1017, 1902, 381, 2250, 52448, 3387, 421, 628, 1304, 449, 369, 428, 341, 624, 20837, 13, 733, 11782, 11, 279, 7776, 869, 314, 1088, 11189, 10065, 12849, 88216, 10713, 8, 369, 25, 220, 21, 13, 198, 248069, 271, 27, 8944, 29, 198, 59, 76367, 34521, 76367, 90, 21, 3307, 198, 510, 8944, 29, 248046, 198]
+inputs:
+<|im_start|>system
+The user will ask a mathematical question. You must solve it by following these steps:
+
+1. Reasoning Process: First, perform a thorough reasoning process. This entire process must be enclosed within '<think>' and '</think>' tags.
+2. Final Answer: Provide the final answer within '<answer>' and '</answer>' tags. The core result must be enclosed in \boxed{}.
+
+Crucial Formatting Rules:
+- Each tag (<think>, </think>, <answer>, </answer>) must occupy its own line.
+- The content inside the tags must start on a new line immediately after the opening tag.
+- Do not add any text outside of these tags.<|im_end|>
+<|im_start|>user
+Divide each side of an equilateral triangle \(ABC\) into four equal parts. Through each division point, draw lines parallel to the other two sides. The sides of triangle\(ABC\) together with these parallel lines define \(15\) lattice points. Find the smallest integer \(n\) such that, no matter which \(n\) points are chosen among these \(15\) lattice points, there always exist three points that form an isosceles triangle.
+After solving the above problem, please output your final answer in the following format:
+### The final answer is: $\boxed{<your answer>}$
+Example:
+### The final answer is: $\boxed{123}$
+The final answer should be given as precisely as possible (using LaTeX symbols such as \sqrt, \frac, \pi, etc.). If the final answer involves a decimal approximation, it must be accurate to at least four decimal places.<|im_end|>
+<|im_start|>assistant
+<think>
+Let the three trisection points on side \({AB}\) from \(A\) to \(B\) be \(L,F,W\); the three trisection points on side \({BC}\) from \(B\) to \(C\) be \(V,D,U\); and the three trisection points on side \({CA}\) from \(C\) to \(A\) be \(N,E,M\). The intersection point of \({MV},{LU},{EF}\) is \(P\); the intersection point of \({MV},{WN},{DF}\) is \(Q\); and the intersection point of \({WN},{LU},{DE}\) is \(R\). If the minimum value of \(n\) is 5, taking 5 lattice points on side \({AB}\), no three lattice points can form an isosceles triangle, thus \(n \geq 6\). Assume, without loss of generality,  the \(n\) chosen lattice points are red points, and the others are blue points. Since \(P,Q,R\) cannot all be red points, we discuss three cases below:
+
+(1) If there are only two red points among \(P,Q,R\), and assume, without loss of generality, \(Q,R\) are red points, then \(P,A,D\) are all blue points, and \(U,V\) and \(E, F\) are also all blue points. Furthermore, since at most one red point can be chosen from \(M,C\) (otherwise \(M,C\) and \(R\) will form an isosceles triangle), at most one red point from \(N,C\) (otherwise \(N,C\) and \(R\) will form an isosceles triangle), and at most one red point from \(M,N\) (otherwise \(M,N\) and \(Q\) will form an isosceles triangle), there is at most one red point that can be chosen from \(M,N,C\). Similarly, there is at most one red point from \(L,M,B\), thus making \(n \leq 5\).
+
+(2) If there is only one red point among \(P,Q,R\), we may assume, without loss of generality, \(P\) is the red point. \textcircled{1}: If \(D\) is a red point, then \(W,N\) are all blue points, and at most one red point from \(F,L,M,E\).
+If \(L\) (or \(M\)) is a red point, then \(A\) is a blue point, at most one red point from \(B,C\) and at most one red point from \(U,V\), thus making \(n \leq 5\). If \(F\) (or \(E\)) is a red point, \(A\) is a blue point, making at most one red point between \(B,C\); at most one red point between \(U,V\), thus \(n \leq 5\).
+\textcircled{2} If \(D\) is a blue point and \(A\) is a red point, then \(L,M\) and \(W,N\) are all blue points, making at most one red point from \(E,F\); at most one red point from \(B,C\); at most one red point  from \(U,V\), thus \(n \leq 5\).
+\textcircled{3} Assuming, without loss of generality, \(L\) as red point, if \(D,A\) are both blue and when at most one red point can be chosen from \(L,M\), \(E,F,M\) are all blue points, making at most one red point between \(W,N\); at most one red point between \(B,C\); at most one red point between \(U,V\), thus \(n \leq 5\).
+\textcircled{4} If \(D,A,L,M\) are all blue points and when \(E,F\) are both red points, \(W,N\) and \(B,C\) are all blue, making at most one red point from \(U,V\), thus \(n \leq 5\). When there is at most one red point from \(E,F\), at most one red point from \(W,N\); at most one red point from \(B,C\); at most one red point from \(U,V\), \(n \leq 5\).
+
+(3) If \(P,Q,R\) are all blue points and there is at most one red point in each triplet \(A,L,M;B,V,W;C,N,U;D,E,F\), there are at most four red points; otherwise, there must be a triplet among \(A,L,M;B,V,W;C,N,U;D,E,F\) that contains at least two red points.
+\textcircled{1} Assume, without loss of generality, \(E,F\) are red points, and if \(D,E,F\) contains at least two red points, , \(D,A\) and \(B,C\) are all blue points, making at most one red point from \(L,M\); at most one red point from \(W,V\); at most one red point from \(N,U\), therefore \(n \leq 5\).
+\textcircled{2} If there is a triplet among \(A,L,M;B,V,W;C,N,U\) that contains at least two red points, we may assume, without loss of generality, \(B,V,W\) contains at least two red points; If \(V,W\) are red points, then \(B,E\) and \(F,D\) are all blue points; assuming, without loss of generality, \(L\) is a red point, if there is a red point from \(L,U\), then \(C,N\) are all blue points, making at most one red point from \(A,M\); even if \(U\) is a red point, we still have \(n \leq 5\). If \(L,U\) are both blue points, then there is at most one red point from \(M,C\); at most one red point from \(A,N\), therefore \(n \leq 5\). If \(B,V\) are red points, \(W\) is a blue point, and we can classify as follow:
+(a) If \(F\) is a red point, then \(D,M,N\) are all blue points. If \(E\) is a red point, then \(C,A\) are all blue points, making at most one red point from \(L,U\), therefore \(n \leq 5\). If \(E\) is a blue point, there is at most one red point from \(A,C\) and at most one red point from \(L,U\), therefore \(n \leq 5\).
+(b) If \(F\) is a blue point and \(D\) is a red point, then \(E,L\) are all blue points, making at most one red point from \(A,C\); at most one red point from \(M,N,U\), therefore \(n \leq 5\).
+(c) If \(F,D\) are blue points and \(L\) is a red point, then \(U,N\) are all blue points, making at most one red point from \(A,C\); at most one red point from \(M,E\), therefore \(n \leq 5\).
+(d) If \(F,D,L\) are blue points and \(U\) is a red point, then \(A\) is a blue point, making at most one red point from \(M,C\); at most one red point from \(N,E\), therefore \(n \leq 5\).
+(e) If \(F,D,L,U\) are blue points, then there is at most one red point from \(M,N\); at most one red point from \(A,C\), making \(E\) a red point, we have \(n \leq 5\). Thus, we can draw a conclusion: if we choose \(n\) lattice points from these 15 lattice points such that no three lattice points can form an isosceles triangle, then \(n \leq 5\). With its contrapositive, we can conclude that when \(n \geq 6\), there must be three lattice points that can form an isosceles triangle. In summary, the minimum value of \(\mathbf{n}\) is: 6.
+</think>
+
+<answer>
+\boxed{\boxed{6}}
+</answer><|im_end|>
+
+label_ids:
+[-100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, 248068, 198, 9764, 279, 2250, 479, 1029, 399, 3387, 383, 3008, 1088, 2231, 1803, 10713, 8, 494, 17237, 32, 55821, 310, 17237, 33, 55821, 381, 17237, 43, 26351, 47875, 59, 1174, 279, 2250, 479, 1029, 399, 3387, 383, 3008, 1088, 2231, 4738, 10713, 8, 494, 17237, 33, 55821, 310, 17237, 34, 55821, 381, 17237, 53, 26386, 48781, 59, 1174, 321, 279, 2250, 479, 1029, 399, 3387, 383, 3008, 1088, 2231, 4887, 10713, 8, 494, 17237, 34, 55821, 310, 17237, 32, 55821, 381, 17237, 45, 40731, 26147, 59, 553, 561, 18664, 1406, 314, 1088, 2231, 64375, 16073, 22512, 16073, 14453, 10713, 8, 369, 17237, 47, 59, 1174, 279, 18664, 1406, 314, 1088, 2231, 64375, 16073, 35695, 16073, 5095, 10713, 8, 369, 17237, 48, 59, 1174, 321, 279, 18664, 1406, 314, 1088, 2231, 35695, 16073, 22512, 16073, 1113, 10713, 8, 369, 17237, 49, 59, 553, 1368, 279, 7776, 869, 314, 17237, 77, 55821, 369, 220, 20, 11, 4483, 220, 20, 52448, 3387, 383, 3008, 1088, 2231, 1803, 10713, 681, 874, 2250, 52448, 3387, 628, 1304, 449, 369, 428, 341, 624, 20837, 11, 8190, 17237, 77, 1088, 689, 80, 220, 21, 59, 553, 60101, 11, 1973, 4557, 314, 1704, 2632, 11, 220, 279, 17237, 77, 55821, 11543, 52448, 3387, 513, 2438, 3387, 11, 321, 279, 3672, 513, 6105, 3387, 13, 8439, 17237, 47, 48170, 22774, 55821, 4021, 660, 381, 2438, 3387, 11, 567, 4123, 2250, 4886, 3559, 25, 271, 7, 16, 8, 1368, 1017, 513, 1132, 1330, 2438, 3387, 4082, 17237, 47, 48170, 22774, 59, 681, 321, 9370, 11, 1973, 4557, 314, 1704, 2632, 11, 17237, 48, 22774, 55821, 513, 2438, 3387, 11, 1179, 17237, 47, 14595, 26386, 55821, 513, 660, 6105, 3387, 11, 321, 17237, 52, 38627, 55821, 321, 17237, 36, 11, 426, 55821, 513, 1048, 660, 6105, 3387, 13, 22677, 11, 2394, 506, 1379, 799, 2438, 1406, 628, 381, 11543, 494, 17237, 44, 10962, 55821, 318, 57913, 17237, 44, 10962, 55821, 321, 17237, 49, 55821, 668, 1304, 449, 369, 428, 341, 624, 20837, 681, 506, 1379, 799, 2438, 1406, 494, 17237, 45, 10962, 55821, 318, 57913, 17237, 45, 10962, 55821, 321, 17237, 49, 55821, 668, 1304, 449, 369, 428, 341, 624, 20837, 681, 321, 506, 1379, 799, 2438, 1406, 494, 17237, 44, 21359, 55821, 318, 57913, 17237, 44, 21359, 55821, 321, 17237, 48, 55821, 668, 1304, 449, 369, 428, 341, 624, 20837, 681, 1017, 369, 506, 1379, 799, 2438, 1406, 421, 628, 381, 11543, 494, 17237, 44, 21359, 10962, 59, 553, 33105, 11, 1017, 369, 506, 1379, 799, 2438, 1406, 494, 17237, 43, 26147, 7904, 59, 681, 8190, 3154, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 271, 7, 17, 8, 1368, 1017, 369, 1132, 799, 2438, 1406, 4082, 17237, 47, 48170, 22774, 59, 681, 567, 1189, 9370, 11, 1973, 4557, 314, 1704, 2632, 11, 17237, 47, 55821, 369, 279, 2438, 1406, 13, 1088, 1272, 41868, 806, 90, 16, 15623, 1368, 17237, 35, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 54, 21359, 55821, 513, 660, 6105, 3387, 11, 321, 506, 1379, 799, 2438, 1406, 494, 17237, 37, 29130, 26147, 40731, 59, 553, 198, 2592, 17237, 43, 55821, 318, 269, 17237, 44, 59, 578, 369, 264, 2438, 1406, 11, 1179, 17237, 32, 55821, 369, 264, 6105, 1406, 11, 506, 1379, 799, 2438, 1406, 494, 17237, 33, 10962, 55821, 321, 506, 1379, 799, 2438, 1406, 494, 17237, 52, 38627, 59, 681, 8190, 3154, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 1368, 17237, 37, 55821, 318, 269, 17237, 36, 59, 578, 369, 264, 2438, 1406, 11, 17237, 32, 55821, 369, 264, 6105, 1406, 11, 3154, 506, 1379, 799, 2438, 1406, 1881, 17237, 33, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 1881, 17237, 52, 38627, 59, 681, 8190, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 59, 1272, 41868, 806, 90, 17, 92, 1368, 17237, 35, 55821, 369, 264, 6105, 1406, 321, 17237, 32, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 43, 26147, 55821, 321, 17237, 54, 21359, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 36, 26351, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 33, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 220, 494, 17237, 52, 38627, 59, 681, 8190, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 59, 1272, 41868, 806, 90, 18, 92, 61806, 11, 1973, 4557, 314, 1704, 2632, 11, 17237, 43, 55821, 430, 2438, 1406, 11, 413, 17237, 35, 14595, 55821, 513, 2107, 6105, 321, 948, 506, 1379, 799, 2438, 1406, 628, 381, 11543, 494, 17237, 43, 26147, 59, 681, 17237, 36, 26351, 26147, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 1881, 17237, 54, 21359, 59, 1174, 506, 1379, 799, 2438, 1406, 1881, 17237, 33, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 1881, 17237, 52, 38627, 59, 681, 8190, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 59, 1272, 41868, 806, 90, 19, 92, 1368, 17237, 35, 14595, 29130, 26147, 55821, 513, 660, 6105, 3387, 321, 948, 17237, 36, 26351, 55821, 513, 2107, 2438, 3387, 11, 17237, 54, 21359, 55821, 321, 17237, 33, 10962, 55821, 513, 660, 6105, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 52, 38627, 59, 681, 8190, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 3095, 1017, 369, 506, 1379, 799, 2438, 1406, 494, 17237, 36, 26351, 59, 681, 506, 1379, 799, 2438, 1406, 494, 17237, 54, 21359, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 33, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 52, 38627, 59, 681, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 271, 7, 18, 8, 1368, 17237, 47, 48170, 22774, 55821, 513, 660, 6105, 3387, 321, 1017, 369, 506, 1379, 799, 2438, 1406, 303, 1754, 95296, 17237, 32, 29130, 26147, 26, 33, 38627, 47875, 26, 34, 21359, 48781, 26, 35, 40731, 26351, 59, 681, 1017, 513, 506, 1379, 2943, 2438, 3387, 26, 5752, 11, 1017, 1902, 381, 264, 95296, 4082, 17237, 32, 29130, 26147, 26, 33, 38627, 47875, 26, 34, 21359, 48781, 26, 35, 40731, 26351, 55821, 421, 5435, 506, 3140, 1330, 2438, 3387, 13, 198, 59, 1272, 41868, 806, 90, 16, 92, 60101, 11, 1973, 4557, 314, 1704, 2632, 11, 17237, 36, 26351, 55821, 513, 2438, 3387, 11, 321, 413, 17237, 35, 40731, 26351, 55821, 5435, 506, 3140, 1330, 2438, 3387, 11, 1116, 17237, 35, 14595, 55821, 321, 17237, 33, 10962, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 43, 26147, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 54, 38627, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 45, 48781, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 59, 1272, 41868, 806, 90, 17, 92, 1368, 1017, 369, 264, 95296, 4082, 17237, 32, 29130, 26147, 26, 33, 38627, 47875, 26, 34, 21359, 48781, 55821, 421, 5435, 506, 3140, 1330, 2438, 3387, 11, 567, 1189, 9370, 11, 1973, 4557, 314, 1704, 2632, 11, 17237, 33, 38627, 47875, 55821, 5435, 506, 3140, 1330, 2438, 3387, 26, 1368, 17237, 53, 47875, 55821, 513, 2438, 3387, 11, 1179, 17237, 33, 40731, 55821, 321, 17237, 37, 26386, 55821, 513, 660, 6105, 3387, 26, 24725, 11, 1973, 4557, 314, 1704, 2632, 11, 17237, 43, 55821, 369, 264, 2438, 1406, 11, 413, 1017, 369, 264, 2438, 1406, 494, 17237, 43, 48781, 59, 681, 1179, 17237, 34, 21359, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 32, 26147, 59, 1174, 1442, 413, 17237, 52, 55821, 369, 264, 2438, 1406, 11, 567, 1990, 599, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 1368, 17237, 43, 48781, 55821, 513, 2107, 6105, 3387, 11, 1179, 1017, 369, 506, 1379, 799, 2438, 1406, 494, 17237, 44, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 32, 21359, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 1368, 17237, 33, 38627, 55821, 513, 2438, 3387, 11, 17237, 54, 55821, 369, 264, 6105, 1406, 11, 321, 567, 628, 46522, 430, 1732, 25, 198, 2784, 8, 1368, 17237, 37, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 35, 26147, 21359, 55821, 513, 660, 6105, 3387, 13, 1368, 17237, 36, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 34, 14595, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 43, 48781, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 1368, 17237, 36, 55821, 369, 264, 6105, 1406, 11, 1017, 369, 506, 1379, 799, 2438, 1406, 494, 17237, 32, 10962, 55821, 321, 506, 1379, 799, 2438, 1406, 494, 17237, 43, 48781, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 1818, 8, 1368, 17237, 37, 55821, 369, 264, 6105, 1406, 321, 17237, 35, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 36, 29130, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 32, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 44, 21359, 48781, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 1290, 8, 1368, 17237, 37, 26386, 55821, 513, 6105, 3387, 321, 17237, 43, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 52, 21359, 55821, 513, 660, 6105, 3387, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 32, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 44, 40731, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 1446, 8, 1368, 17237, 37, 26386, 29130, 55821, 513, 6105, 3387, 321, 17237, 52, 55821, 369, 264, 2438, 1406, 11, 1179, 17237, 32, 55821, 369, 264, 6105, 1406, 11, 3154, 506, 1379, 799, 2438, 1406, 494, 17237, 44, 10962, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 45, 40731, 59, 681, 8646, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 198, 1958, 8, 1368, 17237, 37, 26386, 29130, 48781, 55821, 513, 6105, 3387, 11, 1179, 1017, 369, 506, 1379, 799, 2438, 1406, 494, 17237, 44, 21359, 59, 1174, 506, 1379, 799, 2438, 1406, 494, 17237, 32, 10962, 59, 681, 3154, 17237, 36, 55821, 264, 2438, 1406, 11, 567, 599, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 13891, 11, 567, 628, 3902, 264, 16198, 25, 413, 567, 4992, 17237, 77, 55821, 52448, 3387, 494, 1439, 220, 16, 20, 52448, 3387, 1680, 421, 874, 2250, 52448, 3387, 628, 1304, 449, 369, 428, 341, 624, 20837, 11, 1179, 17237, 77, 1088, 273, 80, 220, 20, 59, 553, 2985, 1141, 5838, 29425, 3295, 11, 567, 628, 30076, 421, 948, 17237, 77, 1088, 689, 80, 220, 21, 59, 681, 1017, 1902, 381, 2250, 52448, 3387, 421, 628, 1304, 449, 369, 428, 341, 624, 20837, 13, 733, 11782, 11, 279, 7776, 869, 314, 1088, 11189, 10065, 12849, 88216, 10713, 8, 369, 25, 220, 21, 13, 198, 248069, 271, 27, 8944, 29, 198, 59, 76367, 34521, 76367, 90, 21, 3307, 198, 510, 8944, 29, 248046, 198]
+labels:
+<think>
+Let the three trisection points on side \({AB}\) from \(A\) to \(B\) be \(L,F,W\); the three trisection points on side \({BC}\) from \(B\) to \(C\) be \(V,D,U\); and the three trisection points on side \({CA}\) from \(C\) to \(A\) be \(N,E,M\). The intersection point of \({MV},{LU},{EF}\) is \(P\); the intersection point of \({MV},{WN},{DF}\) is \(Q\); and the intersection point of \({WN},{LU},{DE}\) is \(R\). If the minimum value of \(n\) is 5, taking 5 lattice points on side \({AB}\), no three lattice points can form an isosceles triangle, thus \(n \geq 6\). Assume, without loss of generality,  the \(n\) chosen lattice points are red points, and the others are blue points. Since \(P,Q,R\) cannot all be red points, we discuss three cases below:
+
+(1) If there are only two red points among \(P,Q,R\), and assume, without loss of generality, \(Q,R\) are red points, then \(P,A,D\) are all blue points, and \(U,V\) and \(E, F\) are also all blue points. Furthermore, since at most one red point can be chosen from \(M,C\) (otherwise \(M,C\) and \(R\) will form an isosceles triangle), at most one red point from \(N,C\) (otherwise \(N,C\) and \(R\) will form an isosceles triangle), and at most one red point from \(M,N\) (otherwise \(M,N\) and \(Q\) will form an isosceles triangle), there is at most one red point that can be chosen from \(M,N,C\). Similarly, there is at most one red point from \(L,M,B\), thus making \(n \leq 5\).
+
+(2) If there is only one red point among \(P,Q,R\), we may assume, without loss of generality, \(P\) is the red point. \textcircled{1}: If \(D\) is a red point, then \(W,N\) are all blue points, and at most one red point from \(F,L,M,E\).
+If \(L\) (or \(M\)) is a red point, then \(A\) is a blue point, at most one red point from \(B,C\) and at most one red point from \(U,V\), thus making \(n \leq 5\). If \(F\) (or \(E\)) is a red point, \(A\) is a blue point, making at most one red point between \(B,C\); at most one red point between \(U,V\), thus \(n \leq 5\).
+\textcircled{2} If \(D\) is a blue point and \(A\) is a red point, then \(L,M\) and \(W,N\) are all blue points, making at most one red point from \(E,F\); at most one red point from \(B,C\); at most one red point  from \(U,V\), thus \(n \leq 5\).
+\textcircled{3} Assuming, without loss of generality, \(L\) as red point, if \(D,A\) are both blue and when at most one red point can be chosen from \(L,M\), \(E,F,M\) are all blue points, making at most one red point between \(W,N\); at most one red point between \(B,C\); at most one red point between \(U,V\), thus \(n \leq 5\).
+\textcircled{4} If \(D,A,L,M\) are all blue points and when \(E,F\) are both red points, \(W,N\) and \(B,C\) are all blue, making at most one red point from \(U,V\), thus \(n \leq 5\). When there is at most one red point from \(E,F\), at most one red point from \(W,N\); at most one red point from \(B,C\); at most one red point from \(U,V\), \(n \leq 5\).
+
+(3) If \(P,Q,R\) are all blue points and there is at most one red point in each triplet \(A,L,M;B,V,W;C,N,U;D,E,F\), there are at most four red points; otherwise, there must be a triplet among \(A,L,M;B,V,W;C,N,U;D,E,F\) that contains at least two red points.
+\textcircled{1} Assume, without loss of generality, \(E,F\) are red points, and if \(D,E,F\) contains at least two red points, , \(D,A\) and \(B,C\) are all blue points, making at most one red point from \(L,M\); at most one red point from \(W,V\); at most one red point from \(N,U\), therefore \(n \leq 5\).
+\textcircled{2} If there is a triplet among \(A,L,M;B,V,W;C,N,U\) that contains at least two red points, we may assume, without loss of generality, \(B,V,W\) contains at least two red points; If \(V,W\) are red points, then \(B,E\) and \(F,D\) are all blue points; assuming, without loss of generality, \(L\) is a red point, if there is a red point from \(L,U\), then \(C,N\) are all blue points, making at most one red point from \(A,M\); even if \(U\) is a red point, we still have \(n \leq 5\). If \(L,U\) are both blue points, then there is at most one red point from \(M,C\); at most one red point from \(A,N\), therefore \(n \leq 5\). If \(B,V\) are red points, \(W\) is a blue point, and we can classify as follow:
+(a) If \(F\) is a red point, then \(D,M,N\) are all blue points. If \(E\) is a red point, then \(C,A\) are all blue points, making at most one red point from \(L,U\), therefore \(n \leq 5\). If \(E\) is a blue point, there is at most one red point from \(A,C\) and at most one red point from \(L,U\), therefore \(n \leq 5\).
+(b) If \(F\) is a blue point and \(D\) is a red point, then \(E,L\) are all blue points, making at most one red point from \(A,C\); at most one red point from \(M,N,U\), therefore \(n \leq 5\).
+(c) If \(F,D\) are blue points and \(L\) is a red point, then \(U,N\) are all blue points, making at most one red point from \(A,C\); at most one red point from \(M,E\), therefore \(n \leq 5\).
+(d) If \(F,D,L\) are blue points and \(U\) is a red point, then \(A\) is a blue point, making at most one red point from \(M,C\); at most one red point from \(N,E\), therefore \(n \leq 5\).
+(e) If \(F,D,L,U\) are blue points, then there is at most one red point from \(M,N\); at most one red point from \(A,C\), making \(E\) a red point, we have \(n \leq 5\). Thus, we can draw a conclusion: if we choose \(n\) lattice points from these 15 lattice points such that no three lattice points can form an isosceles triangle, then \(n \leq 5\). With its contrapositive, we can conclude that when \(n \geq 6\), there must be three lattice points that can form an isosceles triangle. In summary, the minimum value of \(\mathbf{n}\) is: 6.
+</think>
+
+<answer>
+\boxed{\boxed{6}}
+</answer><|im_end|>
+
+[Rank 0 | Local Rank 0] 2026-07-07 04:42:26,720 WARNING [mindspeed_mm.fsdp.data.dataloader.data_collator:177] => model_name is deprecated and will be removed in a future version. Please use collator_id instead. Available collator_ids: llm_pretrain, qwen3asr, qwen3omni, qwen3vl, step3_vl.
+[Rank 5 | Local Rank 5] 2026-07-07 04:42:27,395 INFO [httpx:1025] => HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/json/json.py "HTTP/1.1 200 OK"
+[Rank 1 | Local Rank 1] 2026-07-07 04:42:27,402 INFO [httpx:1025] => HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/json/json.py "HTTP/1.1 200 OK"
+[Rank 3 | Local Rank 3] 2026-07-07 04:42:27,405 INFO [httpx:1025] => HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/json/json.py "HTTP/1.1 200 OK"
+[Rank 7 | Local Rank 7] 2026-07-07 04:42:27,427 INFO [httpx:1025] => HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/json/json.py "HTTP/1.1 200 OK"
+[Rank 2 | Local Rank 2] 2026-07-07 04:42:27,486 INFO [httpx:1025] => HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/json/json.py "HTTP/1.1 200 OK"
+[Rank 4 | Local Rank 4] 2026-07-07 04:42:27,652 INFO [httpx:1025] => HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/json/json.py "HTTP/1.1 200 OK"
+[Rank 6 | Local Rank 6] 2026-07-07 04:42:27,705 INFO [httpx:1025] => HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/json/json.py "HTTP/1.1 200 OK"
+2026-07-07 04:42:27,987 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 0 | Local Rank 0] 2026-07-07 04:42:27,987 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+[Rank 1 | Local Rank 1] 2026-07-07 04:42:29,970 INFO [torch_npu.env:15] => get env TOKENIZERS_PARALLELISM = false
+[Rank 5 | Local Rank 5] 2026-07-07 04:42:29,990 INFO [torch_npu.env:15] => get env TOKENIZERS_PARALLELISM = false
+[Rank 2 | Local Rank 2] 2026-07-07 04:42:30,067 INFO [torch_npu.env:15] => get env TOKENIZERS_PARALLELISM = false
+[Rank 1 | Local Rank 1] 2026-07-07 04:42:30,112 WARNING [mindspeed_mm.fsdp.data.dataloader.data_collator:177] => model_name is deprecated and will be removed in a future version. Please use collator_id instead. Available collator_ids: llm_pretrain, qwen3asr, qwen3omni, qwen3vl, step3_vl.
+[Rank 5 | Local Rank 5] 2026-07-07 04:42:30,129 WARNING [mindspeed_mm.fsdp.data.dataloader.data_collator:177] => model_name is deprecated and will be removed in a future version. Please use collator_id instead. Available collator_ids: llm_pretrain, qwen3asr, qwen3omni, qwen3vl, step3_vl.
+[Rank 3 | Local Rank 3] 2026-07-07 04:42:30,142 INFO [torch_npu.env:15] => get env TOKENIZERS_PARALLELISM = false
+[Rank 2 | Local Rank 2] 2026-07-07 04:42:30,205 WARNING [mindspeed_mm.fsdp.data.dataloader.data_collator:177] => model_name is deprecated and will be removed in a future version. Please use collator_id instead. Available collator_ids: llm_pretrain, qwen3asr, qwen3omni, qwen3vl, step3_vl.
+[Rank 7 | Local Rank 7] 2026-07-07 04:42:30,205 INFO [torch_npu.env:15] => get env TOKENIZERS_PARALLELISM = false
+[Rank 4 | Local Rank 4] 2026-07-07 04:42:30,211 INFO [torch_npu.env:15] => get env TOKENIZERS_PARALLELISM = false
+[Rank 3 | Local Rank 3] 2026-07-07 04:42:30,282 WARNING [mindspeed_mm.fsdp.data.dataloader.data_collator:177] => model_name is deprecated and will be removed in a future version. Please use collator_id instead. Available collator_ids: llm_pretrain, qwen3asr, qwen3omni, qwen3vl, step3_vl.
+[Rank 4 | Local Rank 4] 2026-07-07 04:42:30,344 WARNING [mindspeed_mm.fsdp.data.dataloader.data_collator:177] => model_name is deprecated and will be removed in a future version. Please use collator_id instead. Available collator_ids: llm_pretrain, qwen3asr, qwen3omni, qwen3vl, step3_vl.
+[Rank 7 | Local Rank 7] 2026-07-07 04:42:30,377 WARNING [mindspeed_mm.fsdp.data.dataloader.data_collator:177] => model_name is deprecated and will be removed in a future version. Please use collator_id instead. Available collator_ids: llm_pretrain, qwen3asr, qwen3omni, qwen3vl, step3_vl.
+[Rank 6 | Local Rank 6] 2026-07-07 04:42:30,614 INFO [torch_npu.env:15] => get env TOKENIZERS_PARALLELISM = false
+[Rank 6 | Local Rank 6] 2026-07-07 04:42:30,804 WARNING [mindspeed_mm.fsdp.data.dataloader.data_collator:177] => model_name is deprecated and will be removed in a future version. Please use collator_id instead. Available collator_ids: llm_pretrain, qwen3asr, qwen3omni, qwen3vl, step3_vl.
+2026-07-07 04:42:31,401 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 1 | Local Rank 1] 2026-07-07 04:42:31,401 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+2026-07-07 04:42:31,481 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 5 | Local Rank 5] 2026-07-07 04:42:31,481 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+2026-07-07 04:42:31,536 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 2 | Local Rank 2] 2026-07-07 04:42:31,536 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+2026-07-07 04:42:31,602 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 3 | Local Rank 3] 2026-07-07 04:42:31,602 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+2026-07-07 04:42:31,670 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 4 | Local Rank 4] 2026-07-07 04:42:31,670 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+2026-07-07 04:42:31,757 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 7 | Local Rank 7] 2026-07-07 04:42:31,757 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+2026-07-07 04:42:32,141 - template - 730 - INFO - Replace eos token: <|im_end|>
+[Rank 6 | Local Rank 6] 2026-07-07 04:42:32,141 INFO [mindspeed_mm.fsdp.data.data_utils.func_utils.template:730] => Replace eos token: <|im_end|>
+/opt/conda/lib/python3.11/site-packages/torch_npu/distributed/distributed_c10d.py:158: UserWarning: HCCL doesn't support gather at the moment. Implemented with allgather instead.
+  warnings.warn("HCCL doesn't support gather at the moment. Implemented with allgather instead.")
+[rank1]:[W707 04:42:32.377420502 TensorFactories.cpp:340] Warning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (function operator())
+[rank4]:[W707 04:42:32.377428502 TensorFactories.cpp:340] Warning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (function operator())
+[rank5]:[W707 04:42:32.377501233 TensorFactories.cpp:340] Warning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (function operator())
+[rank3]:[W707 04:42:32.377526163 TensorFactories.cpp:340] Warning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (function operator())
+[rank7]:[W707 04:42:32.377654664 TensorFactories.cpp:340] Warning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (function operator())
+[rank6]:[W707 04:42:32.377836005 TensorFactories.cpp:340] Warning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (function operator())
+[rank2]:[W707 04:42:32.378534730 TensorFactories.cpp:340] Warning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (function operator())
+[Rank 0 | Local Rank 0] 2026-07-07 04:42:53,166 INFO [mindspeed_mm.fsdp.checkpoint.dcp_checkpointer:48] => Loaded checkpoint from /workspace/llin-rl-dpo/checkpoints/msmm-qwen36-27b-dcp/release
+[2026-07-07 04:42:53] [WARNING] [292076] profiler.py: Profiler won't be using warmup, this can skew profiler results
+/workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/features/memory/async_offload.py:25: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  if tensor.storage().size() <= 0:
+/workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/features/memory/async_offload.py:25: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  if tensor.storage().size() <= 0:
+/workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/features/memory/async_offload.py:25: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  if tensor.storage().size() <= 0:
+/workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/features/memory/async_offload.py:25: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  if tensor.storage().size() <= 0:
+/workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/features/memory/async_offload.py:25: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  if tensor.storage().size() <= 0:
+/workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/features/memory/async_offload.py:25: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  if tensor.storage().size() <= 0:
+/workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/features/memory/async_offload.py:25: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  if tensor.storage().size() <= 0:
+/workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/features/memory/async_offload.py:25: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  if tensor.storage().size() <= 0:
+[rank0]:[W707 04:42:56.539011182 TensorFactories.cpp:340] Warning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (function operator())
+[Rank 0 | Local Rank 0] 2026-07-07 04:43:44,024 INFO [mindspeed_mm.fsdp.train.train_engine:48] =>  [2026-07-07 04:43:44] iteration        1/       4 | consumed samples:            8 | elapsed time per iteration (ms): 50847.1 | learning rate: 1.000000E-05 | global batch size:     8 | loss: 6.478492E-01 | grad norm: 7.410 |
+[Rank 0 | Local Rank 0] 2026-07-07 04:44:11,071 INFO [mindspeed_mm.fsdp.train.train_engine:48] =>  [2026-07-07 04:44:11] iteration        2/       4 | consumed samples:           16 | elapsed time per iteration (ms): 27044.5 | learning rate: 8.535534E-06 | global batch size:     8 | loss: 6.042322E-01 | grad norm: 4.154 |
+[Rank 0] (after 2 iterations) memory (MB) | allocated: 39140.3603515625 | max allocated: 59460.90087890625 | reserved: 59538.0 | max reserved: 61198.0
+[rank4]:[E707 04:44:21.300461186 OpParamMaker.cpp:454] operator():../third_party/op-plugin/op_plugin/ops/opapi/RotaryMulBackwardKernelNpuOpApi.cpp:67 NPU function error: call aclnnRotaryPositionEmbeddingGrad failed, error code is 561002
+[ERROR] 2026-07-07-04:44:21 (PID:292080, Device:4, RankID:4) ERR00100 PTA call acl api failed.
+EZ9999: Inner Error!
+EZ9999[PID: 292080] 2026-07-07-04:44:21.855.235 (EZ9999):  reserveAlignNum = 2592 too large, aicore do not support.[FUNC:RopeHalfGradSetTiling][FILE:rope_half_grad_tiling.cpp][LINE:365]
+        TraceBack (most recent call last):
+       RopeHalfGradSetTiling failed.[FUNC:RopeHalfGradInitSplitInfo][FILE:rope_half_grad_tiling.cpp][LINE:428]
+       RopeHalfGradInitSplitInfo not support.[FUNC:DoOpTiling][FILE:rope_half_grad_tiling.cpp][LINE:543]
+       RotaryPositionEmbeddingGrad do tiling failed, ret is -1.
+       Check NnopbaseExecutorDoTiling(executor) failed
+       Check NnopbaseExecutorTilingAndUpdateBinInfo(executor) failed
+       Check NnopbaseExecutorMatchCache(executor) failed
+       Check NnopbaseRunForWorkspace(*executor, workspaceSize) failed
+
+Exception raised from operator() at ../third_party/op-plugin/op_plugin/ops/opapi/RotaryMulBackwardKernelNpuOpApi.cpp:67 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0xd4 (0xffff96e13ea4 in /opt/conda/lib/python3.11/site-packages/torch/lib/libc10.so)
+frame #1: c10::detail::torchCheckFail(char const*, char const*, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0xe4 (0xffff96db3e44 in /opt/conda/lib/python3.11/site-packages/torch/lib/libc10.so)
+frame #2: <unknown function> + 0x25d6640 (0xffff7f9d6640 in /opt/conda/lib/python3.11/site-packages/torch_npu/lib/libtorch_npu.so)
+frame #3: <unknown function> + 0x373a1e0 (0xffff80b3a1e0 in /opt/conda/lib/python3.11/site-packages/torch_npu/lib/libtorch_npu.so)
+frame #4: <unknown function> + 0xc19b64 (0xffff7e019b64 in /opt/conda/lib/python3.11/site-packages/torch_npu/lib/libtorch_npu.so)
+frame #5: <unknown function> + 0xc1cb98 (0xffff7e01cb98 in /opt/conda/lib/python3.11/site-packages/torch_npu/lib/libtorch_npu.so)
+frame #6: <unknown function> + 0xc187fc (0xffff7e0187fc in /opt/conda/lib/python3.11/site-packages/torch_npu/lib/libtorch_npu.so)
+frame #7: <unknown function> + 0x289da4 (0xffff7d339da4 in /usr/local/Ascend/cann-9.0.0/lib64/libhccl.so)
+frame #8: <unknown function> + 0x7fbb4 (0xffffa2defbb4 in /lib64/libc.so.6)
+frame #9: <unknown function> + 0xe7d5c (0xffffa2e57d5c in /lib64/libc.so.6)
+
+[rank4]: Traceback (most recent call last):
+[rank4]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/train/trainer.py", line 433, in <module>
+[rank4]:     trainer.train()
+[rank4]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/train/trainer.py", line 426, in train
+[rank4]:     self.trainer.train()
+[rank4]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/train/train_engine.py", line 250, in train
+[rank4]:     loss_dict = self.train_step(train_dataloader_iter)
+[rank4]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/train/train_engine.py", line 163, in train_step
+[rank4]:     loss.backward()
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/torch/_tensor.py", line 648, in backward
+[rank4]:     torch.autograd.backward(
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/torch/autograd/__init__.py", line 353, in backward
+[rank4]:     _engine_run_backward(
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/torch/autograd/graph.py", line 824, in _engine_run_backward
+[rank4]:     return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/torch/autograd/function.py", line 307, in apply
+[rank4]:     return user_fn(self, *args)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_fully_shard/_fsdp_param_group.py", line 747, in backward
+[rank4]:     ctx.param_group.post_backward()
+[rank4]:   File "/workspace/llin-rl-dpo/reference/MindSpeed-MM-rjx-snapshot/mindspeed_mm/fsdp/ops/fully_shard/fully_shard.py", line 685, in param_group_post_backward_pt27
+[rank4]:     ) = foreach_reduce(
+[rank4]:         ^^^^^^^^^^^^^^^
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank4]:     return func(*args, **kwargs)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_fully_shard/_fsdp_collectives.py", line 410, in foreach_reduce
+[rank4]:     dist.reduce_scatter_tensor(
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/c10d_logger.py", line 81, in wrapper
+[rank4]:     return func(*args, **kwargs)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/opt/conda/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py", line 4286, in reduce_scatter_tensor
+[rank4]:     work = group._reduce_scatter_base(output, input, opts)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]: RuntimeError: The Inner error is reported as above. The process exits for this inner error, and the current working operator name is aclnnRotaryPositionEmbeddingGrad.
+[rank4]: Since the operator is called asynchronously, the stacktrace may be inaccurate. If you want to get the accurate stacktrace, please set the environment variable ASCEND_LAUNCH_BLOCKING=1.
+[rank4]: Note: ASCEND_LAUNCH_BLOCKING=1 will force ops to run in synchronous mode, resulting in performance degradation. Please unset ASCEND_LAUNCH_BLOCKING in time after debugging.
+[rank4]: [ERROR] 2026-07-07-04:44:21 (PID:292080, Device:4, RankID:4) ERR00100 PTA call acl api failed.
+
+W0707 04:45:13.763000 291996 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 292076 closing signal SIGTERM
+W0707 04:45:13.764000 291996 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 292077 closing signal SIGTERM
+W0707 04:45:13.773000 291996 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 292078 closing signal SIGTERM
+W0707 04:45:13.782000 291996 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 292079 closing signal SIGTERM
+W0707 04:45:13.787000 291996 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 292081 closing signal SIGTERM
+W0707 04:45:13.793000 291996 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 292082 closing signal SIGTERM
+W0707 04:45:13.796000 291996 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 292083 closing signal SIGTERM
+E0707 04:45:14.963000 291996 site-packages/torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 4 (pid: 292080) of binary: /workspace/llin-rl-dpo/.venvs/rjx-msmm-native/bin/python
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 896, in <module>
+    main()
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 892, in main
+    run(args)
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/run.py", line 883, in run
+    elastic_launch(
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 270, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+mindspeed_mm/fsdp/train/trainer.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-07-07_04:45:13
+  host      : 269f1583621d
+  rank      : 4 (local_rank: 4)
+  exitcode  : 1 (pid: 292080)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+[ERROR] 2026-07-07-04:45:14 (PID:291996, Device:-1, RankID:-1) ERR99999 UNKNOWN applicaiton exception
